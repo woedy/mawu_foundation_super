@@ -41,7 +41,7 @@ Use the following user stories to guide implementation. Check off items as they 
   - Snapshot panels for Programs, Impact, Get Involved, and Shop.  
   - Mobile-responsive layout validated across breakpoints.
 
-- [ ] **Story: Build the programs & impact explorer**  
+- [x] **Story: Build the programs & impact explorer**
   **As a** community stakeholder  
   **I want** to explore continental programs and current Volta initiatives  
   **So that** I understand where support is going.  

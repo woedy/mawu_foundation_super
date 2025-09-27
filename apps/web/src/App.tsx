@@ -1,3 +1,4 @@
+import { useEffect, useMemo, useState } from 'react';
 import type { ReactNode } from 'react';
 import {
   Body,
@@ -11,8 +12,153 @@ import {
   Heading,
   Section
 } from './design-system';
+import { fallbackProgramsPayload } from './data/programs-fallback';
+import { cn } from './lib/cn';
+import type {
+  ProgramDetail,
+  ProgramFilter,
+  ProgramFocus,
+  ProgramsPayload
+} from './types/programs';
+
+const API_BASE_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:3001';
 
 const App = () => {
+  const [programsPayload, setProgramsPayload] = useState<ProgramsPayload | null>(null);
+  const [programsLoading, setProgramsLoading] = useState<boolean>(true);
+  const [programsError, setProgramsError] = useState<string | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<ProgramFilter>('All');
+  const [selectedProgramSlug, setSelectedProgramSlug] = useState<string | null>(null);
+  const [selectedFocus, setSelectedFocus] = useState<ProgramFocus>('volta');
+
+  useEffect(() => {
+    let isActive = true;
+    const controller = new AbortController();
+
+    const loadPrograms = async () => {
+      try {
+        setProgramsLoading(true);
+        const response = await fetch(`${API_BASE_URL}/programs`, {
+          signal: controller.signal
+        });
+
+        if (!response.ok) {
+          throw new Error(`Request failed with status ${response.status}`);
+        }
+
+        const payload = (await response.json()) as ProgramsPayload;
+
+        if (!isActive) {
+          return;
+        }
+
+        setProgramsPayload(payload);
+        setProgramsError(null);
+      } catch (error) {
+        if (!isActive) {
+          return;
+        }
+
+        if (error instanceof DOMException && error.name === 'AbortError') {
+          return;
+        }
+
+        console.error('Failed to load program data', error);
+        setProgramsPayload(fallbackProgramsPayload);
+        setProgramsError(
+          'Live program insights are unavailable, so we are showing a demo snapshot instead. Start the API to see the latest data.'
+        );
+      } finally {
+        if (isActive) {
+          setProgramsLoading(false);
+        }
+      }
+    };
+
+    void loadPrograms();
+
+    return () => {
+      isActive = false;
+      controller.abort();
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!programsPayload) {
+      return;
+    }
+
+    setSelectedProgramSlug((current) => {
+      if (current && programsPayload.programs.some((program) => program.slug === current)) {
+        return current;
+      }
+
+      return programsPayload.programs[0]?.slug ?? null;
+    });
+
+    setSelectedFocus((current) => {
+      if (programsPayload.regions.some((region) => region.id === current)) {
+        return current;
+      }
+
+      return programsPayload.regions[0]?.id ?? current;
+    });
+  }, [programsPayload]);
+
+  const categories = useMemo(() => programsPayload?.categories ?? [], [programsPayload]);
+  const programs = useMemo(() => programsPayload?.programs ?? [], [programsPayload]);
+  const regions = useMemo(() => programsPayload?.regions ?? [], [programsPayload]);
+  const metrics = useMemo(() => programsPayload?.impactMetrics ?? [], [programsPayload]);
+
+  const filteredPrograms = useMemo(() => {
+    if (!programs.length) {
+      return [] as ProgramDetail[];
+    }
+
+    if (selectedCategory === 'All') {
+      return programs;
+    }
+
+    return programs.filter((program) => program.category === selectedCategory);
+  }, [programs, selectedCategory]);
+
+  useEffect(() => {
+    if (!filteredPrograms.length) {
+      return;
+    }
+
+    if (!selectedProgramSlug || !filteredPrograms.some((program) => program.slug === selectedProgramSlug)) {
+      setSelectedProgramSlug(filteredPrograms[0].slug);
+    }
+  }, [filteredPrograms, selectedProgramSlug]);
+
+  const activeRegion = useMemo(() => {
+    if (!regions.length) {
+      return null;
+    }
+
+    return regions.find((region) => region.id === selectedFocus) ?? regions[0];
+  }, [regions, selectedFocus]);
+
+  const selectedProgram = useMemo(() => {
+    if (!programs.length) {
+      return null;
+    }
+
+    if (selectedProgramSlug) {
+      const match = programs.find((program) => program.slug === selectedProgramSlug);
+      if (match) {
+        return match;
+      }
+    }
+
+    if (filteredPrograms.length) {
+      return filteredPrograms[0];
+    }
+
+    return programs[0];
+  }, [filteredPrograms, programs, selectedProgramSlug]);
+
   const impactStats = [
     { label: 'Communities served across Africa', value: '48', accent: 'bg-brand-500/20 text-brand-100' },
     { label: 'People gaining daily access to clean water', value: '32K', accent: 'bg-white/10 text-white' },
@@ -226,55 +372,263 @@ const App = () => {
         </Section>
 
         <Section id="programs">
-          <div className="grid gap-10 lg:grid-cols-[1.2fr_1fr] lg:items-start">
-            <div className="space-y-6">
-              <Eyebrow>Experience Design</Eyebrow>
-              <Heading level={2}>A mission-driven experience for every supporter</Heading>
-              <Body>
-                We are building a digital ecosystem that meets donors, partners, and communities where they are. From real-time
-                telemetry to immersive storytelling, every interaction is crafted to inspire trust and collective action.
-              </Body>
-              <div className="grid gap-6 sm:grid-cols-3">
-                {experienceHighlights.map((highlight) => (
-                  <Card className="text-center" key={highlight.title}>
-                    <span aria-hidden className="text-3xl">
-                      {highlight.icon}
-                    </span>
-                    <Heading className="text-lg" level={4}>
-                      {highlight.title}
+          <div className="flex flex-col gap-12">
+            <div className="grid gap-10 xl:grid-cols-[1.05fr_0.95fr] xl:items-center">
+              <div className="space-y-6">
+                <Eyebrow>Programs &amp; Impact Explorer</Eyebrow>
+                <Heading level={2}>Navigate the initiatives powering Mawu Foundation</Heading>
+                <Body>
+                  Discover how continent-spanning visions connect with our current Volta Region pilots. Filter by impact area,
+                  explore focus regions, and dive into program narratives sourced directly from our field teams.
+                </Body>
+                <div
+                  aria-label="Select focus region"
+                  className="flex flex-wrap gap-3"
+                  role="group"
+                >
+                  {regions.map((region) => (
+                    <Button
+                      key={region.id}
+                      aria-pressed={activeRegion?.id === region.id}
+                      onClick={() => setSelectedFocus(region.id)}
+                      size="sm"
+                      variant={activeRegion?.id === region.id ? 'primary' : 'ghost'}
+                    >
+                      {region.name}
+                    </Button>
+                  ))}
+                </div>
+              </div>
+              <Card className="overflow-hidden border border-ink-100/60 bg-white/80 shadow-soft">
+                {activeRegion ? (
+                  <>
+                    <div className="relative h-64 w-full overflow-hidden">
+                      <img
+                        alt={activeRegion.hero.alt}
+                        className="h-full w-full object-cover"
+                        src={activeRegion.hero.image}
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-ink-900/80 via-ink-900/10 to-transparent" />
+                      <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
+                        <p className="text-xs font-semibold uppercase tracking-[0.24em] text-white/70">Seasonal focus</p>
+                        <p className="mt-2 text-xl font-semibold">{activeRegion.name}</p>
+                      </div>
+                    </div>
+                    <CardContent className="space-y-5">
+                      <Body variant="muted">{activeRegion.description}</Body>
+                      <div className="flex flex-wrap gap-6 text-sm font-semibold text-brand-700">
+                        {activeRegion.stats.map((stat) => (
+                          <div key={stat.label} className="flex flex-col">
+                            <span className="text-2xl text-ink-900">{stat.value}</span>
+                            <span className="text-xs uppercase tracking-[0.2em] text-ink-400">{stat.label}</span>
+                          </div>
+                        ))}
+                      </div>
+                      <div>
+                        <p className="text-xs font-semibold uppercase tracking-[0.24em] text-ink-400">Current priorities</p>
+                        <ul className="mt-3 space-y-2 text-sm text-ink-700">
+                          {activeRegion.priorities.map((priority) => (
+                            <li key={priority} className="flex gap-3">
+                              <span aria-hidden className="mt-1 h-2 w-2 rounded-full bg-brand-500" />
+                              <span>{priority}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    </CardContent>
+                  </>
+                ) : (
+                  <CardContent className="space-y-3">
+                    <Heading level={3}>Loading focus regions…</Heading>
+                    <Body variant="muted">Hold tight while we prepare the explorer.</Body>
+                  </CardContent>
+                )}
+              </Card>
+            </div>
+
+            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+              {programsError ? (
+                <Card className="md:col-span-2 xl:col-span-4 border border-red-200 bg-red-50/70">
+                  <CardContent className="space-y-2">
+                    <Heading className="text-red-700" level={4}>
+                      We could not reach the live impact service
                     </Heading>
-                    <Body variant="muted">{highlight.description}</Body>
-                  </Card>
-                ))}
+                    <Body className="text-red-600" variant="muted">
+                      {programsError}
+                    </Body>
+                  </CardContent>
+                </Card>
+              ) : null}
+              {metrics.length
+                ? metrics.map((metric) => (
+                    <Card className="border border-ink-100/60 bg-white/80 p-6 shadow-soft" key={metric.label}>
+                      <p className="text-xs font-semibold uppercase tracking-[0.24em] text-ink-400">{metric.label}</p>
+                      <p className="mt-3 text-3xl font-semibold text-brand-700">{metric.value}</p>
+                      {metric.trend ? (
+                        <p className="mt-1 text-xs font-semibold uppercase tracking-[0.18em] text-brand-600">{metric.trend}</p>
+                      ) : null}
+                      {metric.description ? (
+                        <Body className="mt-3 text-xs" variant="muted">
+                          {metric.description}
+                        </Body>
+                      ) : null}
+                    </Card>
+                  ))
+                : Array.from({ length: 4 }).map((_, index) => (
+                    <Card
+                      className="animate-pulse border border-ink-100/50 bg-white/60 p-6"
+                      key={`metric-skeleton-${index}`}
+                    >
+                      <div className="h-3 w-24 rounded-full bg-ink-200/60" />
+                      <div className="mt-4 h-8 w-32 rounded-full bg-brand-200/60" />
+                      <div className="mt-5 h-3 w-full rounded-full bg-ink-100/60" />
+                    </Card>
+                  ))}
+            </div>
+
+            <div className="space-y-8">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.24em] text-ink-400">Filter by impact area</p>
+                <div
+                  aria-label="Filter programs by category"
+                  className="mt-4 flex flex-wrap gap-3"
+                  role="group"
+                >
+                  {['All', ...categories].map((category) => (
+                    <Button
+                      key={category}
+                      aria-pressed={selectedCategory === category}
+                      onClick={() => setSelectedCategory(category as ProgramFilter)}
+                      size="sm"
+                      variant={selectedCategory === category ? 'primary' : 'ghost'}
+                    >
+                      {category}
+                    </Button>
+                  ))}
+                </div>
+              </div>
+              <div className="grid gap-10 lg:grid-cols-[1.15fr_0.85fr] lg:items-start">
+                <div className="space-y-4">
+                  {programsLoading && !filteredPrograms.length ? (
+                    Array.from({ length: 3 }).map((_, index) => (
+                      <Card className="animate-pulse border border-ink-100/50 bg-white/70 p-6" key={`program-skeleton-${index}`}>
+                        <div className="h-4 w-2/3 rounded-full bg-ink-200/60" />
+                        <div className="mt-3 h-3 w-1/2 rounded-full bg-ink-100/60" />
+                        <div className="mt-4 h-3 w-full rounded-full bg-ink-100/60" />
+                      </Card>
+                    ))
+                  ) : filteredPrograms.length ? (
+                    filteredPrograms.map((program) => (
+                      <Card
+                        className={cn(
+                          'border border-ink-100/60 bg-white/80 p-6 text-left shadow-soft transition hover:-translate-y-0.5 hover:shadow-elevated focus-within:border-brand-400',
+                          selectedProgram?.slug === program.slug && 'border-brand-500 shadow-elevated'
+                        )}
+                        key={program.slug}
+                      >
+                        <div className="flex items-center justify-between gap-3">
+                          <Heading className="text-xl" level={3}>
+                            {program.title}
+                          </Heading>
+                          <span className="rounded-full bg-brand-100 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-brand-700">
+                            {program.category}
+                          </span>
+                        </div>
+                        <Body className="mt-3" variant="muted">
+                          {program.summary}
+                        </Body>
+                        <div className="mt-4 flex flex-wrap items-center gap-3 text-sm font-semibold text-brand-700">
+                          <span>{program.spotlightStatistic}</span>
+                          <span className="rounded-full bg-ink-900/90 px-3 py-1 text-xs uppercase tracking-[0.2em] text-white">
+                            {program.focus === 'volta' ? 'Volta Focus' : 'Pan-African'}
+                          </span>
+                        </div>
+                        <div className="mt-5 flex flex-wrap gap-3">
+                          <Button
+                            onClick={() => setSelectedProgramSlug(program.slug)}
+                            size="sm"
+                            variant={selectedProgram?.slug === program.slug ? 'primary' : 'ghost'}
+                          >
+                            Preview story
+                          </Button>
+                          <Button as="a" href={`#program-${program.slug}`} size="sm" variant="secondary">
+                            Read full narrative
+                          </Button>
+                        </div>
+                      </Card>
+                    ))
+                  ) : (
+                    <Card className="border border-ink-100/60 bg-white/70">
+                      <CardContent>
+                        <Body variant="muted">No programs match this filter yet.</Body>
+                      </CardContent>
+                    </Card>
+                  )}
+                </div>
+                <div>
+                  {selectedProgram ? (
+                    <Card className="overflow-hidden border border-ink-100/60 bg-white/80 shadow-elevated">
+                      <div className="relative h-64 w-full overflow-hidden">
+                        <img
+                          alt={selectedProgram.title}
+                          className="h-full w-full object-cover"
+                          src={selectedProgram.heroImage}
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-ink-900/85 via-ink-900/10 to-transparent" />
+                        <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
+                          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-white/70">Impact spotlight</p>
+                          <p className="mt-2 text-lg font-semibold">{selectedProgram.spotlightStatistic}</p>
+                        </div>
+                      </div>
+                      <CardContent className="space-y-4">
+                        <Heading className="text-2xl" level={3}>
+                          {selectedProgram.title}
+                        </Heading>
+                        <Body variant="muted">{selectedProgram.summary}</Body>
+                        <blockquote className="rounded-2xl bg-brand-50/80 p-4 text-sm text-brand-800">
+                          <p className="italic">“{selectedProgram.highlightQuote.quote}”</p>
+                          <p className="mt-2 text-xs font-semibold uppercase tracking-[0.2em] text-brand-600">
+                            {selectedProgram.highlightQuote.attribution}
+                          </p>
+                        </blockquote>
+                        <div className="flex flex-wrap gap-3">
+                          <Button as="a" href={`#program-${selectedProgram.slug}`} size="sm" variant="secondary">
+                            Deep dive into the program
+                          </Button>
+                          <Button as="a" href="#donate" size="sm" variant="ghost">
+                            Fund this initiative
+                          </Button>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ) : (
+                    <Card className="border border-ink-100/60 bg-white/70">
+                      <CardContent>
+                        <Body variant="muted">Select a program to preview its story.</Body>
+                      </CardContent>
+                    </Card>
+                  )}
+                </div>
               </div>
             </div>
-            <Card className="bg-gradient-to-br from-brand-500 via-brand-500/90 to-brand-700 text-white shadow-elevated">
-              <CardHeader>
-                <Heading className="text-white" level={3}>
-                  Pan-African Impact Framework
-                </Heading>
-                <Body className="text-white/80">
-                  Our integrated approach spans education, health, water, livelihoods, and climate resilience—sequenced with
-                  communities to deliver lasting change.
-                </Body>
-              </CardHeader>
-              <CardContent className="space-y-3 text-white/80">
-                <ChecklistItem>Education studios igniting digital literacy and future-ready skills.</ChecklistItem>
-                <ChecklistItem>Community health networks blending clinics, telemedicine, and mobile care.</ChecklistItem>
-                <ChecklistItem>Water security corridors with regenerative infrastructure and training.</ChecklistItem>
-                <ChecklistItem>Economic empowerment through microfinance, cooperatives, and creative hubs.</ChecklistItem>
-              </CardContent>
-              <CardFooter>
-                <Button as="a" href="#donate" size="sm" variant="secondary">
-                  Back the framework
-                </Button>
-                <Button as="a" href="#contact" size="sm" variant="ghost">
-                  Partner with us
-                </Button>
-              </CardFooter>
-            </Card>
+
+            <div className="grid gap-6 sm:grid-cols-3">
+              {experienceHighlights.map((highlight) => (
+                <Card className="text-center" key={highlight.title}>
+                  <span aria-hidden className="text-3xl">{highlight.icon}</span>
+                  <Heading className="text-lg" level={4}>
+                    {highlight.title}
+                  </Heading>
+                  <Body variant="muted">{highlight.description}</Body>
+                </Card>
+              ))}
+            </div>
           </div>
         </Section>
+
+        {programs.map((program) => (
+          <ProgramDetailSection key={program.slug} program={program} />
+        ))}
 
         <Section background="muted" id="shop">
           <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
@@ -425,6 +779,103 @@ const App = () => {
     </div>
   );
 };
+
+const ProgramDetailSection = ({ program }: { program: ProgramDetail }) => (
+  <Section
+    background={program.focus === 'volta' ? 'tinted' : 'default'}
+    id={`program-${program.slug}`}
+    paddedContainer
+  >
+    <div className="grid gap-10 lg:grid-cols-[1.2fr_1fr] lg:items-start">
+      <div className="space-y-6">
+        <Eyebrow>{program.category}</Eyebrow>
+        <Heading level={2}>{program.title}</Heading>
+        <Body>{program.excerpt}</Body>
+        <Card className="overflow-hidden shadow-soft">
+          <img alt={program.title} className="h-64 w-full object-cover" src={program.heroImage} />
+          <div className="p-6">
+            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-brand-600">Season highlight</p>
+            <p className="mt-2 text-lg font-semibold text-brand-700">{program.spotlightStatistic}</p>
+          </div>
+        </Card>
+        <div className="space-y-4">
+          <Heading className="text-lg" level={3}>
+            Outcomes this season
+          </Heading>
+          <ul className="space-y-2 text-sm text-ink-700">
+            {program.outcomes.map((outcome) => (
+              <li key={outcome} className="flex gap-3">
+                <span aria-hidden className="mt-1.5 h-2 w-2 rounded-full bg-brand-500" />
+                <span>{outcome}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div className="space-y-4">
+          <Heading className="text-lg" level={3}>
+            Program narrative
+          </Heading>
+          {program.narrative.map((paragraph, index) => (
+            <Body key={index} variant="muted">
+              {paragraph}
+            </Body>
+          ))}
+        </div>
+      </div>
+      <div className="space-y-6">
+        <Card className="bg-ink-900 text-white shadow-soft">
+          <CardContent className="space-y-4">
+            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-brand-200/80">Community voice</p>
+            <p className="text-lg leading-relaxed text-white/90 italic">“{program.highlightQuote.quote}”</p>
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand-100/90">
+              {program.highlightQuote.attribution}
+            </p>
+          </CardContent>
+        </Card>
+        <Card className="shadow-soft">
+          <CardHeader>
+            <Heading className="text-lg" level={3}>
+              Support pathways
+            </Heading>
+            <Body variant="muted">Choose how you want to participate.</Body>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            {program.ctas.map((cta) => (
+              <div key={cta.label} className="space-y-1">
+                <Button
+                  as="a"
+                  href={cta.href}
+                  size="sm"
+                  variant={cta.tone === 'primary' ? 'primary' : 'secondary'}
+                >
+                  {cta.label}
+                </Button>
+                {cta.description ? (
+                  <p className="text-xs text-ink-500">{cta.description}</p>
+                ) : null}
+              </div>
+            ))}
+          </CardContent>
+        </Card>
+        <Card className="shadow-soft">
+          <CardHeader>
+            <Heading className="text-lg" level={3}>
+              Field gallery
+            </Heading>
+          </CardHeader>
+          <CardContent className="grid gap-3">
+            {program.gallery.map((image) => (
+              <div key={image.src} className="overflow-hidden rounded-2xl">
+                <img alt={image.alt} className="h-40 w-full object-cover" src={image.src} />
+                <p className="mt-2 text-xs text-ink-500">{image.alt}</p>
+              </div>
+            ))}
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  </Section>
+);
 
 const ChecklistItem = ({ children }: { children: ReactNode }) => (
   <div className="flex items-start gap-3 text-sm text-ink-600">

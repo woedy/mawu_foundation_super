@@ -6,7 +6,10 @@ import { z } from 'zod';
 const envSchema = z.object({
   NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
   API_PORT: z.coerce.number().int().positive().default(3001),
-  STRIPE_SECRET_KEY: z.string().min(1, 'STRIPE_SECRET_KEY is required to process payments.'),
+  STRIPE_SECRET_KEY: z
+    .string()
+    .min(1, 'STRIPE_SECRET_KEY is required to process payments.')
+    .optional(),
   STRIPE_WEBHOOK_SECRET: z.string().optional(),
   CLIENT_URL: z.string().url().optional()
 });
@@ -63,5 +66,20 @@ export const loadEnvConfig = (options: LoadEnvOptions = {}): AppEnv => {
     throw new Error(`Invalid environment configuration:\n${formatted}`);
   }
 
-  return parsed.data;
+  const data = parsed.data;
+
+  if (!data.STRIPE_SECRET_KEY) {
+    const message =
+      data.NODE_ENV === 'production'
+        ? 'STRIPE_SECRET_KEY must be configured before running in production.'
+        : 'STRIPE_SECRET_KEY is not set. Stripe features will be disabled until a key is provided.';
+
+    if (data.NODE_ENV === 'production') {
+      throw new Error(`Invalid environment configuration:\nSTRIPE_SECRET_KEY: ${message}`);
+    }
+
+    console.warn(message);
+  }
+
+  return data;
 };

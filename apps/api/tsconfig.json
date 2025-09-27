@@ -14,7 +14,7 @@
     "types": ["node"],
     "baseUrl": "./src",
     "paths": {
-      "@mawu/config": ["../../packages/config/src"]
+      "@mawu/config": ["../../packages/config/src/index"]
     },
     "composite": true
   },
