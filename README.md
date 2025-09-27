@@ -30,6 +30,13 @@ Run these from the repository root.
 | `npm run build --workspace <name>` | Produces a production build for the chosen workspace. |
 | `npm run lint --workspace <name>` | Runs ESLint in the specified workspace. |
 | `npm run format --workspace <name>` | Checks code formatting with Prettier. |
+| `npm run storybook --workspace @mawu/web` | Opens the design system workbench for component previews. |
+
+## Design System Foundations
+- Tailwind theme extends brand palettes (`brand`, `ink`, `sand`), refined typography scales, spacing tokens, and elevation shadows.
+- Reusable primitives (`Container`, `Section`, `Button`, `Card`, `Typography`) ensure consistent layouts, CTAs, and storytelling blocks.
+- Accessibility guidelines live in `docs/accessibility.md` and the UI ships with skip links, focus-visible rings, and semantic navigation landmarks.
+- Storybook (`npm run storybook --workspace @mawu/web`) documents tokens and components for investor demos and collaboration.
 
 ## Front-End Vision Highlights
 - Mission-driven hero experience with impact metrics and focused storytelling for the Volta Region spotlight.
@@ -39,8 +46,7 @@ Run these from the repository root.
 - Storytelling modules, blog updates, and multimedia galleries to keep supporters engaged.
 
 ## Roadmap Notes
-- Expand the design system foundations with reusable components and accessibility guidelines.
-- Build out the programs and impact explorer with data visualizations and regional filtering.
+- Enrich the programs and impact explorer with data visualizations and regional filtering.
 - Implement the Get Involved and Transparency hub with live Stripe checkout and validated forms.
 - Launch the commerce experience with Stripe payment intents and placeholders for future payment methods (crypto, PayPal, bank transfer, MoMo).
 - Assemble an investor demo toolkit with scripts, sample data, and deployment instructions.

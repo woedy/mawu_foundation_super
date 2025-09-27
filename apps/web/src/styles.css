@@ -13,3 +13,17 @@ body {
   margin: 0;
   min-height: 100vh;
 }
+
+@layer base {
+  *:focus-visible {
+    @apply outline-none ring-4 ring-brand-200/80 ring-offset-2 ring-offset-white transition;
+  }
+
+  a {
+    @apply focus-visible:underline;
+  }
+}
+
+.skip-link {
+  @apply sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-full focus:bg-brand-500 focus:px-5 focus:py-3 focus:text-sm focus:font-semibold focus:text-white focus:shadow-elevated;
+}

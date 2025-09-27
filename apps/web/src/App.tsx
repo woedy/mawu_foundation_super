@@ -1,3 +1,17 @@
+import type { ReactNode } from 'react';
+import {
+  Body,
+  Button,
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  Container,
+  Eyebrow,
+  Heading,
+  Section
+} from './design-system';
+
 const App = () => {
   const impactStats = [
     { label: 'Communities served across Africa', value: '48', accent: 'bg-brand-500/20 text-brand-100' },
@@ -72,13 +86,13 @@ const App = () => {
     }
   ];
 
-  const shellPadding = 'px-6 sm:px-8 lg:px-12';
-  const container = `mx-auto w-full max-w-[120rem] ${shellPadding}`;
-
   return (
     <div className="min-h-screen bg-gradient-to-b from-sand-50 via-white to-sand-100 text-ink-900">
+      <a className="skip-link" href="#main">
+        Skip to content
+      </a>
       <header className="sticky top-0 z-20 border-b border-white/40 bg-white/60 backdrop-blur-lg">
-        <nav className={`${container} flex items-center justify-between py-4`}>
+        <Container className="flex items-center justify-between py-4">
           <div className="flex items-center gap-3">
             <span className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-500 text-xl font-semibold text-white shadow-soft">
               MF
@@ -88,34 +102,50 @@ const App = () => {
               <p className="text-xs uppercase tracking-[0.24em] text-ink-400">Humanity in Motion</p>
             </div>
           </div>
-          <div className="hidden items-center gap-8 text-sm font-semibold text-ink-600 md:flex">
-            <a className="transition hover:text-brand-600" href="#vision">
-              Vision
-            </a>
-            <a className="transition hover:text-brand-600" href="#volta">
-              Volta Focus
-            </a>
-            <a className="transition hover:text-brand-600" href="#programs">
-              Programs
-            </a>
-            <a className="transition hover:text-brand-600" href="#shop">
-              Shop
-            </a>
-            <a className="transition hover:text-brand-600" href="#donate">
-              Donate
-            </a>
-          </div>
-          <a
-            className="rounded-full bg-brand-500 px-6 py-2 text-sm font-semibold uppercase tracking-wide text-white shadow-soft transition hover:bg-brand-600"
-            href="#donate"
-          >
+          <nav aria-label="Primary">
+            <ul className="hidden items-center gap-8 text-sm font-semibold text-ink-600 md:flex">
+              <li>
+                <a className="transition hover:text-brand-600" href="#vision">
+                  Vision
+                </a>
+              </li>
+              <li>
+                <a className="transition hover:text-brand-600" href="#volta">
+                  Volta Focus
+                </a>
+              </li>
+              <li>
+                <a className="transition hover:text-brand-600" href="#programs">
+                  Programs
+                </a>
+              </li>
+              <li>
+                <a className="transition hover:text-brand-600" href="#shop">
+                  Shop
+                </a>
+              </li>
+              <li>
+                <a className="transition hover:text-brand-600" href="#donate">
+                  Donate
+                </a>
+              </li>
+            </ul>
+          </nav>
+          <Button as="a" href="#donate">
             Give Today
-          </a>
-        </nav>
+          </Button>
+        </Container>
       </header>
 
-      <main className="flex flex-col gap-20 pb-24">
-        <section id="vision" className="relative w-full overflow-hidden bg-ink-900 text-white shadow-soft">
+      <main className="flex flex-col" id="main">
+        <Section
+          background="inverted"
+          bleed
+          className="overflow-hidden shadow-soft"
+          containerClassName="relative flex flex-col gap-12 pb-16 pt-28 lg:flex-row lg:items-end lg:gap-16"
+          id="vision"
+          padding="none"
+        >
           <div className="absolute inset-0">
             <img
               alt="Community celebrating impact"
@@ -124,222 +154,292 @@ const App = () => {
             />
             <div className="absolute inset-0 bg-gradient-to-br from-ink-900 via-ink-900/80 to-brand-600/70" />
           </div>
-          <div className={`${container} relative flex flex-col gap-12 pb-16 pt-28 lg:flex-row lg:items-end lg:gap-16`}>
-            <div className="flex-1 space-y-6">
-              <span className="inline-flex items-center rounded-full bg-white/15 px-4 py-2 text-xs font-semibold uppercase tracking-[0.28em] text-brand-100">
-                Pan-African Mission
-              </span>
-              <h1 className="font-display text-4xl font-semibold leading-tight sm:text-5xl lg:text-6xl">
-                We co-create resilient futures with communities across Africa.
-              </h1>
-              <p className="max-w-xl text-lg leading-relaxed text-white/80">
-                From schools and clinics to regenerative water systems and thriving micro-enterprises, Mawu Foundation invests in
-                holistic impact ecosystems. This season we are activating a constellation of initiatives in Ghana’s Volta Region to
-                prototype solutions ready to travel continent-wide.
-              </p>
-              <div className="flex flex-col gap-3 sm:flex-row">
-                <a
-                  className="rounded-full bg-brand-500 px-7 py-3 text-center text-sm font-semibold uppercase tracking-wide text-white shadow-soft transition hover:bg-brand-600"
-                  href="#donate"
-                >
-                  Fuel the mission
-                </a>
-                <a
-                  className="rounded-full border border-white/40 px-7 py-3 text-center text-sm font-semibold uppercase tracking-wide text-white transition hover:border-brand-300 hover:text-brand-100"
-                  href="#volta"
-                >
-                  Tour Volta initiatives
-                </a>
-              </div>
-            </div>
-            <div className="flex flex-1 flex-col gap-4 rounded-3xl border border-white/15 bg-white/10 p-6 backdrop-blur">
-              <p className="text-sm font-semibold uppercase tracking-[0.24em] text-brand-100">Impact signals</p>
-              <div className="grid grid-cols-2 gap-4">
-                {impactStats.map((stat) => (
-                  <div key={stat.label} className="rounded-2xl border border-white/10 p-4">
-                    <p className={`text-3xl font-semibold ${stat.accent}`}>{stat.value}</p>
-                    <p className="mt-2 text-xs font-medium uppercase tracking-wide text-white/70">{stat.label}</p>
-                  </div>
-                ))}
-              </div>
-              <p className="text-xs text-white/70">
-                Data refreshed quarterly with auditing partners to keep investors and supporters informed in real time.
-              </p>
+          <div className="relative flex-1 space-y-6">
+            <Eyebrow className="text-brand-100">Pan-African Mission</Eyebrow>
+            <Heading className="text-white" level={1}>
+              We co-create resilient futures with communities across Africa.
+            </Heading>
+            <Body className="max-w-xl text-white/80" variant="light">
+              From schools and clinics to regenerative water systems and thriving micro-enterprises, Mawu Foundation invests in
+              holistic impact ecosystems. This season we are activating a constellation of initiatives in Ghana’s Volta Region to
+              prototype solutions ready to travel continent-wide.
+            </Body>
+            <div className="flex flex-col gap-3 sm:flex-row">
+              <Button as="a" href="#donate">
+                Fuel the mission
+              </Button>
+              <Button as="a" href="#volta" variant="secondary">
+                Tour Volta initiatives
+              </Button>
             </div>
           </div>
-        </section>
+          <Card
+            bleed
+            className="relative flex flex-1 flex-col gap-4 border-white/15 bg-white/10 p-6 backdrop-blur"
+          >
+            <CaptionBlock title="Impact signals" />
+            <div className="grid grid-cols-2 gap-4">
+              {impactStats.map((stat) => (
+                <div key={stat.label} className="rounded-2xl border border-white/10 p-4">
+                  <p className={`text-3xl font-semibold ${stat.accent}`}>{stat.value}</p>
+                  <p className="mt-2 text-xs font-medium uppercase tracking-wide text-white/70">{stat.label}</p>
+                </div>
+              ))}
+            </div>
+            <Body className="text-xs text-white/70" variant="light">
+              Data refreshed quarterly with auditing partners to keep investors and supporters informed in real time.
+            </Body>
+          </Card>
+        </Section>
 
-        <section
-          id="volta"
-          className={`${container} flex flex-col gap-12 rounded-[2.5rem] bg-white/70 p-10 shadow-soft`}
-        >
+        <Section background="tinted" id="volta">
           <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.28em] text-brand-600">Seasonal Spotlight</p>
-              <h2 className="mt-2 font-display text-3xl font-semibold text-ink-900 md:text-4xl">Volta Region, Ghana</h2>
+              <Eyebrow>Seasonal Spotlight</Eyebrow>
+              <Heading>Volta Region, Ghana</Heading>
             </div>
-            <p className="max-w-xl text-sm leading-relaxed text-ink-600">
+            <Body className="max-w-xl" variant="muted">
               A braided journey across education, health, water, and livelihoods—designed with chiefs, educators, and youth leaders
               to ensure dignity and sustainability.
-            </p>
+            </Body>
           </div>
-          <div className="grid gap-6 md:grid-cols-3">
+          <div className="mt-10 grid gap-6 md:grid-cols-3">
             {voltaInitiatives.map((initiative) => (
-              <article
-                key={initiative.title}
-                className="group relative overflow-hidden rounded-3xl border border-ink-100 bg-white shadow-soft/40"
-              >
+              <Card bleed className="group overflow-hidden" key={initiative.title}>
                 <img
                   alt={initiative.title}
                   className="h-48 w-full object-cover transition duration-700 group-hover:scale-105"
                   src={initiative.image}
                 />
                 <div className="space-y-4 p-6">
-                  <h3 className="font-display text-xl font-semibold text-ink-900">{initiative.title}</h3>
-                  <p className="text-sm leading-relaxed text-ink-600">{initiative.description}</p>
-                  <a className="inline-flex items-center gap-2 text-sm font-semibold text-brand-600" href="#impact">
-                    Explore the story <span aria-hidden>→</span>
-                  </a>
+                  <Heading className="text-xl" level={3}>
+                    {initiative.title}
+                  </Heading>
+                  <Body variant="muted">{initiative.description}</Body>
+                  <Button as="a" className="mt-2" href="#impact" size="sm" variant="ghost">
+                    Explore impact
+                  </Button>
                 </div>
-              </article>
+              </Card>
             ))}
           </div>
-        </section>
+        </Section>
 
-        <section id="programs" className={`relative ${container} overflow-hidden rounded-[2.5rem]`}>
-          <div className="absolute inset-0 bg-gradient-to-br from-brand-500/15 via-sand-100 to-white" />
-          <div className="relative grid gap-12 p-10 md:grid-cols-[1.2fr_1fr] md:items-center">
+        <Section id="programs">
+          <div className="grid gap-10 lg:grid-cols-[1.2fr_1fr] lg:items-start">
             <div className="space-y-6">
-              <p className="text-xs font-semibold uppercase tracking-[0.28em] text-brand-600">Core Programs</p>
-              <h2 className="font-display text-3xl font-semibold text-ink-900 md:text-4xl">
-                A network of programs designed to unlock possibility at every life stage.
-              </h2>
-              <p className="text-sm leading-relaxed text-ink-600">
-                Education, health, water, economic empowerment, and community development interweave to form a resilient support
-                lattice. Each initiative is designed to scale across regions with context-aware adaptations.
-              </p>
-              <div className="grid gap-4 md:grid-cols-2">
+              <Eyebrow>Experience Design</Eyebrow>
+              <Heading level={2}>A mission-driven experience for every supporter</Heading>
+              <Body>
+                We are building a digital ecosystem that meets donors, partners, and communities where they are. From real-time
+                telemetry to immersive storytelling, every interaction is crafted to inspire trust and collective action.
+              </Body>
+              <div className="grid gap-6 sm:grid-cols-3">
                 {experienceHighlights.map((highlight) => (
-                  <div key={highlight.title} className="rounded-2xl border border-brand-500/20 bg-white/60 p-5 shadow-soft/30">
-                    <div className="text-2xl">{highlight.icon}</div>
-                    <h3 className="mt-3 text-lg font-semibold text-ink-900">{highlight.title}</h3>
-                    <p className="mt-2 text-sm leading-relaxed text-ink-600">{highlight.description}</p>
-                  </div>
+                  <Card className="text-center" key={highlight.title}>
+                    <span aria-hidden className="text-3xl">
+                      {highlight.icon}
+                    </span>
+                    <Heading className="text-lg" level={4}>
+                      {highlight.title}
+                    </Heading>
+                    <Body variant="muted">{highlight.description}</Body>
+                  </Card>
                 ))}
               </div>
             </div>
-            <div className="space-y-6 rounded-3xl border border-white/40 bg-white/80 p-8 shadow-soft">
-              <div className="space-y-3">
-                <p className="text-xs font-semibold uppercase tracking-[0.28em] text-brand-600">How you can engage</p>
-                <ul className="space-y-3 text-sm leading-relaxed text-ink-600">
-                  <li>
-                    <span className="font-semibold text-ink-900">Invest:</span> Sponsor solar classrooms, medical outreach, or
-                    community finance labs via flexible giving tiers.
-                  </li>
-                  <li>
-                    <span className="font-semibold text-ink-900">Collaborate:</span> Co-design pilot programs with universities,
-                    NGOs, and social enterprises seeking regional partners.
-                  </li>
-                  <li>
-                    <span className="font-semibold text-ink-900">Volunteer:</span> Contribute skills remotely or on the ground—from
-                    UX research to health screenings and mentorship.
-                  </li>
-                </ul>
-              </div>
-              <a
-                className="inline-flex items-center gap-2 rounded-full bg-brand-500 px-6 py-3 text-sm font-semibold uppercase tracking-wide text-white shadow-soft transition hover:bg-brand-600"
-                href="#get-involved"
-              >
-                View engagement pathways <span aria-hidden>→</span>
-              </a>
-            </div>
+            <Card className="bg-gradient-to-br from-brand-500 via-brand-500/90 to-brand-700 text-white shadow-elevated">
+              <CardHeader>
+                <Heading className="text-white" level={3}>
+                  Pan-African Impact Framework
+                </Heading>
+                <Body className="text-white/80">
+                  Our integrated approach spans education, health, water, livelihoods, and climate resilience—sequenced with
+                  communities to deliver lasting change.
+                </Body>
+              </CardHeader>
+              <CardContent className="space-y-3 text-white/80">
+                <ChecklistItem>Education studios igniting digital literacy and future-ready skills.</ChecklistItem>
+                <ChecklistItem>Community health networks blending clinics, telemedicine, and mobile care.</ChecklistItem>
+                <ChecklistItem>Water security corridors with regenerative infrastructure and training.</ChecklistItem>
+                <ChecklistItem>Economic empowerment through microfinance, cooperatives, and creative hubs.</ChecklistItem>
+              </CardContent>
+              <CardFooter>
+                <Button as="a" href="#donate" size="sm" variant="secondary">
+                  Back the framework
+                </Button>
+                <Button as="a" href="#contact" size="sm" variant="ghost">
+                  Partner with us
+                </Button>
+              </CardFooter>
+            </Card>
           </div>
-        </section>
+        </Section>
 
-        <section
-          id="shop"
-          className={`${container} space-y-10 rounded-[2.5rem] bg-ink-900 px-10 py-14 text-white shadow-soft`}
-        >
-          <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+        <Section background="muted" id="shop">
+          <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.28em] text-brand-100">Foundation Merch</p>
-              <h2 className="font-display text-3xl font-semibold sm:text-4xl">Shop the impact-forward capsule</h2>
+              <Eyebrow>Impact Merch</Eyebrow>
+              <Heading>Shop the foundation capsule</Heading>
             </div>
-            <p className="max-w-xl text-sm leading-relaxed text-white/70">
-              Each piece funds a critical project milestone—from teacher training kits to water quality labs—so you can wear your
-              impact proudly.
-            </p>
+            <Body className="max-w-xl" variant="muted">
+              Each purchase fuels community-designed initiatives. Limited-run drops celebrate local artisanship and regenerative
+              materials.
+            </Body>
           </div>
-          <div className="grid gap-6 md:grid-cols-3">
+          <div className="mt-10 grid gap-6 md:grid-cols-3">
             {shopItems.map((item) => (
-              <article key={item.name} className="group overflow-hidden rounded-3xl border border-white/10 bg-white/5">
+              <Card bleed className="group overflow-hidden" key={item.name}>
                 <img
                   alt={item.name}
                   className="h-56 w-full object-cover transition duration-700 group-hover:scale-105"
                   src={item.image}
                 />
-                <div className="space-y-3 p-6">
-                  <h3 className="font-display text-lg font-semibold text-white">{item.name}</h3>
-                  <p className="text-sm leading-relaxed text-white/70">{item.description}</p>
-                  <div className="flex items-center justify-between text-sm font-semibold">
-                    <span>{item.price}</span>
-                    <button className="rounded-full bg-white/10 px-4 py-1 text-xs uppercase tracking-[0.24em] text-white transition hover:bg-white/20">
-                      Add to cart
-                    </button>
+                <div className="space-y-4 p-6">
+                  <Heading className="text-xl" level={3}>
+                    {item.name}
+                  </Heading>
+                  <Body variant="muted">{item.description}</Body>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-semibold text-brand-600">{item.price}</span>
+                    <Button size="sm" variant="ghost">
+                      Add to capsule
+                    </Button>
                   </div>
                 </div>
-              </article>
+              </Card>
             ))}
           </div>
-        </section>
+        </Section>
 
-        <section
-          id="donate"
-          className={`${container} flex flex-col items-center gap-6 rounded-[2.5rem] bg-white px-10 py-14 text-center shadow-soft`}
-        >
-          <p className="text-xs font-semibold uppercase tracking-[0.28em] text-brand-600">Stripe-enabled Giving</p>
-          <h2 className="font-display text-3xl font-semibold text-ink-900 sm:text-4xl">
-            Ready to activate hope? Join the movement with a secure Stripe donation.
-          </h2>
-          <p className="max-w-2xl text-sm leading-relaxed text-ink-600">
-            Choose one-time or recurring contributions, receive impact updates tailored to your interests, and unlock exclusive
-            access to immersive field briefings.
-          </p>
-          <div className="flex flex-col gap-3 sm:flex-row">
-            <a
-              className="rounded-full bg-brand-500 px-7 py-3 text-sm font-semibold uppercase tracking-wide text-white shadow-soft transition hover:bg-brand-600"
-              href="/donate"
-            >
-              Donate with Stripe
-            </a>
-            <a
-              className="rounded-full border border-ink-200 px-7 py-3 text-sm font-semibold uppercase tracking-wide text-ink-700 transition hover:border-brand-400 hover:text-brand-600"
-              href="#get-involved"
-            >
-              Other ways to engage
-            </a>
+        <Section background="tinted" id="donate">
+          <div className="grid gap-10 lg:grid-cols-[1.1fr_1fr] lg:items-center">
+            <div className="space-y-6">
+              <Eyebrow>Donate</Eyebrow>
+              <Heading level={2}>Stripe-secured giving for immediate impact</Heading>
+              <Body>
+                Select a focus area, choose a one-time or recurring cadence, and receive transparent reporting in your inbox. Stripe
+                handles secure payments today while we prepare to launch crypto, PayPal, bank transfer, and MoMo options soon.
+              </Body>
+              <div className="flex flex-wrap gap-3">
+                <Button size="lg">Donate with Stripe</Button>
+                <Button size="lg" variant="ghost">
+                  Coming soon: Crypto · PayPal · Bank · MoMo
+                </Button>
+              </div>
+            </div>
+            <Card className="bg-white/80 backdrop-blur">
+              <CardHeader>
+                <Heading level={3}>Ways to amplify change</Heading>
+                <Body variant="muted">
+                  Whether you are an individual donor or corporate ally, we tailor partnership tracks aligned to your goals.
+                </Body>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <ChecklistItem>Recurring donor circles with quarterly immersion briefings.</ChecklistItem>
+                <ChecklistItem>Corporate collaborations for infrastructure and innovation pilots.</ChecklistItem>
+                <ChecklistItem>Angel alliances underwriting rapid-response relief.</ChecklistItem>
+              </CardContent>
+              <CardFooter>
+                <Button as="a" href="mailto:partnerships@mawufoundation.org" size="sm" variant="secondary">
+                  Start a conversation
+                </Button>
+                <Button as="a" href="#newsletter" size="sm" variant="ghost">
+                  Join newsletter
+                </Button>
+              </CardFooter>
+            </Card>
           </div>
-          <div className="flex flex-col items-center gap-2 text-xs text-ink-500">
-            <p>Crypto · PayPal · Bank Transfer · Mobile Money — Coming Soon</p>
-            <p>All transactions encrypted and audited with global compliance partners.</p>
-          </div>
-        </section>
+        </Section>
+
+        <footer className="bg-ink-900 py-16 text-white">
+          <Container className="grid gap-8 md:grid-cols-[1.2fr_1fr]">
+            <div className="space-y-6">
+              <Heading className="text-white" level={3}>
+                Stay connected to the movement
+              </Heading>
+              <Body className="text-white/75" variant="light">
+                Receive quarterly impact letters, volunteering opportunities, and regional expansion news as we scale across
+                Africa.
+              </Body>
+              <form className="mt-4 flex flex-col gap-3 sm:flex-row">
+                <label className="sr-only" htmlFor="newsletter-email">
+                  Email address
+                </label>
+                <input
+                  className="h-12 flex-1 rounded-full border border-white/20 bg-white/10 px-5 text-sm text-white placeholder:text-white/60 focus:border-brand-200 focus:ring-brand-200 focus:outline-none"
+                  id="newsletter-email"
+                  name="email"
+                  placeholder="Enter your email"
+                  type="email"
+                />
+                <Button size="md" type="submit" variant="secondary">
+                  Subscribe
+                </Button>
+              </form>
+              <p className="text-xs text-white/50">
+                © {new Date().getFullYear()} Mawu Foundation. Crafted for investor previews—content subject to change.
+              </p>
+            </div>
+            <div className="grid grid-cols-2 gap-6 text-sm text-white/80 sm:grid-cols-3">
+              <div className="space-y-3">
+                <p className="font-semibold uppercase tracking-[0.18em] text-white/60">Explore</p>
+                <a className="transition hover:text-brand-200" href="#vision">
+                  Vision
+                </a>
+                <a className="transition hover:text-brand-200" href="#volta">
+                  Volta focus
+                </a>
+                <a className="transition hover:text-brand-200" href="#programs">
+                  Programs
+                </a>
+              </div>
+              <div className="space-y-3">
+                <p className="font-semibold uppercase tracking-[0.18em] text-white/60">Engage</p>
+                <a className="transition hover:text-brand-200" href="#donate">
+                  Donate
+                </a>
+                <a className="transition hover:text-brand-200" href="#shop">
+                  Shop
+                </a>
+                <a className="transition hover:text-brand-200" href="#newsletter">
+                  Newsletter
+                </a>
+              </div>
+              <div className="space-y-3">
+                <p className="font-semibold uppercase tracking-[0.18em] text-white/60">Connect</p>
+                <a className="transition hover:text-brand-200" href="mailto:hello@mawufoundation.org">
+                  hello@mawufoundation.org
+                </a>
+                <a className="transition hover:text-brand-200" href="tel:+233000000000">
+                  +233 000 000 000
+                </a>
+                <a className="transition hover:text-brand-200" href="#transparency">
+                  Transparency hub
+                </a>
+              </div>
+            </div>
+          </Container>
+        </footer>
       </main>
-
-      <footer className="border-t border-ink-100/40 bg-white/70 px-6 py-8 2xl:px-10">
-        <div className={`${container} flex flex-col gap-6 text-sm text-ink-500 sm:flex-row sm:items-center sm:justify-between`}>
-          <div>
-            <p className="font-semibold text-ink-700">© {new Date().getFullYear()} Mawu Foundation</p>
-            <p>Building regenerative impact across Africa with radical transparency.</p>
-          </div>
-          <div className="flex flex-col items-start gap-2 text-xs text-ink-400 sm:items-end">
-            <span className="font-semibold text-ink-600">Stripe active</span>
-            <span>Crypto · PayPal · Bank Transfer · Mobile Money — Coming Soon</span>
-          </div>
-        </div>
-      </footer>
     </div>
   );
 };
+
+const ChecklistItem = ({ children }: { children: ReactNode }) => (
+  <div className="flex items-start gap-3 text-sm text-ink-600">
+    <span aria-hidden className="mt-0.5 inline-flex h-5 w-5 items-center justify-center rounded-full bg-brand-500 text-xs font-semibold text-white">
+      ✓
+    </span>
+    <span className="flex-1 text-left text-ink-700">{children}</span>
+  </div>
+);
+
+const CaptionBlock = ({ title }: { title: string }) => (
+  <div className="flex items-center justify-between">
+    <p className="text-xs font-semibold uppercase tracking-[0.24em] text-brand-100">{title}</p>
+    <span className="text-xs text-white/60">Live insights</span>
+  </div>
+);
 
 export default App;

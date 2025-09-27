@@ -20,7 +20,7 @@ Use the following user stories to guide implementation. Check off items as they 
   - Root-level package manager tooling (pnpm or npm workspaces) configured for both apps.  
   - Shared scripts for install, build, and dev flows documented in README.
 
-- [ ] **Story: Establish design system foundations**  
+- [x] **Story: Establish design system foundations**
   **As a** UI/UX designer  
   **I want** global styling tokens and reusable components  
   **So that** the interface feels cohesive, modern, and accessible.  

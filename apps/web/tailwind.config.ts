@@ -44,11 +44,32 @@ const config: Config = {
         }
       },
       fontFamily: {
-        display: ['\"DM Sans\"', 'ui-sans-serif', 'system-ui'],
-        body: ['\"Work Sans\"', 'ui-sans-serif', 'system-ui']
+        display: ['"DM Sans"', 'ui-sans-serif', 'system-ui'],
+        body: ['"Work Sans"', 'ui-sans-serif', 'system-ui']
+      },
+      fontSize: {
+        '2xs': ['0.625rem', { lineHeight: '0.875rem', letterSpacing: '0.12em', fontWeight: '600' }],
+        'xs-tight': ['0.8125rem', { lineHeight: '1.125rem' }],
+        'sm-plus': ['0.9375rem', { lineHeight: '1.4rem' }]
+      },
+      spacing: {
+        '3xs': '0.25rem',
+        '2xs': '0.375rem',
+        '5.5': '1.375rem',
+        '18': '4.5rem'
+      },
+      borderRadius: {
+        '2xl': '1.5rem',
+        '3xl': '2rem',
+        '4xl': '2.5rem'
       },
       boxShadow: {
-        soft: '0 20px 45px -20px rgba(23, 34, 45, 0.35)'
+        soft: '0 20px 45px -20px rgba(23, 34, 45, 0.35)',
+        elevated: '0 35px 60px -25px rgba(23, 34, 45, 0.45)',
+        glow: '0 0 0 6px rgba(255, 122, 0, 0.18)'
+      },
+      transitionTimingFunction: {
+        brand: 'cubic-bezier(0.4, 0, 0.2, 1)'
       }
     }
   },
