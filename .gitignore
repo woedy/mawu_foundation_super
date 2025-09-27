@@ -1,0 +1,9 @@
+node_modules
+pnpm-lock.yaml
+yarn.lock
+.DS_Store
+.env
+apps/**/dist
+apps/**/build
+packages/**/dist
+**/tsconfig.tsbuildinfo
