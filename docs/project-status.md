@@ -8,6 +8,7 @@ The platform is in a strong mid-development state: the web client delivers a pol
 - A dedicated design system (`Button`, `Card`, `Container`, `Section`, `Typography`) with Storybook stories provides consistent CTAs, layout primitives, and accessible focus handling, ensuring the brand feels modern, spiritual, and trustworthy.【F:apps/web/src/design-system/Button.tsx†L1-L105】【F:apps/web/src/design-system/index.ts†L1-L33】
 - Tailwind tokens and CSS foundations keep the look cohesive, and the README positions Storybook as part of the investor demo workflow that highlights programs across education, health, water, finance, and community development.【F:README.md†L33-L55】
 
+
 ## API and shared services
 - The Express API (`apps/api`) currently exposes `GET /programs` and `GET /programs/:slug` endpoints backed by rich demo data, alongside a health check that reports Stripe configuration status, aligning with the continent-wide storytelling priorities while laying hooks for upcoming donation and volunteer features.【F:apps/api/src/index.ts†L1-L45】【F:apps/api/src/data/programs.ts†L1-L120】
 - Shared configuration lives in `packages/config`, where environment loading and validation ensure Stripe keys are enforced before production and log helpful warnings during development, preventing misconfiguration as fintech features come online.【F:packages/config/src/index.ts†L1-L68】

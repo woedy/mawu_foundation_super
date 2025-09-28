@@ -19,6 +19,7 @@ interface MerchShopSectionProps {
   apiBaseUrl: string;
 }
 
+
 interface FetchState {
   state: 'idle' | 'loading' | 'success' | 'error';
   message: string | null;

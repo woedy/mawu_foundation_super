@@ -12,6 +12,7 @@ import {
   Section
 } from '../design-system';
 
+
 type DonationFrequency = 'once' | 'monthly';
 
 interface TransparencyResource {

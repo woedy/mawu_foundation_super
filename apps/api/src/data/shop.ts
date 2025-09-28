@@ -15,6 +15,7 @@ export interface ShopProduct {
   inventory: number;
 }
 
+
 export interface ShopPaymentMethod {
   id: 'stripe' | 'mobile-money' | 'bank-transfer' | 'paypal' | 'crypto';
   label: string;

@@ -27,6 +27,7 @@ export const fallbackShopCatalog: ShopCatalogPayload = {
       ],
       availability: 'in_stock',
       inventory: 64
+      
     },
     {
       id: 'volta-horizon-hoodie',

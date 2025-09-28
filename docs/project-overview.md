@@ -7,6 +7,7 @@ The Mawu Foundation monorepo powers a humanitarian storytelling platform for a p
 - Presents the seasonal focus in the Volta Region with compelling narratives, imagery, and metrics that show how donations, schools, clinics, books, and infrastructure projects transform lives.
 - Reinforces trust with investor-ready polish—responsive layouts, accessible patterns documented in `docs/accessibility.md`, and clear CTAs for donating, volunteering, and partnering.
 
+
 ## Platform Architecture
 - **Front end (`apps/web`)**: Vite + React + TypeScript + Tailwind application featuring reusable design-system components, interactive program explorers, and resilient fallbacks when the API is offline.
 - **API (`apps/api`)**: Express.js TypeScript service exposing health checks, program and impact data, and the groundwork for donation, volunteer, and commerce integrations.
