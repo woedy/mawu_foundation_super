@@ -5,6 +5,7 @@ import { z } from "zod";
 import { loadEnvConfig } from "@mawu/config";
 import { programsPayload, programs } from "./data/programs";
 import { transparencyResources } from "./data/transparency";
+import { recordNewsletterSignup } from "./data/newsletter.store";
 import {
   shopCatalogPayload,
   shopPaymentMethods,
@@ -70,6 +71,17 @@ const partnershipRequestSchema = z.object({
   phone: z.string().optional(),
   partnershipType: z.string().min(2, "Select a collaboration track."),
   message: z.string().max(4000).optional(),
+});
+
+const newsletterRequestSchema = z.object({
+  email: z
+    .string()
+    .email("Please share a valid email so we can stay in touch."),
+  firstName: z.string().min(1).max(80).optional(),
+  lastName: z.string().min(1).max(80).optional(),
+  interests: z.array(z.string().min(1)).max(8).optional(),
+  source: z.string().min(1).max(60).optional(),
+  consent: z.boolean().optional().default(true),
 });
 
 const paymentMethodOptions = shopPaymentMethods.map((method) => method.id);
@@ -351,6 +363,56 @@ app.post("/donations/checkout", async (req, res) => {
   }
 });
 
+app.post("/engage/newsletter", async (req, res) => {
+  const parsed = newsletterRequestSchema.safeParse(req.body);
+
+  if (!parsed.success) {
+    res.status(400).json({ message: formatZodError(parsed.error) });
+    return;
+  }
+
+  const signup = parsed.data;
+
+  if (!signup.consent) {
+    res.status(400).json({
+      message: "Confirm your consent to receive updates before subscribing.",
+    });
+    return;
+  }
+
+  try {
+    const record = await recordNewsletterSignup({
+      email: signup.email,
+      firstName: signup.firstName,
+      lastName: signup.lastName,
+      interests: signup.interests ?? ["investor-updates"],
+      source: signup.source ?? "web_footer",
+      consent: signup.consent,
+    });
+
+    logger.info(
+      {
+        module: "newsletter",
+        email: record.email,
+        source: record.source,
+        interests: record.interests,
+      },
+      "Newsletter signup recorded",
+    );
+
+    res.status(201).json({
+      message:
+        "Medasi! You are now on the impact update list. Check your inbox for a welcome note soon.",
+    });
+  } catch (error) {
+    logger.error({ err: error }, "Newsletter signup failed");
+    res.status(500).json({
+      message:
+        "We could not add you to the newsletter right now. Please try again shortly.",
+    });
+  }
+});
+
 app.post("/engage/volunteer", (req, res) => {
   const parsed = volunteerRequestSchema.safeParse(req.body);
 
@@ -438,3 +500,4 @@ process.on("SIGTERM", () => {
     logger.info("HTTP server closed");
   });
 });
+

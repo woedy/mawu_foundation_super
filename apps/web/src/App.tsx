@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useState } from 'react';
-import type { ReactNode } from 'react';
+﻿import { useEffect, useMemo, useState } from "react";
+import type { FormEvent, ReactNode } from "react";
 import {
   Body,
   Button,
@@ -10,27 +10,47 @@ import {
   Container,
   Eyebrow,
   Heading,
-  Section
-} from './design-system';
-import { fallbackProgramsPayload } from './data/programs-fallback';
-import { cn } from './lib/cn';
+  Section,
+} from "./design-system";
+import { fallbackProgramsPayload } from "./data/programs-fallback";
+import { cn } from "./lib/cn";
+import { initAnalytics, trackEvent } from "./lib/analytics";
+import { StoriesSection } from "./sections/StoriesSection";
+import { TestimonialsSection } from "./sections/TestimonialsSection";
+
 import type {
   ProgramDetail,
   ProgramFilter,
   ProgramFocus,
-  ProgramsPayload
-} from './types/programs';
+  ProgramsPayload,
+} from "./types/programs";
 
-const API_BASE_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:3001';
-
+const API_BASE_URL = import.meta.env.VITE_API_URL ?? "http://localhost:3001";
 
 const App = () => {
-  const [programsPayload, setProgramsPayload] = useState<ProgramsPayload | null>(null);
+  const [programsPayload, setProgramsPayload] =
+    useState<ProgramsPayload | null>(null);
   const [programsLoading, setProgramsLoading] = useState<boolean>(true);
   const [programsError, setProgramsError] = useState<string | null>(null);
-  const [selectedCategory, setSelectedCategory] = useState<ProgramFilter>('All');
-  const [selectedProgramSlug, setSelectedProgramSlug] = useState<string | null>(null);
-  const [selectedFocus, setSelectedFocus] = useState<ProgramFocus>('volta');
+  const [selectedCategory, setSelectedCategory] =
+    useState<ProgramFilter>("All");
+  const [selectedProgramSlug, setSelectedProgramSlug] = useState<string | null>(
+    null,
+  );
+  const [selectedFocus, setSelectedFocus] = useState<ProgramFocus>("volta");
+
+  const [newsletterEmail, setNewsletterEmail] = useState<string>("");
+  const [newsletterStatus, setNewsletterStatus] = useState<
+    "idle" | "success" | "error"
+  >("idle");
+  const [newsletterMessage, setNewsletterMessage] = useState<string | null>(
+    null,
+  );
+  const [newsletterLoading, setNewsletterLoading] = useState<boolean>(false);
+
+  useEffect(() => {
+    initAnalytics();
+  }, []);
 
   useEffect(() => {
     let isActive = true;
@@ -40,7 +60,7 @@ const App = () => {
       try {
         setProgramsLoading(true);
         const response = await fetch(`${API_BASE_URL}/programs`, {
-          signal: controller.signal
+          signal: controller.signal,
         });
 
         if (!response.ok) {
@@ -60,14 +80,14 @@ const App = () => {
           return;
         }
 
-        if (error instanceof DOMException && error.name === 'AbortError') {
+        if (error instanceof DOMException && error.name === "AbortError") {
           return;
         }
 
-        console.error('Failed to load program data', error);
+        console.error("Failed to load program data", error);
         setProgramsPayload(fallbackProgramsPayload);
         setProgramsError(
-          'Live program insights are unavailable, so we are showing a demo snapshot instead. Start the API to see the latest data.'
+          "Live program insights are unavailable, so we are showing a demo snapshot instead. Start the API to see the latest data.",
         );
       } finally {
         if (isActive) {
@@ -90,7 +110,10 @@ const App = () => {
     }
 
     setSelectedProgramSlug((current) => {
-      if (current && programsPayload.programs.some((program) => program.slug === current)) {
+      if (
+        current &&
+        programsPayload.programs.some((program) => program.slug === current)
+      ) {
         return current;
       }
 
@@ -106,17 +129,29 @@ const App = () => {
     });
   }, [programsPayload]);
 
-  const categories = useMemo(() => programsPayload?.categories ?? [], [programsPayload]);
-  const programs = useMemo(() => programsPayload?.programs ?? [], [programsPayload]);
-  const regions = useMemo(() => programsPayload?.regions ?? [], [programsPayload]);
-  const metrics = useMemo(() => programsPayload?.impactMetrics ?? [], [programsPayload]);
+  const categories = useMemo(
+    () => programsPayload?.categories ?? [],
+    [programsPayload],
+  );
+  const programs = useMemo(
+    () => programsPayload?.programs ?? [],
+    [programsPayload],
+  );
+  const regions = useMemo(
+    () => programsPayload?.regions ?? [],
+    [programsPayload],
+  );
+  const metrics = useMemo(
+    () => programsPayload?.impactMetrics ?? [],
+    [programsPayload],
+  );
 
   const filteredPrograms = useMemo(() => {
     if (!programs.length) {
       return [] as ProgramDetail[];
     }
 
-    if (selectedCategory === 'All') {
+    if (selectedCategory === "All") {
       return programs;
     }
 
@@ -128,7 +163,10 @@ const App = () => {
       return;
     }
 
-    if (!selectedProgramSlug || !filteredPrograms.some((program) => program.slug === selectedProgramSlug)) {
+    if (
+      !selectedProgramSlug ||
+      !filteredPrograms.some((program) => program.slug === selectedProgramSlug)
+    ) {
       setSelectedProgramSlug(filteredPrograms[0].slug);
     }
   }, [filteredPrograms, selectedProgramSlug]);
@@ -147,7 +185,9 @@ const App = () => {
     }
 
     if (selectedProgramSlug) {
-      const match = programs.find((program) => program.slug === selectedProgramSlug);
+      const match = programs.find(
+        (program) => program.slug === selectedProgramSlug,
+      );
       if (match) {
         return match;
       }
@@ -161,77 +201,174 @@ const App = () => {
   }, [filteredPrograms, programs, selectedProgramSlug]);
 
   const impactStats = [
-    { label: 'Communities served across Africa', value: '48', accent: 'bg-brand-500/20 text-brand-100' },
-    { label: 'People gaining daily access to clean water', value: '32K', accent: 'bg-white/10 text-white' },
-    { label: 'Youth enrolled in future-ready classrooms', value: '12.4K', accent: 'bg-brand-500/20 text-brand-100' },
-    { label: 'Volunteers mobilised this season', value: '2.1K', accent: 'bg-white/10 text-white' }
+    {
+      label: "Communities served across Africa",
+      value: "48",
+      accent: "bg-brand-500/20 text-brand-100",
+    },
+    {
+      label: "People gaining daily access to clean water",
+      value: "32K",
+      accent: "bg-white/10 text-white",
+    },
+    {
+      label: "Youth enrolled in future-ready classrooms",
+      value: "12.4K",
+      accent: "bg-brand-500/20 text-brand-100",
+    },
+    {
+      label: "Volunteers mobilised this season",
+      value: "2.1K",
+      accent: "bg-white/10 text-white",
+    },
   ];
 
   const voltaInitiatives = [
     {
-      title: 'Solar Learning Labs',
+      title: "Solar Learning Labs",
       description:
-        'Off-grid classrooms in Keta and Hohoe blending digital curricula with local mentorship to accelerate STEM pathways.',
+        "Off-grid classrooms in Keta and Hohoe blending digital curricula with local mentorship to accelerate STEM pathways.",
       image:
-        'https://images.unsplash.com/photo-1523580846011-d3a5bc25702b?auto=format&fit=crop&w=1200&q=80'
+        "https://images.unsplash.com/photo-1523580846011-d3a5bc25702b?auto=format&fit=crop&w=1200&q=80",
     },
     {
-      title: 'Water & Wellness Corridors',
+      title: "Water & Wellness Corridors",
       description:
-        'Rain-harvesting towers and mobile clinics travelling between Anloga, Sogakope, and Akatsi ensuring continuity of care.',
+        "Rain-harvesting towers and mobile clinics travelling between Anloga, Sogakope, and Akatsi ensuring continuity of care.",
       image:
-        'https://images.unsplash.com/photo-1509099836639-18ba1795216d?auto=format&fit=crop&w=1200&q=80'
+        "https://images.unsplash.com/photo-1509099836639-18ba1795216d?auto=format&fit=crop&w=1200&q=80",
     },
     {
-      title: 'Resilient Livelihoods',
+      title: "Resilient Livelihoods",
       description:
-        'Cooperative agribusiness and microfinance studios helping families pilot climate-smart farming and artisan ventures.',
+        "Cooperative agribusiness and microfinance studios helping families pilot climate-smart farming and artisan ventures.",
       image:
-        'https://images.unsplash.com/photo-1526628953301-3e589a6a8b74?auto=format&fit=crop&w=1200&q=80'
-    }
+        "https://images.unsplash.com/photo-1526628953301-3e589a6a8b74?auto=format&fit=crop&w=1200&q=80",
+    },
   ];
 
   const experienceHighlights = [
     {
-      title: 'For Donors',
+      title: "For Donors",
       description:
-        'Transparent dashboards and immersive storytelling showcase exactly how each contribution powers change in the Volta Region and beyond.',
-      icon: '🤝'
+        "Transparent dashboards and immersive storytelling showcase exactly how each contribution powers change in the Volta Region and beyond.",
+      icon: "??",
     },
     {
-      title: 'For Partners',
+      title: "For Partners",
       description:
-        'Collaborative pilots with local leaders, governments, and innovators help scale successful models across the continent.',
-      icon: '🌍'
+        "Collaborative pilots with local leaders, governments, and innovators help scale successful models across the continent.",
+      icon: "??",
     },
     {
-      title: 'For Communities',
+      title: "For Communities",
       description:
-        'Human-centred design keeps every initiative co-created with residents, ensuring dignity, ownership, and long-term resilience.',
-      icon: '✨'
-    }
+        "Human-centred design keeps every initiative co-created with residents, ensuring dignity, ownership, and long-term resilience.",
+      icon: "?",
+    },
   ];
 
   const shopItems = [
     {
-      name: 'Aurora Impact Tee',
-      description: 'Organic cotton with hand-illustrated constellation of our partner communities.',
-      price: '$38',
-      image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=900&q=80'
+      name: "Aurora Impact Tee",
+      description:
+        "Organic cotton with hand-illustrated constellation of our partner communities.",
+      price: "$38",
+      image:
+        "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=900&q=80",
     },
     {
-      name: 'Unity Canvas Tote',
-      description: 'Carry hope with a limited-run print celebrating African artisanship.',
-      price: '$28',
-      image: 'https://images.unsplash.com/photo-1503341455253-b2e723bb3dbb?auto=format&fit=crop&w=900&q=80'
+      name: "Unity Canvas Tote",
+      description:
+        "Carry hope with a limited-run print celebrating African artisanship.",
+      price: "$28",
+      image:
+        "https://images.unsplash.com/photo-1503341455253-b2e723bb3dbb?auto=format&fit=crop&w=900&q=80",
     },
     {
-      name: 'Volta Sunrise Hoodie',
-      description: 'Cozy fleece dyed in sunrise gradients funding solar microgrid installations.',
-      price: '$68',
-      image: 'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=900&q=80'
-    }
+      name: "Volta Sunrise Hoodie",
+      description:
+        "Cozy fleece dyed in sunrise gradients funding solar microgrid installations.",
+      price: "$68",
+      image:
+        "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=900&q=80",
+    },
   ];
+  const handleNewsletterSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    const trimmedEmail = newsletterEmail.trim();
+    if (!trimmedEmail) {
+      setNewsletterStatus("error");
+      setNewsletterMessage("Add your email so we can send updates.");
+      return;
+    }
+
+    setNewsletterLoading(true);
+    setNewsletterStatus("idle");
+    setNewsletterMessage(null);
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/engage/newsletter`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: trimmedEmail,
+          source: "web_footer",
+          interests: ["investor-updates"],
+          consent: true,
+        }),
+      });
+
+      let payload: { message?: string } | null = null;
+      try {
+        payload = await response.json();
+      } catch (error) {
+        payload = null;
+      }
+
+      if (!response.ok) {
+        throw new Error(
+          payload?.message ??
+            "We could not add you to the newsletter right now. Please try again shortly.",
+        );
+      }
+
+      setNewsletterStatus("success");
+      setNewsletterMessage(
+        payload?.message ??
+          "Medasi! You are now on the impact update list. Check your inbox for a welcome note soon.",
+      );
+      setNewsletterEmail("");
+      trackEvent("newsletter_subscribed", {
+        status: "success",
+        source: "web_footer",
+      });
+    } catch (error) {
+      const message =
+        error instanceof Error
+          ? error.message
+          : "We could not add you to the newsletter right now. Please try again shortly.";
+
+      setNewsletterStatus("error");
+      setNewsletterMessage(message);
+      trackEvent("newsletter_subscribed", {
+        status: "error",
+        source: "web_footer",
+      });
+    } finally {
+      setNewsletterLoading(false);
+    }
+  };
+
+  const newsletterFeedbackTone =
+    newsletterStatus === "success"
+      ? "text-emerald-300"
+      : newsletterStatus === "error"
+        ? "text-rose-300"
+        : "text-white/60";
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-sand-50 via-white to-sand-100 text-ink-900">
@@ -245,8 +382,12 @@ const App = () => {
               MF
             </span>
             <div>
-              <p className="font-display text-lg font-semibold text-ink-900">Mawu Foundation</p>
-              <p className="text-xs uppercase tracking-[0.24em] text-ink-400">Humanity in Motion</p>
+              <p className="font-display text-lg font-semibold text-ink-900">
+                Mawu Foundation
+              </p>
+              <p className="text-xs uppercase tracking-[0.24em] text-ink-400">
+                Humanity in Motion
+              </p>
             </div>
           </div>
           <nav aria-label="Primary">
@@ -264,6 +405,16 @@ const App = () => {
               <li>
                 <a className="transition hover:text-brand-600" href="#programs">
                   Programs
+                </a>
+              </li>
+              <li>
+                <a className="transition hover:text-brand-600" href="#stories">
+                  Stories
+                </a>
+              </li>
+              <li>
+                <a className="transition hover:text-brand-600" href="#voices">
+                  Voices
                 </a>
               </li>
               <li>
@@ -307,9 +458,11 @@ const App = () => {
               We co-create resilient futures with communities across Africa.
             </Heading>
             <Body className="max-w-xl text-white/80" variant="light">
-              From schools and clinics to regenerative water systems and thriving micro-enterprises, Mawu Foundation invests in
-              holistic impact ecosystems. This season we are activating a constellation of initiatives in Ghana’s Volta Region to
-              prototype solutions ready to travel continent-wide.
+              From schools and clinics to regenerative water systems and
+              thriving micro-enterprises, Mawu Foundation invests in holistic
+              impact ecosystems. This season we are activating a constellation
+              of initiatives in Ghana's Volta Region to prototype solutions
+              ready to travel continent-wide.
             </Body>
             <div className="flex flex-col gap-3 sm:flex-row">
               <Button as="a" href="#donate">
@@ -327,14 +480,22 @@ const App = () => {
             <CaptionBlock title="Impact signals" />
             <div className="grid grid-cols-2 gap-4">
               {impactStats.map((stat) => (
-                <div key={stat.label} className="rounded-2xl border border-white/10 p-4">
-                  <p className={`text-3xl font-semibold ${stat.accent}`}>{stat.value}</p>
-                  <p className="mt-2 text-xs font-medium uppercase tracking-wide text-white/70">{stat.label}</p>
+                <div
+                  key={stat.label}
+                  className="rounded-2xl border border-white/10 p-4"
+                >
+                  <p className={`text-3xl font-semibold ${stat.accent}`}>
+                    {stat.value}
+                  </p>
+                  <p className="mt-2 text-xs font-medium uppercase tracking-wide text-white/70">
+                    {stat.label}
+                  </p>
                 </div>
               ))}
             </div>
             <Body className="text-xs text-white/70" variant="light">
-              Data refreshed quarterly with auditing partners to keep investors and supporters informed in real time.
+              Data refreshed quarterly with auditing partners to keep investors
+              and supporters informed in real time.
             </Body>
           </Card>
         </Section>
@@ -346,13 +507,18 @@ const App = () => {
               <Heading>Volta Region, Ghana</Heading>
             </div>
             <Body className="max-w-xl" variant="muted">
-              A braided journey across education, health, water, and livelihoods—designed with chiefs, educators, and youth leaders
-              to ensure dignity and sustainability.
+              A braided journey across education, health, water, and
+              livelihoods--designed with chiefs, educators, and youth leaders to
+              ensure dignity and sustainability.
             </Body>
           </div>
           <div className="mt-10 grid gap-6 md:grid-cols-3">
             {voltaInitiatives.map((initiative) => (
-              <Card bleed className="group overflow-hidden" key={initiative.title}>
+              <Card
+                bleed
+                className="group overflow-hidden"
+                key={initiative.title}
+              >
                 <img
                   alt={initiative.title}
                   className="h-48 w-full object-cover transition duration-700 group-hover:scale-105"
@@ -363,7 +529,13 @@ const App = () => {
                     {initiative.title}
                   </Heading>
                   <Body variant="muted">{initiative.description}</Body>
-                  <Button as="a" className="mt-2" href="#impact" size="sm" variant="ghost">
+                  <Button
+                    as="a"
+                    className="mt-2"
+                    href="#impact"
+                    size="sm"
+                    variant="ghost"
+                  >
                     Explore impact
                   </Button>
                 </div>
@@ -377,10 +549,14 @@ const App = () => {
             <div className="grid gap-10 xl:grid-cols-[1.05fr_0.95fr] xl:items-center">
               <div className="space-y-6">
                 <Eyebrow>Programs &amp; Impact Explorer</Eyebrow>
-                <Heading level={2}>Navigate the initiatives powering Mawu Foundation</Heading>
+                <Heading level={2}>
+                  Navigate the initiatives powering Mawu Foundation
+                </Heading>
                 <Body>
-                  Discover how continent-spanning visions connect with our current Volta Region pilots. Filter by impact area,
-                  explore focus regions, and dive into program narratives sourced directly from our field teams.
+                  Discover how continent-spanning visions connect with our
+                  current Volta Region pilots. Filter by impact area, explore
+                  focus regions, and dive into program narratives sourced
+                  directly from our field teams.
                 </Body>
                 <div
                   aria-label="Select focus region"
@@ -393,7 +569,9 @@ const App = () => {
                       aria-pressed={activeRegion?.id === region.id}
                       onClick={() => setSelectedFocus(region.id)}
                       size="sm"
-                      variant={activeRegion?.id === region.id ? 'primary' : 'ghost'}
+                      variant={
+                        activeRegion?.id === region.id ? "primary" : "ghost"
+                      }
                     >
                       {region.name}
                     </Button>
@@ -411,8 +589,12 @@ const App = () => {
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-ink-900/80 via-ink-900/10 to-transparent" />
                       <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
-                        <p className="text-xs font-semibold uppercase tracking-[0.24em] text-white/70">Seasonal focus</p>
-                        <p className="mt-2 text-xl font-semibold">{activeRegion.name}</p>
+                        <p className="text-xs font-semibold uppercase tracking-[0.24em] text-white/70">
+                          Seasonal focus
+                        </p>
+                        <p className="mt-2 text-xl font-semibold">
+                          {activeRegion.name}
+                        </p>
                       </div>
                     </div>
                     <CardContent className="space-y-5">
@@ -420,17 +602,26 @@ const App = () => {
                       <div className="flex flex-wrap gap-6 text-sm font-semibold text-brand-700">
                         {activeRegion.stats.map((stat) => (
                           <div key={stat.label} className="flex flex-col">
-                            <span className="text-2xl text-ink-900">{stat.value}</span>
-                            <span className="text-xs uppercase tracking-[0.2em] text-ink-400">{stat.label}</span>
+                            <span className="text-2xl text-ink-900">
+                              {stat.value}
+                            </span>
+                            <span className="text-xs uppercase tracking-[0.2em] text-ink-400">
+                              {stat.label}
+                            </span>
                           </div>
                         ))}
                       </div>
                       <div>
-                        <p className="text-xs font-semibold uppercase tracking-[0.24em] text-ink-400">Current priorities</p>
+                        <p className="text-xs font-semibold uppercase tracking-[0.24em] text-ink-400">
+                          Current priorities
+                        </p>
                         <ul className="mt-3 space-y-2 text-sm text-ink-700">
                           {activeRegion.priorities.map((priority) => (
                             <li key={priority} className="flex gap-3">
-                              <span aria-hidden className="mt-1 h-2 w-2 rounded-full bg-brand-500" />
+                              <span
+                                aria-hidden
+                                className="mt-1 h-2 w-2 rounded-full bg-brand-500"
+                              />
                               <span>{priority}</span>
                             </li>
                           ))}
@@ -440,8 +631,10 @@ const App = () => {
                   </>
                 ) : (
                   <CardContent className="space-y-3">
-                    <Heading level={3}>Loading focus regions…</Heading>
-                    <Body variant="muted">Hold tight while we prepare the explorer.</Body>
+                    <Heading level={3}>Loading focus regions...</Heading>
+                    <Body variant="muted">
+                      Hold tight while we prepare the explorer.
+                    </Body>
                   </CardContent>
                 )}
               </Card>
@@ -462,11 +655,20 @@ const App = () => {
               ) : null}
               {metrics.length
                 ? metrics.map((metric) => (
-                    <Card className="border border-ink-100/60 bg-white/80 p-6 shadow-soft" key={metric.label}>
-                      <p className="text-xs font-semibold uppercase tracking-[0.24em] text-ink-400">{metric.label}</p>
-                      <p className="mt-3 text-3xl font-semibold text-brand-700">{metric.value}</p>
+                    <Card
+                      className="border border-ink-100/60 bg-white/80 p-6 shadow-soft"
+                      key={metric.label}
+                    >
+                      <p className="text-xs font-semibold uppercase tracking-[0.24em] text-ink-400">
+                        {metric.label}
+                      </p>
+                      <p className="mt-3 text-3xl font-semibold text-brand-700">
+                        {metric.value}
+                      </p>
                       {metric.trend ? (
-                        <p className="mt-1 text-xs font-semibold uppercase tracking-[0.18em] text-brand-600">{metric.trend}</p>
+                        <p className="mt-1 text-xs font-semibold uppercase tracking-[0.18em] text-brand-600">
+                          {metric.trend}
+                        </p>
                       ) : null}
                       {metric.description ? (
                         <Body className="mt-3 text-xs" variant="muted">
@@ -489,19 +691,25 @@ const App = () => {
 
             <div className="space-y-8">
               <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.24em] text-ink-400">Filter by impact area</p>
+                <p className="text-xs font-semibold uppercase tracking-[0.24em] text-ink-400">
+                  Filter by impact area
+                </p>
                 <div
                   aria-label="Filter programs by category"
                   className="mt-4 flex flex-wrap gap-3"
                   role="group"
                 >
-                  {['All', ...categories].map((category) => (
+                  {["All", ...categories].map((category) => (
                     <Button
                       key={category}
                       aria-pressed={selectedCategory === category}
-                      onClick={() => setSelectedCategory(category as ProgramFilter)}
+                      onClick={() =>
+                        setSelectedCategory(category as ProgramFilter)
+                      }
                       size="sm"
-                      variant={selectedCategory === category ? 'primary' : 'ghost'}
+                      variant={
+                        selectedCategory === category ? "primary" : "ghost"
+                      }
                     >
                       {category}
                     </Button>
@@ -512,7 +720,10 @@ const App = () => {
                 <div className="space-y-4">
                   {programsLoading && !filteredPrograms.length ? (
                     Array.from({ length: 3 }).map((_, index) => (
-                      <Card className="animate-pulse border border-ink-100/50 bg-white/70 p-6" key={`program-skeleton-${index}`}>
+                      <Card
+                        className="animate-pulse border border-ink-100/50 bg-white/70 p-6"
+                        key={`program-skeleton-${index}`}
+                      >
                         <div className="h-4 w-2/3 rounded-full bg-ink-200/60" />
                         <div className="mt-3 h-3 w-1/2 rounded-full bg-ink-100/60" />
                         <div className="mt-4 h-3 w-full rounded-full bg-ink-100/60" />
@@ -522,8 +733,9 @@ const App = () => {
                     filteredPrograms.map((program) => (
                       <Card
                         className={cn(
-                          'border border-ink-100/60 bg-white/80 p-6 text-left shadow-soft transition hover:-translate-y-0.5 hover:shadow-elevated focus-within:border-brand-400',
-                          selectedProgram?.slug === program.slug && 'border-brand-500 shadow-elevated'
+                          "border border-ink-100/60 bg-white/80 p-6 text-left shadow-soft transition hover:-translate-y-0.5 hover:shadow-elevated focus-within:border-brand-400",
+                          selectedProgram?.slug === program.slug &&
+                            "border-brand-500 shadow-elevated",
                         )}
                         key={program.slug}
                       >
@@ -541,18 +753,29 @@ const App = () => {
                         <div className="mt-4 flex flex-wrap items-center gap-3 text-sm font-semibold text-brand-700">
                           <span>{program.spotlightStatistic}</span>
                           <span className="rounded-full bg-ink-900/90 px-3 py-1 text-xs uppercase tracking-[0.2em] text-white">
-                            {program.focus === 'volta' ? 'Volta Focus' : 'Pan-African'}
+                            {program.focus === "volta"
+                              ? "Volta Focus"
+                              : "Pan-African"}
                           </span>
                         </div>
                         <div className="mt-5 flex flex-wrap gap-3">
                           <Button
                             onClick={() => setSelectedProgramSlug(program.slug)}
                             size="sm"
-                            variant={selectedProgram?.slug === program.slug ? 'primary' : 'ghost'}
+                            variant={
+                              selectedProgram?.slug === program.slug
+                                ? "primary"
+                                : "ghost"
+                            }
                           >
                             Preview story
                           </Button>
-                          <Button as="a" href={`#program-${program.slug}`} size="sm" variant="secondary">
+                          <Button
+                            as="a"
+                            href={`#program-${program.slug}`}
+                            size="sm"
+                            variant="secondary"
+                          >
                             Read full narrative
                           </Button>
                         </div>
@@ -561,7 +784,9 @@ const App = () => {
                   ) : (
                     <Card className="border border-ink-100/60 bg-white/70">
                       <CardContent>
-                        <Body variant="muted">No programs match this filter yet.</Body>
+                        <Body variant="muted">
+                          No programs match this filter yet.
+                        </Body>
                       </CardContent>
                     </Card>
                   )}
@@ -577,8 +802,12 @@ const App = () => {
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-ink-900/85 via-ink-900/10 to-transparent" />
                         <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
-                          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-white/70">Impact spotlight</p>
-                          <p className="mt-2 text-lg font-semibold">{selectedProgram.spotlightStatistic}</p>
+                          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-white/70">
+                            Impact spotlight
+                          </p>
+                          <p className="mt-2 text-lg font-semibold">
+                            {selectedProgram.spotlightStatistic}
+                          </p>
                         </div>
                       </div>
                       <CardContent className="space-y-4">
@@ -587,16 +816,28 @@ const App = () => {
                         </Heading>
                         <Body variant="muted">{selectedProgram.summary}</Body>
                         <blockquote className="rounded-2xl bg-brand-50/80 p-4 text-sm text-brand-800">
-                          <p className="italic">“{selectedProgram.highlightQuote.quote}”</p>
+                          <p className="italic">
+                            "{selectedProgram.highlightQuote.quote}"
+                          </p>
                           <p className="mt-2 text-xs font-semibold uppercase tracking-[0.2em] text-brand-600">
                             {selectedProgram.highlightQuote.attribution}
                           </p>
                         </blockquote>
                         <div className="flex flex-wrap gap-3">
-                          <Button as="a" href={`#program-${selectedProgram.slug}`} size="sm" variant="secondary">
+                          <Button
+                            as="a"
+                            href={`#program-${selectedProgram.slug}`}
+                            size="sm"
+                            variant="secondary"
+                          >
                             Deep dive into the program
                           </Button>
-                          <Button as="a" href="#donate" size="sm" variant="ghost">
+                          <Button
+                            as="a"
+                            href="#donate"
+                            size="sm"
+                            variant="ghost"
+                          >
                             Fund this initiative
                           </Button>
                         </div>
@@ -605,7 +846,9 @@ const App = () => {
                   ) : (
                     <Card className="border border-ink-100/60 bg-white/70">
                       <CardContent>
-                        <Body variant="muted">Select a program to preview its story.</Body>
+                        <Body variant="muted">
+                          Select a program to preview its story.
+                        </Body>
                       </CardContent>
                     </Card>
                   )}
@@ -616,7 +859,9 @@ const App = () => {
             <div className="grid gap-6 sm:grid-cols-3">
               {experienceHighlights.map((highlight) => (
                 <Card className="text-center" key={highlight.title}>
-                  <span aria-hidden className="text-3xl">{highlight.icon}</span>
+                  <span aria-hidden className="text-3xl">
+                    {highlight.icon}
+                  </span>
                   <Heading className="text-lg" level={4}>
                     {highlight.title}
                   </Heading>
@@ -631,6 +876,9 @@ const App = () => {
           <ProgramDetailSection key={program.slug} program={program} />
         ))}
 
+        <StoriesSection />
+        <TestimonialsSection />
+
         <Section background="muted" id="shop">
           <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
             <div>
@@ -638,8 +886,8 @@ const App = () => {
               <Heading>Shop the foundation capsule</Heading>
             </div>
             <Body className="max-w-xl" variant="muted">
-              Each purchase fuels community-designed initiatives. Limited-run drops celebrate local artisanship and regenerative
-              materials.
+              Each purchase fuels community-designed initiatives. Limited-run
+              drops celebrate local artisanship and regenerative materials.
             </Body>
           </div>
           <div className="mt-10 grid gap-6 md:grid-cols-3">
@@ -656,7 +904,9 @@ const App = () => {
                   </Heading>
                   <Body variant="muted">{item.description}</Body>
                   <div className="flex items-center justify-between">
-                    <span className="text-sm font-semibold text-brand-600">{item.price}</span>
+                    <span className="text-sm font-semibold text-brand-600">
+                      {item.price}
+                    </span>
                     <Button size="sm" variant="ghost">
                       Add to capsule
                     </Button>
@@ -671,15 +921,19 @@ const App = () => {
           <div className="grid gap-10 lg:grid-cols-[1.1fr_1fr] lg:items-center">
             <div className="space-y-6">
               <Eyebrow>Donate</Eyebrow>
-              <Heading level={2}>Stripe-secured giving for immediate impact</Heading>
+              <Heading level={2}>
+                Stripe-secured giving for immediate impact
+              </Heading>
               <Body>
-                Select a focus area, choose a one-time or recurring cadence, and receive transparent reporting in your inbox. Stripe
-                handles secure payments today while we prepare to launch crypto, PayPal, bank transfer, and MoMo options soon.
+                Select a focus area, choose a one-time or recurring cadence, and
+                receive transparent reporting in your inbox. Stripe handles
+                secure payments today while we prepare to launch crypto, PayPal,
+                bank transfer, and MoMo options soon.
               </Body>
               <div className="flex flex-wrap gap-3">
                 <Button size="lg">Donate with Stripe</Button>
                 <Button size="lg" variant="ghost">
-                  Coming soon: Crypto · PayPal · Bank · MoMo
+                  Coming soon: Crypto / PayPal / Bank / MoMo
                 </Button>
               </div>
             </div>
@@ -687,16 +941,29 @@ const App = () => {
               <CardHeader>
                 <Heading level={3}>Ways to amplify change</Heading>
                 <Body variant="muted">
-                  Whether you are an individual donor or corporate ally, we tailor partnership tracks aligned to your goals.
+                  Whether you are an individual donor or corporate ally, we
+                  tailor partnership tracks aligned to your goals.
                 </Body>
               </CardHeader>
               <CardContent className="space-y-4">
-                <ChecklistItem>Recurring donor circles with quarterly immersion briefings.</ChecklistItem>
-                <ChecklistItem>Corporate collaborations for infrastructure and innovation pilots.</ChecklistItem>
-                <ChecklistItem>Angel alliances underwriting rapid-response relief.</ChecklistItem>
+                <ChecklistItem>
+                  Recurring donor circles with quarterly immersion briefings.
+                </ChecklistItem>
+                <ChecklistItem>
+                  Corporate collaborations for infrastructure and innovation
+                  pilots.
+                </ChecklistItem>
+                <ChecklistItem>
+                  Angel alliances underwriting rapid-response relief.
+                </ChecklistItem>
               </CardContent>
               <CardFooter>
-                <Button as="a" href="mailto:partnerships@mawufoundation.org" size="sm" variant="secondary">
+                <Button
+                  as="a"
+                  href="mailto:partnerships@mawufoundation.org"
+                  size="sm"
+                  variant="secondary"
+                >
                   Start a conversation
                 </Button>
                 <Button as="a" href="#newsletter" size="sm" variant="ghost">
@@ -714,31 +981,68 @@ const App = () => {
                 Stay connected to the movement
               </Heading>
               <Body className="text-white/75" variant="light">
-                Receive quarterly impact letters, volunteering opportunities, and regional expansion news as we scale across
-                Africa.
+                Receive quarterly impact letters, volunteering opportunities,
+                and regional expansion news as we scale across Africa.
               </Body>
-              <form className="mt-4 flex flex-col gap-3 sm:flex-row">
+              <form
+                className="mt-4 flex flex-col gap-3 sm:flex-row"
+                id="newsletter"
+                noValidate
+                onSubmit={handleNewsletterSubmit}
+              >
                 <label className="sr-only" htmlFor="newsletter-email">
                   Email address
                 </label>
                 <input
-                  className="h-12 flex-1 rounded-full border border-white/20 bg-white/10 px-5 text-sm text-white placeholder:text-white/60 focus:border-brand-200 focus:ring-brand-200 focus:outline-none"
+                  aria-invalid={newsletterStatus === "error"}
+                  autoComplete="email"
+                  className="h-12 flex-1 rounded-full border border-white/20 bg-white/10 px-5 text-sm text-white placeholder:text-white/60 focus:border-brand-200 focus:ring-brand-200 focus:outline-none disabled:cursor-not-allowed"
+                  disabled={newsletterLoading}
                   id="newsletter-email"
                   name="email"
+                  onChange={(event) => {
+                    setNewsletterEmail(event.target.value);
+                    if (newsletterStatus !== "idle") {
+                      setNewsletterStatus("idle");
+                      setNewsletterMessage(null);
+                    }
+                  }}
                   placeholder="Enter your email"
+                  required
                   type="email"
+                  value={newsletterEmail}
                 />
-                <Button size="md" type="submit" variant="secondary">
-                  Subscribe
+                <Button
+                  aria-busy={newsletterLoading}
+                  disabled={newsletterLoading}
+                  size="md"
+                  type="submit"
+                  variant="secondary"
+                >
+                  {newsletterLoading ? "Subscribing..." : "Subscribe"}
                 </Button>
               </form>
+              {newsletterMessage ? (
+                <p
+                  aria-live="polite"
+                  className={cn(
+                    "text-xs font-semibold",
+                    newsletterFeedbackTone,
+                  )}
+                >
+                  {newsletterMessage}
+                </p>
+              ) : null}
               <p className="text-xs text-white/50">
-                © {new Date().getFullYear()} Mawu Foundation. Crafted for investor previews—content subject to change.
+                (c) {new Date().getFullYear()} Mawu Foundation. Crafted for
+                investor previews--content subject to change.
               </p>
             </div>
             <div className="grid grid-cols-2 gap-6 text-sm text-white/80 sm:grid-cols-3">
               <div className="space-y-3">
-                <p className="font-semibold uppercase tracking-[0.18em] text-white/60">Explore</p>
+                <p className="font-semibold uppercase tracking-[0.18em] text-white/60">
+                  Explore
+                </p>
                 <a className="transition hover:text-brand-200" href="#vision">
                   Vision
                 </a>
@@ -748,28 +1052,50 @@ const App = () => {
                 <a className="transition hover:text-brand-200" href="#programs">
                   Programs
                 </a>
+                <a className="transition hover:text-brand-200" href="#stories">
+                  Stories
+                </a>
+                <a className="transition hover:text-brand-200" href="#voices">
+                  Voices
+                </a>
               </div>
               <div className="space-y-3">
-                <p className="font-semibold uppercase tracking-[0.18em] text-white/60">Engage</p>
+                <p className="font-semibold uppercase tracking-[0.18em] text-white/60">
+                  Engage
+                </p>
                 <a className="transition hover:text-brand-200" href="#donate">
                   Donate
                 </a>
                 <a className="transition hover:text-brand-200" href="#shop">
                   Shop
                 </a>
-                <a className="transition hover:text-brand-200" href="#newsletter">
+                <a
+                  className="transition hover:text-brand-200"
+                  href="#newsletter"
+                >
                   Newsletter
                 </a>
               </div>
               <div className="space-y-3">
-                <p className="font-semibold uppercase tracking-[0.18em] text-white/60">Connect</p>
-                <a className="transition hover:text-brand-200" href="mailto:hello@mawufoundation.org">
+                <p className="font-semibold uppercase tracking-[0.18em] text-white/60">
+                  Connect
+                </p>
+                <a
+                  className="transition hover:text-brand-200"
+                  href="mailto:hello@mawufoundation.org"
+                >
                   hello@mawufoundation.org
                 </a>
-                <a className="transition hover:text-brand-200" href="tel:+233000000000">
+                <a
+                  className="transition hover:text-brand-200"
+                  href="tel:+233000000000"
+                >
                   +233 000 000 000
                 </a>
-                <a className="transition hover:text-brand-200" href="#transparency">
+                <a
+                  className="transition hover:text-brand-200"
+                  href="#transparency"
+                >
                   Transparency hub
                 </a>
               </div>
@@ -783,7 +1109,7 @@ const App = () => {
 
 const ProgramDetailSection = ({ program }: { program: ProgramDetail }) => (
   <Section
-    background={program.focus === 'volta' ? 'tinted' : 'default'}
+    background={program.focus === "volta" ? "tinted" : "default"}
     id={`program-${program.slug}`}
     paddedContainer
   >
@@ -793,10 +1119,18 @@ const ProgramDetailSection = ({ program }: { program: ProgramDetail }) => (
         <Heading level={2}>{program.title}</Heading>
         <Body>{program.excerpt}</Body>
         <Card className="overflow-hidden shadow-soft">
-          <img alt={program.title} className="h-64 w-full object-cover" src={program.heroImage} />
+          <img
+            alt={program.title}
+            className="h-64 w-full object-cover"
+            src={program.heroImage}
+          />
           <div className="p-6">
-            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-brand-600">Season highlight</p>
-            <p className="mt-2 text-lg font-semibold text-brand-700">{program.spotlightStatistic}</p>
+            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-brand-600">
+              Season highlight
+            </p>
+            <p className="mt-2 text-lg font-semibold text-brand-700">
+              {program.spotlightStatistic}
+            </p>
           </div>
         </Card>
         <div className="space-y-4">
@@ -806,7 +1140,10 @@ const ProgramDetailSection = ({ program }: { program: ProgramDetail }) => (
           <ul className="space-y-2 text-sm text-ink-700">
             {program.outcomes.map((outcome) => (
               <li key={outcome} className="flex gap-3">
-                <span aria-hidden className="mt-1.5 h-2 w-2 rounded-full bg-brand-500" />
+                <span
+                  aria-hidden
+                  className="mt-1.5 h-2 w-2 rounded-full bg-brand-500"
+                />
                 <span>{outcome}</span>
               </li>
             ))}
@@ -826,8 +1163,12 @@ const ProgramDetailSection = ({ program }: { program: ProgramDetail }) => (
       <div className="space-y-6">
         <Card className="bg-ink-900 text-white shadow-soft">
           <CardContent className="space-y-4">
-            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-brand-200/80">Community voice</p>
-            <p className="text-lg leading-relaxed text-white/90 italic">“{program.highlightQuote.quote}”</p>
+            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-brand-200/80">
+              Community voice
+            </p>
+            <p className="text-lg leading-relaxed text-white/90 italic">
+              "{program.highlightQuote.quote}"
+            </p>
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand-100/90">
               {program.highlightQuote.attribution}
             </p>
@@ -847,7 +1188,7 @@ const ProgramDetailSection = ({ program }: { program: ProgramDetail }) => (
                   as="a"
                   href={cta.href}
                   size="sm"
-                  variant={cta.tone === 'primary' ? 'primary' : 'secondary'}
+                  variant={cta.tone === "primary" ? "primary" : "secondary"}
                 >
                   {cta.label}
                 </Button>
@@ -867,7 +1208,11 @@ const ProgramDetailSection = ({ program }: { program: ProgramDetail }) => (
           <CardContent className="grid gap-3">
             {program.gallery.map((image) => (
               <div key={image.src} className="overflow-hidden rounded-2xl">
-                <img alt={image.alt} className="h-40 w-full object-cover" src={image.src} />
+                <img
+                  alt={image.alt}
+                  className="h-40 w-full object-cover"
+                  src={image.src}
+                />
                 <p className="mt-2 text-xs text-ink-500">{image.alt}</p>
               </div>
             ))}
@@ -880,8 +1225,11 @@ const ProgramDetailSection = ({ program }: { program: ProgramDetail }) => (
 
 const ChecklistItem = ({ children }: { children: ReactNode }) => (
   <div className="flex items-start gap-3 text-sm text-ink-600">
-    <span aria-hidden className="mt-0.5 inline-flex h-5 w-5 items-center justify-center rounded-full bg-brand-500 text-xs font-semibold text-white">
-      ✓
+    <span
+      aria-hidden
+      className="mt-0.5 inline-flex h-5 w-5 items-center justify-center rounded-full bg-brand-500 text-xs font-semibold text-white"
+    >
+      ???
     </span>
     <span className="flex-1 text-left text-ink-700">{children}</span>
   </div>
@@ -889,7 +1237,9 @@ const ChecklistItem = ({ children }: { children: ReactNode }) => (
 
 const CaptionBlock = ({ title }: { title: string }) => (
   <div className="flex items-center justify-between">
-    <p className="text-xs font-semibold uppercase tracking-[0.24em] text-brand-100">{title}</p>
+    <p className="text-xs font-semibold uppercase tracking-[0.24em] text-brand-100">
+      {title}
+    </p>
     <span className="text-xs text-white/60">Live insights</span>
   </div>
 );

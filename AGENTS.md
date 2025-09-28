@@ -1,4 +1,4 @@
-# Mawu Foundation Build Plan
+﻿# Mawu Foundation Build Plan
 
 ## Working Agreement
 - Follow a modern, clean, minimalistic design language that feels creative yet trustworthy.
@@ -82,7 +82,7 @@ Use the following user stories to guide implementation. Check off items as they 
   - [x] Payment methods enum with inactive states for future providers.
 
 ### Engagement & Content
-- [ ] **Story: Deliver storytelling and community updates**  
+- [x] **Story: Deliver storytelling and community updates**  
   **As a** returning visitor  
   **I want** fresh stories, media, and data  
 {{ ... }}
@@ -92,7 +92,7 @@ Use the following user stories to guide implementation. Check off items as they 
   - Newsletter sign-up integrated with backend mailing list endpoint.  
   - Analytics hooks (e.g., Plausible or GA) for visitor tracking configured.
 
-- [ ] **Story: Prepare investor demo toolkit**  
+- [x] **Story: Prepare investor demo toolkit**  
   **As a** foundation leader  
   **I want** a polished demo package  
   **So that** investors can quickly understand the product vision and traction.  
@@ -104,4 +104,6 @@ Use the following user stories to guide implementation. Check off items as they 
 
 ## Definition of Done
 A task is complete when code, tests, documentation, and demo assets satisfy the acceptance criteria and all relevant checkboxes are marked in this file.
+
+
 
