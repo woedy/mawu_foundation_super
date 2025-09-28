@@ -62,7 +62,7 @@ Use the following user stories to guide implementation. Check off items as they 
   - Confirmation and follow-up messaging flows.
 
 ### Commerce & Payments
-- [ ] **Story: Launch the merch shop experience**  
+- [x] **Story: Launch the merch shop experience**
   **As a** supporter  
   **I want** to purchase branded merchandise easily  
   **So that** I can represent the foundation while contributing financially.  

@@ -1,0 +1,37 @@
+export type ShopAvailability = 'in_stock' | 'low_stock' | 'backorder';
+
+export interface ShopProduct {
+  id: string;
+  slug: string;
+  name: string;
+  category: string;
+  price: number;
+  currency: string;
+  tags: string[];
+  impactStatement: string;
+  description: string;
+  images: string[];
+  availability: ShopAvailability;
+  inventory: number;
+}
+
+export interface ShopPaymentMethod {
+  id: 'stripe' | 'mobile-money' | 'bank-transfer' | 'paypal' | 'crypto';
+  label: string;
+  status: 'active' | 'coming_soon';
+  description: string;
+}
+
+export interface ShopCatalogPayload {
+  hero: {
+    title: string;
+    description: string;
+  };
+  currency: string;
+  categories: string[];
+  featuredProductSlugs: string[];
+  products: ShopProduct[];
+  paymentMethods: ShopPaymentMethod[];
+  shippingRegions: string[];
+  lastUpdated: string;
+}

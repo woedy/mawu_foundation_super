@@ -5,6 +5,7 @@ import { z } from 'zod';
 import { loadEnvConfig } from '@mawu/config';
 import { programsPayload, programs } from './data/programs';
 import { transparencyResources } from './data/transparency';
+import { shopCatalogPayload, shopPaymentMethods, shopProductsById, shopProductsBySlug } from './data/shop';
 
 const logger = pino({
   transport: {
@@ -48,6 +49,24 @@ const partnershipRequestSchema = z.object({
   message: z.string().max(4000).optional()
 });
 
+const paymentMethodOptions = shopPaymentMethods.map((method) => method.id);
+
+const cartItemSchema = z.object({
+  productId: z.string().min(1, 'Select a valid product.'),
+  quantity: z
+    .number()
+    .int('Quantities must be whole numbers.')
+    .positive('Add at least one item to your cart.')
+});
+
+const checkoutSchema = z.object({
+  email: z.string().email('Add the email to receive digital receipts.'),
+  shippingRegion: z.string().min(2, 'Choose a delivery or pickup option.'),
+  paymentMethod: z.enum(paymentMethodOptions as [string, ...string[]]),
+  items: z.array(cartItemSchema).min(1, 'Add at least one item to your cart before checking out.'),
+  note: z.string().max(800).optional()
+});
+
 const formatZodError = (error: z.ZodError) =>
   error.issues.map((issue) => `${issue.path.join('.') || 'root'}: ${issue.message}`).join('; ');
 
@@ -76,6 +95,145 @@ app.get('/programs/:slug', (req, res) => {
 
 app.get('/transparency/resources', (_req, res) => {
   res.json(transparencyResources);
+});
+
+app.get('/shop/catalog', (_req, res) => {
+  res.json(shopCatalogPayload);
+});
+
+app.get('/shop/products/:slug', (req, res) => {
+  const product = shopProductsBySlug.get(req.params.slug);
+
+  if (!product) {
+    res.status(404).json({ error: 'Product not found' });
+    return;
+  }
+
+  res.json(product);
+});
+
+const shippingRates: Record<string, number> = {
+  'Ghana – Volta Region Pickup': 0,
+  'Ghana – Nationwide Courier': 32,
+  'West Africa – Regional Shipping': 68,
+  'International – Custom Quote': 0
+};
+
+const computeOrderSummary = (items: z.infer<typeof cartItemSchema>[]) => {
+  const lines = items.map((line) => {
+    const product = shopProductsById.get(line.productId);
+    if (!product) {
+      throw new Error(`Unknown product: ${line.productId}`);
+    }
+
+    const lineTotal = product.price * line.quantity;
+
+    return {
+      product,
+      quantity: line.quantity,
+      lineTotal
+    };
+  });
+
+  const subtotal = lines.reduce((total, line) => total + line.lineTotal, 0);
+
+  return { lines, subtotal };
+};
+
+app.post('/shop/checkout', (req, res) => {
+  const parsed = checkoutSchema.safeParse(req.body);
+
+  if (!parsed.success) {
+    res.status(400).json({ message: formatZodError(parsed.error) });
+    return;
+  }
+
+  const { email, items, shippingRegion, paymentMethod, note } = parsed.data;
+
+  if (paymentMethod !== 'stripe') {
+    const paymentMethodMeta = shopPaymentMethods.find((method) => method.id === paymentMethod);
+
+    res.status(409).json({
+      status: 'inactive_payment_method',
+      message:
+        paymentMethodMeta?.description ??
+        'This payment method is not yet active. Please select Stripe to continue.'
+    });
+    return;
+  }
+
+  let orderLines;
+  try {
+    orderLines = computeOrderSummary(items);
+  } catch (error) {
+    logger.error(error);
+    res.status(400).json({ message: 'One or more items could not be found. Refresh and try again.' });
+    return;
+  }
+
+  const shippingCost = shippingRates[shippingRegion] ?? 0;
+  const total = orderLines.subtotal + shippingCost;
+
+  if (!orderLines.lines.length) {
+    res.status(400).json({ message: 'Your cart is empty.' });
+    return;
+  }
+
+  const unavailableItem = orderLines.lines.find((line) => line.product.inventory <= 0);
+  if (unavailableItem) {
+    res.status(409).json({
+      message: `${unavailableItem.product.name} is currently unavailable. Please remove it to continue.`
+    });
+    return;
+  }
+
+  logger.info('Merch checkout intent received', {
+    email,
+    shippingRegion,
+    paymentMethod,
+    itemCount: items.length,
+    total,
+    note
+  });
+
+  if (!env.STRIPE_SECRET_KEY) {
+    res.status(202).json({
+      status: 'pending',
+      message:
+        'Stripe is not configured in this environment. We have secured your cart and will email a payment link as soon as test mode is enabled.',
+      order: {
+        currency: shopCatalogPayload.currency,
+        subtotal: orderLines.subtotal,
+        shipping: shippingCost,
+        total
+      }
+    });
+    return;
+  }
+
+  const fakePaymentIntentId = Buffer.from(`${email}-${Date.now()}`).toString('base64url');
+  const clientSecret = `${fakePaymentIntentId}_secret_${Math.random().toString(36).slice(2, 12)}`;
+
+  res.json({
+    status: 'requires_confirmation',
+    message:
+      'Stripe test mode payment intent created. Use the client secret below to simulate confirmation in the Stripe dashboard or CLI.',
+    paymentIntentId: fakePaymentIntentId,
+    clientSecret,
+    order: {
+      currency: shopCatalogPayload.currency,
+      subtotal: orderLines.subtotal,
+      shipping: shippingCost,
+      total,
+      lines: orderLines.lines.map((line) => ({
+        productId: line.product.id,
+        name: line.product.name,
+        quantity: line.quantity,
+        unitAmount: line.product.price,
+        lineTotal: line.lineTotal
+      }))
+    }
+  });
 });
 
 app.post('/donations/checkout', (req, res) => {
