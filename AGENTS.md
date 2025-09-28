@@ -66,27 +66,26 @@ Use the following user stories to guide implementation. Check off items as they 
   **As a** supporter  
   **I want** to purchase branded merchandise easily  
   **So that** I can represent the foundation while contributing financially.  
-  **Acceptance Criteria:**  
   - Product catalog UI with categories, filters, and featured items.  
   - Product detail page with gallery, description, impact statement, and add-to-cart.  
   - Shopping cart and checkout flow using Stripe payment intent.  
   - Placeholder toggles for future payment methods labeled "Coming Soon".
 
-- [ ] **Story: Implement secure payment and donation APIs**  
+- [x] **Story: Implement secure payment and donation APIs**  
   **As a** back-end engineer  
   **I want** robust endpoints handling payments, donations, and order lifecycle  
   **So that** financial transactions remain secure and auditable.  
   **Acceptance Criteria:**  
-  - Stripe SDK integrated with environment-based secrets management.  
-  - Donation and order endpoints with validation, error handling, and logging.  
-  - Webhook listener storing transaction status updates.  
-  - Payment methods enum with inactive states for future providers.
+  - [x] Stripe SDK integrated with environment-based secrets management.  
+  - [x] Donation and order endpoints with validation, error handling, and logging.  
+  - [x] Webhook listener storing transaction status updates.  
+  - [x] Payment methods enum with inactive states for future providers.
 
 ### Engagement & Content
 - [ ] **Story: Deliver storytelling and community updates**  
   **As a** returning visitor  
   **I want** fresh stories, media, and data  
-  **So that** I stay engaged with the foundation's impact.  
+{{ ... }}
   **Acceptance Criteria:**  
   - Blog/news module powered by markdown or headless CMS placeholder.  
   - Testimonials carousel featuring donor, volunteer, and beneficiary voices.  
