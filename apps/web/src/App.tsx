@@ -1,11 +1,9 @@
 import { useEffect, useMemo, useState } from 'react';
-import type { ReactNode } from 'react';
 import {
   Body,
   Button,
   Card,
   CardContent,
-  CardFooter,
   CardHeader,
   Container,
   Eyebrow,
@@ -20,6 +18,7 @@ import type {
   ProgramFocus,
   ProgramsPayload
 } from './types/programs';
+import GetInvolvedSection from './sections/GetInvolvedSection';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:3001';
 
@@ -666,45 +665,7 @@ const App = () => {
           </div>
         </Section>
 
-        <Section background="tinted" id="donate">
-          <div className="grid gap-10 lg:grid-cols-[1.1fr_1fr] lg:items-center">
-            <div className="space-y-6">
-              <Eyebrow>Donate</Eyebrow>
-              <Heading level={2}>Stripe-secured giving for immediate impact</Heading>
-              <Body>
-                Select a focus area, choose a one-time or recurring cadence, and receive transparent reporting in your inbox. Stripe
-                handles secure payments today while we prepare to launch crypto, PayPal, bank transfer, and MoMo options soon.
-              </Body>
-              <div className="flex flex-wrap gap-3">
-                <Button size="lg">Donate with Stripe</Button>
-                <Button size="lg" variant="ghost">
-                  Coming soon: Crypto · PayPal · Bank · MoMo
-                </Button>
-              </div>
-            </div>
-            <Card className="bg-white/80 backdrop-blur">
-              <CardHeader>
-                <Heading level={3}>Ways to amplify change</Heading>
-                <Body variant="muted">
-                  Whether you are an individual donor or corporate ally, we tailor partnership tracks aligned to your goals.
-                </Body>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <ChecklistItem>Recurring donor circles with quarterly immersion briefings.</ChecklistItem>
-                <ChecklistItem>Corporate collaborations for infrastructure and innovation pilots.</ChecklistItem>
-                <ChecklistItem>Angel alliances underwriting rapid-response relief.</ChecklistItem>
-              </CardContent>
-              <CardFooter>
-                <Button as="a" href="mailto:partnerships@mawufoundation.org" size="sm" variant="secondary">
-                  Start a conversation
-                </Button>
-                <Button as="a" href="#newsletter" size="sm" variant="ghost">
-                  Join newsletter
-                </Button>
-              </CardFooter>
-            </Card>
-          </div>
-        </Section>
+        <GetInvolvedSection apiBaseUrl={API_BASE_URL} />
 
         <footer className="bg-ink-900 py-16 text-white">
           <Container className="grid gap-8 md:grid-cols-[1.2fr_1fr]">
@@ -875,15 +836,6 @@ const ProgramDetailSection = ({ program }: { program: ProgramDetail }) => (
       </div>
     </div>
   </Section>
-);
-
-const ChecklistItem = ({ children }: { children: ReactNode }) => (
-  <div className="flex items-start gap-3 text-sm text-ink-600">
-    <span aria-hidden className="mt-0.5 inline-flex h-5 w-5 items-center justify-center rounded-full bg-brand-500 text-xs font-semibold text-white">
-      ✓
-    </span>
-    <span className="flex-1 text-left text-ink-700">{children}</span>
-  </div>
 );
 
 const CaptionBlock = ({ title }: { title: string }) => (

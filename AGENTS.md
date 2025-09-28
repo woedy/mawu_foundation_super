@@ -51,7 +51,7 @@ Use the following user stories to guide implementation. Check off items as they 
   - Impact metrics cards sourced from API mock data.  
   - Detail pages featuring narratives, galleries, and CTA strips.
 
-- [ ] **Story: Implement the Get Involved & Transparency hub**  
+- [x] **Story: Implement the Get Involved & Transparency hub**
   **As a** supporter  
   **I want** clear pathways to donate, volunteer, or partner and verify legitimacy  
   **So that** I can take action with confidence.  
