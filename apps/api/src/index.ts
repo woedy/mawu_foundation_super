@@ -113,10 +113,10 @@ app.get('/shop/products/:slug', (req, res) => {
 });
 
 const shippingRates: Record<string, number> = {
-  'Ghana â€“ Volta Region Pickup': 0,
-  'Ghana â€“ Nationwide Courier': 32,
-  'West Africa â€“ Regional Shipping': 68,
-  'International â€“ Custom Quote': 0
+  'Ghana – Volta Region Pickup': 0,
+  'Ghana – Nationwide Courier': 32,
+  'West Africa – Regional Shipping': 68,
+  'International – Custom Quote': 0
 };
 
 const computeOrderSummary = (items: z.infer<typeof cartItemSchema>[]) => {

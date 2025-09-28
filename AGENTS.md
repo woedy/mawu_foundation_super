@@ -86,7 +86,7 @@ Use the following user stories to guide implementation. Check off items as they 
 - [ ] **Story: Deliver storytelling and community updates**  
   **As a** returning visitor  
   **I want** fresh stories, media, and data  
-  **So that** I stay engaged with the foundation’s impact.  
+  **So that** I stay engaged with the foundation's impact.  
   **Acceptance Criteria:**  
   - Blog/news module powered by markdown or headless CMS placeholder.  
   - Testimonials carousel featuring donor, volunteer, and beneficiary voices.  
@@ -105,3 +105,4 @@ Use the following user stories to guide implementation. Check off items as they 
 
 ## Definition of Done
 A task is complete when code, tests, documentation, and demo assets satisfy the acceptance criteria and all relevant checkboxes are marked in this file.
+

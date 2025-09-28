@@ -1,9 +1,11 @@
 import { useEffect, useMemo, useState } from 'react';
+import type { ReactNode } from 'react';
 import {
   Body,
   Button,
   Card,
   CardContent,
+  CardFooter,
   CardHeader,
   Container,
   Eyebrow,
@@ -18,8 +20,6 @@ import type {
   ProgramFocus,
   ProgramsPayload
 } from './types/programs';
-import GetInvolvedSection from './sections/GetInvolvedSection';
-import MerchShopSection from './sections/MerchShopSection';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:3001';
 
@@ -208,6 +208,27 @@ const App = () => {
       description:
         'Human-centred design keeps every initiative co-created with residents, ensuring dignity, ownership, and long-term resilience.',
       icon: '✨'
+    }
+  ];
+
+  const shopItems = [
+    {
+      name: 'Aurora Impact Tee',
+      description: 'Organic cotton with hand-illustrated constellation of our partner communities.',
+      price: '$38',
+      image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=900&q=80'
+    },
+    {
+      name: 'Unity Canvas Tote',
+      description: 'Carry hope with a limited-run print celebrating African artisanship.',
+      price: '$28',
+      image: 'https://images.unsplash.com/photo-1503341455253-b2e723bb3dbb?auto=format&fit=crop&w=900&q=80'
+    },
+    {
+      name: 'Volta Sunrise Hoodie',
+      description: 'Cozy fleece dyed in sunrise gradients funding solar microgrid installations.',
+      price: '$68',
+      image: 'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=900&q=80'
     }
   ];
 
@@ -609,9 +630,81 @@ const App = () => {
           <ProgramDetailSection key={program.slug} program={program} />
         ))}
 
-        <MerchShopSection apiBaseUrl={API_BASE_URL} />
+        <Section background="muted" id="shop">
+          <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+            <div>
+              <Eyebrow>Impact Merch</Eyebrow>
+              <Heading>Shop the foundation capsule</Heading>
+            </div>
+            <Body className="max-w-xl" variant="muted">
+              Each purchase fuels community-designed initiatives. Limited-run drops celebrate local artisanship and regenerative
+              materials.
+            </Body>
+          </div>
+          <div className="mt-10 grid gap-6 md:grid-cols-3">
+            {shopItems.map((item) => (
+              <Card bleed className="group overflow-hidden" key={item.name}>
+                <img
+                  alt={item.name}
+                  className="h-56 w-full object-cover transition duration-700 group-hover:scale-105"
+                  src={item.image}
+                />
+                <div className="space-y-4 p-6">
+                  <Heading className="text-xl" level={3}>
+                    {item.name}
+                  </Heading>
+                  <Body variant="muted">{item.description}</Body>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-semibold text-brand-600">{item.price}</span>
+                    <Button size="sm" variant="ghost">
+                      Add to capsule
+                    </Button>
+                  </div>
+                </div>
+              </Card>
+            ))}
+          </div>
+        </Section>
 
-        <GetInvolvedSection apiBaseUrl={API_BASE_URL} />
+        <Section background="tinted" id="donate">
+          <div className="grid gap-10 lg:grid-cols-[1.1fr_1fr] lg:items-center">
+            <div className="space-y-6">
+              <Eyebrow>Donate</Eyebrow>
+              <Heading level={2}>Stripe-secured giving for immediate impact</Heading>
+              <Body>
+                Select a focus area, choose a one-time or recurring cadence, and receive transparent reporting in your inbox. Stripe
+                handles secure payments today while we prepare to launch crypto, PayPal, bank transfer, and MoMo options soon.
+              </Body>
+              <div className="flex flex-wrap gap-3">
+                <Button size="lg">Donate with Stripe</Button>
+                <Button size="lg" variant="ghost">
+                  Coming soon: Crypto · PayPal · Bank · MoMo
+                </Button>
+              </div>
+            </div>
+            <Card className="bg-white/80 backdrop-blur">
+              <CardHeader>
+                <Heading level={3}>Ways to amplify change</Heading>
+                <Body variant="muted">
+                  Whether you are an individual donor or corporate ally, we tailor partnership tracks aligned to your goals.
+                </Body>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <ChecklistItem>Recurring donor circles with quarterly immersion briefings.</ChecklistItem>
+                <ChecklistItem>Corporate collaborations for infrastructure and innovation pilots.</ChecklistItem>
+                <ChecklistItem>Angel alliances underwriting rapid-response relief.</ChecklistItem>
+              </CardContent>
+              <CardFooter>
+                <Button as="a" href="mailto:partnerships@mawufoundation.org" size="sm" variant="secondary">
+                  Start a conversation
+                </Button>
+                <Button as="a" href="#newsletter" size="sm" variant="ghost">
+                  Join newsletter
+                </Button>
+              </CardFooter>
+            </Card>
+          </div>
+        </Section>
 
         <footer className="bg-ink-900 py-16 text-white">
           <Container className="grid gap-8 md:grid-cols-[1.2fr_1fr]">
@@ -782,6 +875,15 @@ const ProgramDetailSection = ({ program }: { program: ProgramDetail }) => (
       </div>
     </div>
   </Section>
+);
+
+const ChecklistItem = ({ children }: { children: ReactNode }) => (
+  <div className="flex items-start gap-3 text-sm text-ink-600">
+    <span aria-hidden className="mt-0.5 inline-flex h-5 w-5 items-center justify-center rounded-full bg-brand-500 text-xs font-semibold text-white">
+      ✓
+    </span>
+    <span className="flex-1 text-left text-ink-700">{children}</span>
+  </div>
 );
 
 const CaptionBlock = ({ title }: { title: string }) => (
