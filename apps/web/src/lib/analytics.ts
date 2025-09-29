@@ -12,6 +12,7 @@ let scriptRequested = false;
 const PLAUSIBLE_ENDPOINT =
   "https://plausible.io/js/script.tagged-events.outbound-links.js";
 
+/* eslint-disable no-unused-vars */
 declare global {
   interface Window {
     plausible?: (
@@ -21,6 +22,7 @@ declare global {
     mawuAnalyticsDebug?: boolean;
   }
 }
+/* eslint-enable no-unused-vars */
 
 const getDomain = () =>
   import.meta.env.VITE_ANALYTICS_DOMAIN as string | undefined;
