@@ -28,9 +28,7 @@ export class PaymentService {
     this.webhookSecret = config.webhookSecret;
 
     if (this.isEnabled && config.stripeSecretKey) {
-      this.stripe = new Stripe(config.stripeSecretKey, {
-        apiVersion: "2023-10-16",
-      });
+      this.stripe = new Stripe(config.stripeSecretKey);
     }
   }
 

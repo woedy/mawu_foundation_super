@@ -60,3 +60,6 @@ export type ProgramsPayload = {
   regions: RegionFocus[];
   impactMetrics: ProgramImpactMetric[];
 };
+
+export type ProgramRegion = RegionFocus;
+export type ProgramMetric = ProgramImpactMetric;

@@ -3,16 +3,22 @@ import path from 'node:path';
 import { config as loadDotenv } from 'dotenv';
 import { z } from 'zod';
 
-const envSchema = z.object({
-  NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
-  API_PORT: z.coerce.number().int().positive().default(3001),
-  STRIPE_SECRET_KEY: z
-    .string()
-    .min(1, 'STRIPE_SECRET_KEY is required to process payments.')
-    .optional(),
-  STRIPE_WEBHOOK_SECRET: z.string().optional(),
-  CLIENT_URL: z.string().url().optional()
-});
+const envSchema = z
+  .object({
+    NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
+    PORT: z.coerce.number().int().positive().optional(),
+    API_PORT: z.coerce.number().int().positive().default(3001),
+    STRIPE_SECRET_KEY: z
+      .string()
+      .min(1, 'STRIPE_SECRET_KEY is required to process payments.')
+      .optional(),
+    STRIPE_WEBHOOK_SECRET: z.string().optional(),
+    CLIENT_URL: z.string().url().optional()
+  })
+  .transform((value) => ({
+    ...value,
+    API_PORT: value.PORT ?? value.API_PORT
+  }));
 
 export type AppEnv = z.infer<typeof envSchema>;
 

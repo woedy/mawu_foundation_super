@@ -49,6 +49,13 @@ Run these from the repository root.
 | `npm run format --workspace <name>` | Checks code formatting with Prettier. |
 | `npm run storybook --workspace @mawu/web` | Opens the design system workbench for component previews. |
 
+## Deployment
+- Copy `.env.production.example` to `.env.production` (or configure the same variables inside Coolify) and fill in your Stripe keys plus public URLs.
+- Deploy to Coolify with its **Nixpacks** builder:
+  - Provision the API by pointing Coolify at `apps/api` and keeping the generated Nixpacks plan in `apps/api/nixpacks.toml`.
+  - Provision the web client by pointing Coolify at `apps/web` using the companion Nixpacks plan in `apps/web/nixpacks.toml`.
+- Detailed Coolify setup steps, including environment variables and domain wiring, live in [`docs/deployment/coolify.md`](docs/deployment/coolify.md).
+
 ## Current Focus
 - **Story: Implement the Get Involved & Transparency hub** – activate Stripe-powered donation paths, launch volunteer and partnership inquiries, and surface governance resources so supporters can take action with confidence.
 - **Up Next:** After the hub is live we will introduce the merch shop experience with Stripe checkout and placeholders for future payment methods.

@@ -3,6 +3,8 @@ import type {
   ComponentPropsWithoutRef,
   ComponentPropsWithRef,
   ElementType,
+  ForwardRefRenderFunction,
+  ReactElement,
   ReactNode,
 } from 'react';
 import { cn } from '../lib/cn';
@@ -60,49 +62,66 @@ const renderIcon = (icon: ReactNode, position: 'leading' | 'trailing') => (
   </span>
 );
 
-export const Button = forwardRef(
-  <T extends ElementType = 'button'>(
-    {
-      as,
-      children,
-      className,
-      icon,
-      leadingIcon,
-      size = 'md',
-      variant = 'primary',
-      ...rest
-    }: ButtonProps<T>,
-    ref: PolymorphicRef<T>
-  ) => {
-    const Component = (as ?? 'button') as ElementType;
-    const componentProps =
-      Component === 'button'
-        ? {
-            ...rest,
-            type:
-              (rest as ComponentPropsWithoutRef<'button'>).type ??
-              'button',
-          }
-        : rest;
+type ButtonComponent = <T extends ElementType = 'button'>({
+  as,
+  children,
+  className,
+  icon,
+  leadingIcon,
+  size,
+  variant,
+  ...rest
+}: ButtonProps<T> & { ref?: PolymorphicRef<T> }) => ReactElement | null;
 
-    return (
-      <Component
-        className={cn(
-          'inline-flex items-center justify-center rounded-full font-semibold uppercase tracking-[0.14em] transition-all duration-200 focus:outline-none focus-visible:outline-none',
-          sizeStyles[size],
-          contentStyles[size],
-          variantStyles[variant],
-          className,
-        )}
-        ref={ref}
-        {...componentProps}
-      >
-        {leadingIcon && renderIcon(leadingIcon, 'leading')}
-        <span className="whitespace-nowrap">{children}</span>
-        {icon && renderIcon(icon, 'trailing')}
-      </Component>
-    );
-  },
+const ButtonInner = <T extends ElementType = 'button'>(
+  {
+    as,
+    children,
+    className,
+    icon,
+    leadingIcon,
+    size = 'md',
+    variant = 'primary',
+    ...rest
+  }: ButtonProps<T>,
+  ref: PolymorphicRef<T>,
+) => {
+  const Component = (as ?? 'button') as ElementType;
+  const componentProps =
+    Component === 'button'
+      ? {
+          ...rest,
+          type:
+            (rest as ComponentPropsWithoutRef<'button'>).type ??
+            'button',
+        }
+      : rest;
+
+  return (
+    <Component
+      className={cn(
+        'inline-flex items-center justify-center rounded-full font-semibold uppercase tracking-[0.14em] transition-all duration-200 focus:outline-none focus-visible:outline-none',
+        sizeStyles[size],
+        contentStyles[size],
+        variantStyles[variant],
+        className,
+      )}
+      ref={ref}
+      {...componentProps}
+    >
+      {leadingIcon && renderIcon(leadingIcon, 'leading')}
+      <span className="whitespace-nowrap">{children}</span>
+      {icon && renderIcon(icon, 'trailing')}
+    </Component>
+  );
+};
+
+const ForwardedButton = forwardRef(
+  ButtonInner as ForwardRefRenderFunction<
+    unknown,
+    Omit<ButtonProps<ElementType>, 'ref'>
+  >,
 );
+ForwardedButton.displayName = 'Button';
 
-Button.displayName = 'Button';
+export const Button = ForwardedButton as unknown as ButtonComponent;
