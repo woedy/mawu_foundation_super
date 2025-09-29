@@ -1,73 +1,43 @@
-# Coolify Deployment Guide (Nixpacks)
+# Coolify Deployment Guide (Static Site)
 
-This guide explains how to deploy the Mawu Foundation monorepo to a self-hosted Coolify instance using its Nixpacks builder. The repository now ships dedicated Nixpacks plans for both the API (`apps/api/nixpacks.toml`) and the web client (`apps/web/nixpacks.toml`) so each service can be deployed independently with sensible defaults.
+This guide explains how to deploy the Mawu Foundation static investor demo to a self-hosted Coolify instance using its Nixpacks builder. Only the web client is required—the site ships as static assets powered entirely by curated demo data.
 
 ## 1. Prerequisites
 - Coolify v4 or newer with the **Nixpacks** build system enabled.
-- Stripe API keys (secret + webhook signing secret) for the environment you are targeting.
-- Domains or subdomains reserved for the public web app (e.g. `app.example.com`) and the API (e.g. `api.example.com`).
+- Domain or subdomain reserved for the public web app (e.g. `demo.mawufoundation.org`).
 - Repository access for Coolify (GitHub, GitLab, or a private Git endpoint).
 
 ## 2. Environment configuration
-Create a production env file locally to mirror the variables you will add to Coolify:
-
+Create a production env file locally to mirror the variables you will add to Coolify (optional, only needed for Plausible analytics):
 ```bash
 cp .env.production.example .env.production
 ```
-
-Update `.env.production` with your real secrets and URLs:
+Update `.env.production` if you plan to forward analytics events:
 
 | Variable | Description |
 | --- | --- |
-| `NODE_ENV` | Set to `production` when running in Coolify. |
-| `API_PORT` | External API port. When running on Coolify it will automatically mirror the platform `PORT`. |
-| `STRIPE_SECRET_KEY` | Stripe secret key for live payments or a restricted test key. |
-| `STRIPE_WEBHOOK_SECRET` | Signing secret for the webhook endpoint configured in Stripe. |
-| `CLIENT_URL` | Public URL of the web app (used by the API CORS policy). |
-| `VITE_API_URL` | Public URL of the API (embedded in the static web build). |
-
-> **Tip:** When deploying with Nixpacks you only need to add `API_PORT` if you are running locally. In Coolify the platform `PORT` is passed through automatically.
+| `VITE_ANALYTICS_DOMAIN` | Plausible domain that should receive tagged events (optional). |
 
 ## 3. Repository files relevant to deployment
-- `apps/api/nixpacks.toml` – installs workspace dependencies, builds the TypeScript API, and boots it with `API_PORT` sourced from the platform.
 - `apps/web/nixpacks.toml` – installs dependencies, runs the Vite production build, and serves it via `vite preview` bound to the platform port.
-- `.env.production.example` – reference file containing the minimum environment required for the production stack.
+- `.env.production.example` – reference file containing the optional analytics environment variable.
 
-## 4. Deploying the API service
+## 4. Deploying the web client
 1. In Coolify create a new **Application** and select **Nixpacks** as the build pack.
-2. Point the repository root to this project and set the **Root Directory** to `apps/api`.
-3. Add the following environment variables:
-   - `NODE_ENV=production`
-   - `CLIENT_URL=https://app.example.com`
-   - `STRIPE_SECRET_KEY=sk_live_...`
-   - `STRIPE_WEBHOOK_SECRET=whsec_...`
-   - `API_PORT=3001` *(optional – Coolify will inject `PORT` automatically)*
-4. Expose the service on port `3001` (or whichever value you set for `API_PORT`) and map it to your API domain (e.g. `api.example.com`).
-5. Deploy. The bundled Nixpacks plan runs `npm install --include=dev`, compiles the API with `npm run build`, and starts it with `npm run start`.
+2. Point the repository root to this project and set the **Root Directory** to `apps/web`.
+3. Add environment variables as needed (e.g. `NODE_ENV=production`, `VITE_ANALYTICS_DOMAIN=demo.mawufoundation.org`).
+4. Map the service to your desired domain (e.g. `demo.mawufoundation.org`). Coolify will proxy HTTPS and forward requests to the internal port exposed by Nixpacks.
+5. Deploy. The provided plan runs `npm install`, `npm run build`, and serves the bundle via `npm run preview -- --host 0.0.0.0 --port $PORT`.
 
-## 5. Deploying the web client
-1. Create a second Coolify **Application** using the same repository with the **Root Directory** set to `apps/web`.
-2. Add the following environment variables:
-   - `NODE_ENV=production`
-   - `VITE_API_URL=https://api.example.com`
-3. Map the service to your desired domain (e.g. `app.example.com`). Coolify will proxy HTTPS and forward requests to the internal port exposed by Nixpacks.
-4. Deploy. The provided plan runs `npm run build` to emit the Vite bundle and serves it through `npm run preview -- --host 0.0.0.0 --port $PORT`.
-
-## 6. Local verification before pushing
-You can reproduce the Nixpacks build locally by using the `npx nixpacks build` command (requires Nixpacks CLI):
-
+## 5. Local verification before pushing
+You can reproduce the Nixpacks build locally by using the `npx nixpacks build` command (requires the Nixpacks CLI):
 ```bash
-# API
-npx nixpacks build apps/api --name mawu-api --no-cache
-
-# Web
 npx nixpacks build apps/web --name mawu-web --no-cache
 ```
+To launch the container locally, use `docker run` with the resulting image and mount your `.env.production` file if analytics are enabled.
 
-To launch the containers locally, use `docker run` with the resulting images and mount your `.env.production` file as needed.
-
-## 7. Post-deployment checklist
-- Hit `https://api.example.com/health` to ensure the API boots with Stripe configured and reports `status: "ok"`.
-- Walk through donation and shop flows to confirm Stripe Checkout sessions are created successfully.
-- Submit a volunteer or partnership inquiry and verify the API responds with a success payload.
-- Review Coolify logs for both services to ensure all environment variables are detected and no TypeScript build errors slip through.
+## 6. Post-deployment checklist
+- Visit the deployed domain and confirm programs, stories, and merch sections render correctly.
+- Submit the newsletter form to see the simulated confirmation banner.
+- Verify Plausible events arrive (if `VITE_ANALYTICS_DOMAIN` is configured).
+- Review Coolify logs to ensure the Vite preview server started without errors.

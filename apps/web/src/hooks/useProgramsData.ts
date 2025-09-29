@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 
 import { fallbackProgramsPayload } from "../data/programs-fallback";
-import { API_BASE_URL } from "../lib/config";
 import type { ProgramsPayload } from "../types/programs";
 
 export interface ProgramsDataState {
@@ -17,53 +16,29 @@ export const useProgramsData = (): ProgramsDataState => {
 
   useEffect(() => {
     let isActive = true;
-    const controller = new AbortController();
 
-    const loadPrograms = async () => {
-      try {
-        setLoading(true);
-        const response = await fetch(`${API_BASE_URL}/programs`, {
-          signal: controller.signal,
-        });
+    const loadDemoData = async () => {
+      setLoading(true);
 
-        if (!response.ok) {
-          throw new Error(`Request failed with status ${response.status}`);
-        }
+      await new Promise((resolve) => {
+        window.setTimeout(resolve, 400);
+      });
 
-        const data = (await response.json()) as ProgramsPayload;
-
-        if (!isActive) {
-          return;
-        }
-
-        setPayload(data);
-        setError(null);
-      } catch (error) {
-        if (!isActive) {
-          return;
-        }
-
-        if (error instanceof DOMException && error.name === "AbortError") {
-          return;
-        }
-
-        console.error("Failed to load program data", error);
-        setPayload(fallbackProgramsPayload);
-        setError(
-          "Live program insights are unavailable right now, so we are showing a demo snapshot instead. Start the API to see the latest data.",
-        );
-      } finally {
-        if (isActive) {
-          setLoading(false);
-        }
+      if (!isActive) {
+        return;
       }
+
+      setPayload(fallbackProgramsPayload);
+      setError(
+        "Demo mode active: explore our curated program snapshot while the live API is paused for this investor preview.",
+      );
+      setLoading(false);
     };
 
-    void loadPrograms();
+    void loadDemoData();
 
     return () => {
       isActive = false;
-      controller.abort();
     };
   }, []);
 
