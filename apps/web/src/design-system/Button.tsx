@@ -1,9 +1,9 @@
 import { forwardRef } from 'react';
 import type {
-  AnchorHTMLAttributes,
-  ButtonHTMLAttributes,
+  ComponentPropsWithoutRef,
+  ComponentPropsWithRef,
   ElementType,
-  ReactNode
+  ReactNode,
 } from 'react';
 import { cn } from '../lib/cn';
 
@@ -19,10 +19,11 @@ type BaseProps = {
   variant?: ButtonVariant;
 };
 
-type ButtonAsButton = BaseProps & ButtonHTMLAttributes<HTMLButtonElement> & { as?: 'button' };
-type ButtonAsAnchor = BaseProps & AnchorHTMLAttributes<HTMLAnchorElement> & { as: 'a' };
+type PolymorphicRef<T extends ElementType> = ComponentPropsWithRef<T>['ref'];
 
-type PolymorphicProps = ButtonAsButton | ButtonAsAnchor;
+type ButtonProps<T extends ElementType> = BaseProps & {
+  as?: T;
+} & Omit<ComponentPropsWithoutRef<T>, keyof BaseProps | 'as'>;
 
 const variantStyles: Record<ButtonVariant, string> = {
   primary:
@@ -59,17 +60,28 @@ const renderIcon = (icon: ReactNode, position: 'leading' | 'trailing') => (
   </span>
 );
 
-export const Button = forwardRef<HTMLButtonElement | HTMLAnchorElement, PolymorphicProps>(
-  (
-    { as = 'button', children, className, icon, leadingIcon, size = 'md', variant = 'primary', ...rest },
-    ref
+export const Button = forwardRef(
+  <T extends ElementType = 'button'>(
+    {
+      as,
+      children,
+      className,
+      icon,
+      leadingIcon,
+      size = 'md',
+      variant = 'primary',
+      ...rest
+    }: ButtonProps<T>,
+    ref: PolymorphicRef<T>
   ) => {
-    const Component = as as ElementType;
+    const Component = (as ?? 'button') as ElementType;
     const componentProps =
-      as === 'button'
+      Component === 'button'
         ? {
             ...rest,
-            type: (rest as ButtonHTMLAttributes<HTMLButtonElement>).type ?? 'button'
+            type:
+              (rest as ComponentPropsWithoutRef<'button'>).type ??
+              'button',
           }
         : rest;
 
@@ -80,9 +92,9 @@ export const Button = forwardRef<HTMLButtonElement | HTMLAnchorElement, Polymorp
           sizeStyles[size],
           contentStyles[size],
           variantStyles[variant],
-          className
+          className,
         )}
-        ref={ref as never}
+        ref={ref}
         {...componentProps}
       >
         {leadingIcon && renderIcon(leadingIcon, 'leading')}
@@ -90,7 +102,7 @@ export const Button = forwardRef<HTMLButtonElement | HTMLAnchorElement, Polymorp
         {icon && renderIcon(icon, 'trailing')}
       </Component>
     );
-  }
+  },
 );
 
 Button.displayName = 'Button';
