@@ -13,11 +13,7 @@ import {
 } from '../design-system';
 import { cn } from '../lib/cn';
 import { fallbackShopCatalog } from '../data/shop-fallback';
-import type { ShopCatalogPayload, ShopPaymentMethod, ShopProduct } from '../types/shop';
-
-interface MerchShopSectionProps {
-  apiBaseUrl: string;
-}
+import type { ShopPaymentMethod, ShopProduct } from '../types/shop';
 
 
 interface FetchState {
@@ -73,9 +69,18 @@ const formatCurrency = (amount: number, currency: string) =>
     maximumFractionDigits: 2
   }).format(amount);
 
-const MerchShopSection = ({ apiBaseUrl }: MerchShopSectionProps) => {
-  const [catalog, setCatalog] = useState<ShopCatalogPayload>(fallbackShopCatalog);
-  const [catalogState, setCatalogState] = useState<FetchState>({ state: 'loading', message: null });
+const demoDelay = (ms = 600) =>
+  new Promise((resolve) => {
+    window.setTimeout(resolve, ms);
+  });
+
+const MerchShopSection = () => {
+  const catalog = fallbackShopCatalog;
+  const catalogState: FetchState = {
+    state: 'success',
+    message:
+      'Demo mode: showcasing a curated capsule. Reconnect the API later for live inventory and Stripe fulfilment.',
+  };
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const [selectedProductSlug, setSelectedProductSlug] = useState<string | null>(null);
   const [selectedQuantity, setSelectedQuantity] = useState<number>(1);
@@ -88,56 +93,6 @@ const MerchShopSection = ({ apiBaseUrl }: MerchShopSectionProps) => {
   const [paymentMethod, setPaymentMethod] = useState<ShopPaymentMethod['id']>('stripe');
   const [checkoutState, setCheckoutState] = useState<FetchState>(defaultFetchState);
   const [checkoutResult, setCheckoutResult] = useState<CheckoutResult | null>(null);
-
-  useEffect(() => {
-    let isMounted = true;
-    const controller = new AbortController();
-
-    const loadCatalog = async () => {
-      try {
-        setCatalogState({ state: 'loading', message: 'Loading latest inventory & availability…' });
-        const response = await fetch(`${apiBaseUrl}/shop/catalog`, {
-          signal: controller.signal
-        });
-
-        if (!response.ok) {
-          throw new Error(`Request failed with status ${response.status}`);
-        }
-
-        const payload = (await response.json()) as ShopCatalogPayload;
-
-        if (!isMounted) {
-          return;
-        }
-
-        setCatalog(payload);
-        setCatalogState({ state: 'success', message: null });
-      } catch (error) {
-        if (!isMounted) {
-          return;
-        }
-
-        if (error instanceof DOMException && error.name === 'AbortError') {
-          return;
-        }
-
-        console.error('Unable to load shop catalog', error);
-        setCatalogState({
-          state: 'error',
-          message:
-            'Live inventory is offline at the moment. Explore our curated preview pieces while we sync the warehouse.'
-        });
-        setCatalog(fallbackShopCatalog);
-      }
-    };
-
-    void loadCatalog();
-
-    return () => {
-      isMounted = false;
-      controller.abort();
-    };
-  }, [apiBaseUrl]);
 
   const featuredProductSet = useMemo(
     () => new Set(catalog.featuredProductSlugs),
@@ -376,53 +331,34 @@ const MerchShopSection = ({ apiBaseUrl }: MerchShopSectionProps) => {
     setCheckoutState({ state: 'loading', message: 'Preparing a secure Stripe checkout session…' });
     setCheckoutResult(null);
 
-    try {
-      const response = await fetch(`${apiBaseUrl}/shop/checkout`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          email: buyerEmail,
-          shippingRegion: selectedShippingRegion,
-          paymentMethod,
-          items: cartDetails.map((line) => ({
-            productId: line.productId,
-            quantity: line.quantity
-          })),
-          note: checkoutNote.length ? checkoutNote : undefined
-        })
-      });
+    await demoDelay(750);
 
-      const payload = (await response.json()) as CheckoutResult | { message: string; status?: string };
+    const orderLines = cartDetails.map((line) => ({
+      productId: line.productId,
+      name: line.product.name,
+      quantity: line.quantity,
+      unitAmount: line.product.price,
+      lineTotal: line.lineTotal
+    }));
 
-      if (!response.ok && response.status !== 202) {
-        const message = 'message' in payload ? payload.message : 'Checkout failed.';
-        throw new Error(message);
+    const result: CheckoutResult = {
+      status: 'demo',
+      message: 'Demo checkout generated. Reconnect the API to process this order through Stripe.',
+      order: {
+        currency: catalog.currency,
+        subtotal,
+        shipping: shippingEstimate,
+        total: estimatedTotal,
+        lines: orderLines
       }
+    };
 
-      const result: CheckoutResult = {
-        status: 'status' in payload && payload.status ? payload.status : response.status === 202 ? 'pending' : 'requires_confirmation',
-        message:
-          'message' in payload && typeof payload.message === 'string'
-            ? payload.message
-            : 'Stripe checkout created. Follow the instructions to finalise your order.',
-        clientSecret: 'clientSecret' in payload ? payload.clientSecret : undefined,
-        paymentIntentId: 'paymentIntentId' in payload ? payload.paymentIntentId : undefined,
-        order: 'order' in payload ? payload.order : undefined
-      };
-
-      setCheckoutResult(result);
-      setCheckoutState({ state: 'success', message: 'Next step: follow the Stripe instructions below to confirm payment.' });
-      setCart([]);
-    } catch (error) {
-      console.error('Checkout failed', error);
-      setCheckoutState({
-        state: 'error',
-        message:
-          error instanceof Error
-            ? error.message
-            : 'Something went wrong while preparing checkout. Please try again.'
-      });
-    }
+    setCheckoutResult(result);
+    setCheckoutState({
+      state: 'success',
+      message: 'Demo checkout ready! Live Stripe processing resumes once the backend is back online.'
+    });
+    setCart([]);
   };
 
   const canCheckout =
@@ -452,8 +388,14 @@ const MerchShopSection = ({ apiBaseUrl }: MerchShopSectionProps) => {
               <Body className="max-w-2xl text-lg text-ink-700">
                 {catalog.hero.description}
               </Body>
-              {catalogState.state === 'error' && catalogState.message && (
-                <Body className="rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-800">
+              {catalogState.message && (
+                <Body
+                  className={`rounded-2xl border p-4 text-sm ${
+                    catalogState.state === 'error'
+                      ? 'border-amber-200 bg-amber-50 text-amber-800'
+                      : 'border-brand-200/70 bg-brand-50 text-brand-800'
+                  }`}
+                >
                   {catalogState.message}
                 </Body>
               )}

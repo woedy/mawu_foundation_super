@@ -1,72 +1,57 @@
-﻿# Run & Deploy Checklist
+# Run & Deploy Checklist
 
-These steps were verified against the current monorepo build (see commands at the end) so facilitators can trust the setup before every investor session.
+These steps were verified against the current static build so facilitators can trust the setup before every investor session.
 
 ## 1. Install dependencies
 ```bash
 npm install
 ```
-This bootstraps all npm workspaces (`apps/web`, `apps/api`, `packages/config`).
+This bootstraps the `apps/web` workspace.
 
-## 2. Configure environment
-Create `.env` at the repository root:
+## 2. Configure environment (optional)
+If you want Plausible analytics during the walkthrough:
 ```bash
 cp .env.example .env
 ```
-Populate the following keys:
-```ini
-# API
-STRIPE_SECRET_KEY=sk_test_xxx              # optional with graceful fallback
-STRIPE_WEBHOOK_SECRET=whsec_xxx            # optional but enables webhook logging
-CLIENT_URL=http://localhost:5173
+Uncomment `VITE_ANALYTICS_DOMAIN` and set it to the domain connected to your Plausible site.
 
-# Web client
-VITE_API_URL=http://localhost:3001
-VITE_ANALYTICS_DOMAIN=demo.mawufoundation.org
-```
-
-## 3. Start services locally
-In separate terminals run:
+## 3. Start the demo locally
 ```bash
-npm run dev --workspace @mawu/api
 npm run dev --workspace @mawu/web
 ```
-- API listens on `localhost:3001` and logs webhook/payment status.
-- Web client boots at `localhost:5173` and consumes live API endpoints.
+- Vite boots at `http://localhost:5173`.
+- All data loads from TypeScript modules and markdown files bundled with the repo—no backend required.
 
-## 4. Seed demo content
-Follow [`seed-data-notes.md`](./seed-data-notes.md) to refresh stories, testimonials, and newsletter entries. Confirm the footer form returns a success banner.
+## 4. Refresh demo content
+Follow [`seed-data-notes.md`](./seed-data-notes.md) to update stories, testimonials, programs, and merch copy before each session.
 
-## 5. Plausible analytics (optional)
-If demonstrating analytics:
-1. Ensure the Plausible script loads (network tab shows `script.tagged-events.outbound-links.js`).
-2. Open the Plausible dashboard in another tab to watch `story_opened`, `testimonial_cycle`, and `newsletter_subscribed` events stream in live.
+## 5. Plausible analytics spot-check (optional)
+If analytics are enabled:
+1. Confirm the network tab loads `script.tagged-events.outbound-links.js` from Plausible.
+2. Watch `story_opened`, `testimonial_cycle`, and `newsletter_subscribed` events arrive in the Plausible dashboard.
 
 ## 6. Production build smoke test
 Before recording or shipping demo assets:
 ```bash
-npm run build --workspace @mawu/api
 npm run build --workspace @mawu/web
 ```
-- Confirms TypeScript passes on both workspaces.
-- Produces `apps/web/dist` for static hosting previews.
+- Confirms TypeScript passes and emits `apps/web/dist` for static hosting previews.
 
 ## 7. Deployment pointers
-- **API:** Package `apps/api` with Node 18+, install with `npm ci`, then `npm run build` followed by `npm start`. Environment keys mirror local `.env`.
-- **Web:** Deploy contents of `apps/web/dist` to any static host (Vercel, Netlify, S3 + CloudFront). Ensure `VITE_API_URL` points to the hosted API before building.
-- **Config package:** Already bundled via workspace symlinks—no extra steps needed.
+- Deploy the contents of `apps/web/dist` to any static host (Coolify, Netlify, Vercel, S3 + CloudFront).
+- For Coolify, see the single-service guide in [`../deployment/coolify.md`](../deployment/coolify.md).
+- Ensure any configured `VITE_ANALYTICS_DOMAIN` matches the production domain before building.
 
 ## 8. Quick regression checklist
-- [ ] `/health` endpoint reports `stripeConfigured` correctly.
-- [ ] Programs explorer fetches live data (no offline banner).
-- [ ] Stories & testimonials render without console errors.
-- [ ] Newsletter submission returns HTTP 201 and logs to `newsletter-signups.json`.
+- [ ] Programs explorer renders all curated initiatives.
+- [ ] Stories & testimonials cycle without console errors.
+- [ ] Newsletter submission shows the simulated confirmation banner.
+- [ ] Merch showcase highlights inventory and "Coming Soon" payment messaging.
 - [ ] Plausible events appear (if configured).
 
 ---
 _Build verification (latest run):_
 ```
-npm run build --workspace @mawu/api
 npm run build --workspace @mawu/web
 ```
-Both commands succeed (see CI logs or run locally before the demo).
+The command succeeds locally and in CI.

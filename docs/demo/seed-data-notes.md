@@ -1,6 +1,6 @@
-﻿# Demo Seed Data Notes
+# Demo Seed Data Notes
 
-This guide ensures the web experience and API surfaces rich, investor-ready content during the walkthrough.
+This guide ensures the web experience ships with rich, investor-ready content during the walkthrough without relying on a backend.
 
 ## 1. Markdown stories
 - Location: `apps/web/src/stories/`
@@ -18,39 +18,18 @@ This guide ensures the web experience and API surfaces rich, investor-ready cont
 - Keep the array to 3–5 entries for a tight carousel rotation (autoplay cycles every 9s).
 
 ## 3. Newsletter ledger
-- API writes signups to `apps/api/data/newsletter-signups.json` via `recordNewsletterSignup`.
-- The file is ignored by Git, so you can safely seed it manually (one entry per line, valid JSON array).
-- For demo scenarios:
-  ```json
-  [
-    {
-      "id": "demo-subscriber-1",
-      "email": "investor-preview@mawu.demo",
-      "firstName": "Investor",
-      "lastName": "Preview",
-      "interests": ["investor-updates", "storytelling"],
-      "source": "web_footer",
-      "consent": true,
-      "createdAt": "2024-10-10T10:00:00.000Z",
-      "updatedAt": "2024-10-10T10:00:00.000Z"
-    }
-  ]
-  ```
-- Trigger a fresh entry by submitting the footer form in incognito mode; success/error banners appear and analytics track the result.
+- Newsletter submissions are simulated client-side and display a confirmation banner without persisting to disk.
+- Update copy in `apps/web/src/components/NewsletterSignup.tsx` if you need session-specific messaging.
+- Analytics events (`newsletter_subscribed`) still fire when Plausible is enabled.
 
 ## 4. Analytics domain
 - Set `VITE_ANALYTICS_DOMAIN` in `.env` (e.g., `demo.mawufoundation.org`).
 - When the domain is present, `initAnalytics` loads the Plausible tagged-events script.
 - Use the Plausible dashboard to monitor `story_opened`, `testimonial_cycle`, and `newsletter_subscribed` demo events.
 
-## 5. Stripe & payment data
-- Provide test mode keys in `.env`:
-  - `STRIPE_SECRET_KEY=sk_test_...`
-  - `STRIPE_WEBHOOK_SECRET=whsec_...`
-- The API simulates payment intents without external dependencies when keys are absent, returning contextual messaging so the demo still passes.
-
-## 6. Programs & shop catalog
-- Seeded via `apps/api/src/data/programs.ts` and `apps/api/src/data/shop.ts`.
-- Update small pieces (spotlight statistics, pricing, impact notes) to align with the investor narrative for the session.
+## 5. Programs & shop catalog
+- Primary data lives in `apps/web/src/data/programs-fallback.ts` and `apps/web/src/data/shop-fallback.ts`.
+- Update spotlights, pricing, impact notes, and availability flags to align with the investor narrative for the session.
+- Re-run `npm run build --workspace @mawu/web` if you want a production snapshot of the latest edits.
 
 > _Pro tip:_ After editing seed files, run `npm run build --workspace @mawu/web` to catch any TypeScript regressions before the live session.

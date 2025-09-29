@@ -2,8 +2,12 @@ import { FormEvent, useState } from "react";
 
 import { Button } from "../design-system";
 import { cn } from "../lib/cn";
-import { API_BASE_URL } from "../lib/config";
 import { trackEvent } from "../lib/analytics";
+
+const simulateNetworkDelay = (ms = 600) =>
+  new Promise((resolve) => {
+    window.setTimeout(resolve, ms);
+  });
 
 export const NewsletterSignup = () => {
   const [email, setEmail] = useState<string>("");
@@ -25,59 +29,19 @@ export const NewsletterSignup = () => {
     setStatus("idle");
     setMessage(null);
 
-    try {
-      const response = await fetch(`${API_BASE_URL}/engage/newsletter`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: trimmedEmail,
-          source: "web_footer",
-          interests: ["investor-updates"],
-          consent: true,
-        }),
-      });
+    await simulateNetworkDelay();
 
-      let payload: { message?: string } | null = null;
-      try {
-        payload = await response.json();
-      } catch (error) {
-        payload = null;
-      }
+    setStatus("success");
+    setMessage(
+      "Medasi! This demo adds you to our investor preview list. We'll restore live newsletter sync once the API is reconnected.",
+    );
+    setEmail("");
+    trackEvent("newsletter_subscribed", {
+      status: "success",
+      source: "web_footer",
+    });
 
-      if (!response.ok) {
-        throw new Error(
-          payload?.message ??
-            "We could not add you to the newsletter right now. Please try again shortly.",
-        );
-      }
-
-      setStatus("success");
-      setMessage(
-        payload?.message ??
-          "Medasi! You are now on the impact update list. Check your inbox for a welcome note soon.",
-      );
-      setEmail("");
-      trackEvent("newsletter_subscribed", {
-        status: "success",
-        source: "web_footer",
-      });
-    } catch (error) {
-      const errorMessage =
-        error instanceof Error
-          ? error.message
-          : "We could not add you to the newsletter right now. Please try again shortly.";
-
-      setStatus("error");
-      setMessage(errorMessage);
-      trackEvent("newsletter_subscribed", {
-        status: "error",
-        source: "web_footer",
-      });
-    } finally {
-      setSubmitting(false);
-    }
+    setSubmitting(false);
   };
 
   const feedbackTone =
