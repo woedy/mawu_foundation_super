@@ -2,7 +2,7 @@
   "name": "mawu_foundation_super",
   "version": "0.1.0",
   "private": true,
-  "description": "Monorepo workspace for the Mawu Foundation web and API applications.",
+  "description": "Workspace for the Mawu Foundation static investor demo.",
   "scripts": {
     "build": "npm run build --workspaces",
     "dev": "npm run dev --workspaces",
@@ -11,7 +11,6 @@
     "format": "npm run format --if-present --workspaces"
   },
   "workspaces": [
-    "apps/*",
-    "packages/*"
+    "apps/web"
   ]
 }

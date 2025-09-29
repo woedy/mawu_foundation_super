@@ -1,4 +1,4 @@
-﻿# KPI Briefing & Talk Tracks
+# KPI Briefing & Talk Tracks
 
 Use these bullets as the closing punch for the demo. Numbers are illustrative—update them ahead of each investor meeting.
 
@@ -8,10 +8,10 @@ Use these bullets as the closing punch for the demo. Numbers are illustrative—
 - **Youth in learning labs:** 12.4K students enrolled, 38% from rural districts.
 - **Volunteer mobilisation:** 2.1K active volunteers, 400 trained in the last quarter.
 
-_Talk track:_ "Our impact velocity is compounding because every program is designed with local ownership. The metrics you see on the hero tile refresh quarterly and map directly to the API payload investors can query."
+_Talk track:_ "Our impact velocity is compounding because every program is designed with local ownership. The metrics you see on the hero tile refresh quarterly and come straight from the curated dataset we use internally—so even this static demo mirrors the real dashboards."
 
 ## Financial traction
-- **Donation conversion:** 7.8% of unique visitors initiate Stripe checkout.
+- **Donation conversion:** 7.8% of unique visitors initiate Stripe checkout (based on last live sprint).
 - **Recurring donors:** 42 active circles funding 63% of seasonal programs in Volta.
 - **Merch contribution:** Shop capsule accounts for 12% of unrestricted revenue.
 
@@ -22,7 +22,7 @@ _Talk track:_ "Payments remain Stripe-first. Future toggles for crypto and mobil
 - **Story engagement:** 62% of demo users open at least one `story_opened` event.
 - **Testimonial resonance:** Carousel completion rate at 54% during previews.
 
-_Talk track:_ "Our new storytelling module—powered by markdown files—lets programme leads publish updates without engineering support, while Plausible events validate the narratives that convert donors."
+_Talk track:_ "Our storytelling module—powered by markdown files—lets programme leads publish updates without engineering support, while Plausible events validate the narratives that convert donors."
 
 ## Investment ask framing
 1. **$750K seed extension** to scale corridor pilots into two additional Ghanaian regions and co-design mobile money integrations.

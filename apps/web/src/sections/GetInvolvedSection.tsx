@@ -1,5 +1,5 @@
 import type { FormEvent, ReactNode } from 'react';
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import {
   Body,
   Button,
@@ -87,11 +87,12 @@ interface FetchStatus {
 
 const defaultStatus: FetchStatus = { state: 'idle', message: null };
 
-interface GetInvolvedSectionProps {
-  apiBaseUrl: string;
-}
+const simulateNetworkDelay = (ms = 700) =>
+  new Promise((resolve) => {
+    window.setTimeout(resolve, ms);
+  });
 
-const GetInvolvedSection = ({ apiBaseUrl }: GetInvolvedSectionProps) => {
+const GetInvolvedSection = () => {
   const [selectedAmount, setSelectedAmount] = useState<number | 'custom'>(donationPresetAmounts[1]);
   const [customAmount, setCustomAmount] = useState('');
   const [donationFrequency, setDonationFrequency] = useState<DonationFrequency>('once');
@@ -116,43 +117,12 @@ const GetInvolvedSection = ({ apiBaseUrl }: GetInvolvedSectionProps) => {
   const [partnerMessage, setPartnerMessage] = useState('');
   const [partnerStatus, setPartnerStatus] = useState<FetchStatus>(defaultStatus);
 
-  const [resources, setResources] = useState<TransparencyResource[]>(fallbackTransparencyResources);
-  const [resourcesStatus, setResourcesStatus] = useState<FetchStatus>(defaultStatus);
-
-  useEffect(() => {
-    const controller = new AbortController();
-    const loadResources = async () => {
-      try {
-        setResourcesStatus({ state: 'loading', message: null });
-        const response = await fetch(`${apiBaseUrl}/transparency/resources`, {
-          signal: controller.signal
-        });
-
-        if (!response.ok) {
-          throw new Error(`Request failed with status ${response.status}`);
-        }
-
-        const payload = (await response.json()) as TransparencyResource[];
-        setResources(payload);
-        setResourcesStatus({ state: 'success', message: null });
-      } catch (error) {
-        if (controller.signal.aborted) {
-          return;
-        }
-
-        console.warn('Falling back to static transparency resources', error);
-        setResources(fallbackTransparencyResources);
-        setResourcesStatus({
-          state: 'error',
-          message: 'Live transparency registry is unavailable. Showing our latest published snapshot instead.'
-        });
-      }
-    };
-
-    void loadResources();
-
-    return () => controller.abort();
-  }, [apiBaseUrl]);
+  const resources = fallbackTransparencyResources;
+  const transparencyNotice: FetchStatus = {
+    state: 'success',
+    message:
+      'Demo mode: previewing our latest published transparency documents. Reconnect the API later for live registry updates.',
+  };
 
   const donationAmountDisplay = useMemo(() => {
     if (selectedAmount === 'custom') {
@@ -177,50 +147,14 @@ const GetInvolvedSection = ({ apiBaseUrl }: GetInvolvedSectionProps) => {
       return;
     }
 
-    try {
-      setDonationStatus({ state: 'loading', message: 'Generating your secure Stripe session…' });
-      const response = await fetch(`${apiBaseUrl}/donations/checkout`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          amount: amountValue,
-          currency: 'GHS',
-          frequency: donationFrequency,
-          focusArea: donationFocus,
-          email: donorEmail
-        })
-      });
+    setDonationStatus({ state: 'loading', message: 'Preparing a demo Stripe session…' });
+    await simulateNetworkDelay();
 
-      const payload = (await response.json()) as {
-        status: string;
-        message?: string;
-        checkoutUrl?: string;
-      };
-
-      if (!response.ok) {
-        throw new Error(payload?.message ?? 'Unable to create a donation session right now.');
-      }
-
-      if (payload.checkoutUrl) {
-        window.open(payload.checkoutUrl, '_blank', 'noopener');
-      }
-
-      setDonationStatus({
-        state: 'success',
-        message:
-          payload.message ??
-          'Your secure Stripe checkout is ready in a new tab. We will also email you a confirmation in the next few minutes.'
-      });
-    } catch (error) {
-      console.error('Failed to start donation session', error);
-      setDonationStatus({
-        state: 'error',
-        message:
-          error instanceof Error
-            ? error.message
-            : 'Something went wrong while preparing your donation. Please try again shortly.'
-      });
-    }
+    setDonationStatus({
+      state: 'success',
+      message:
+        'Demo mode active: imagine a Stripe checkout opening in a new tab. Live payments return once the API reconnects.',
+    });
   };
 
   const toggleVolunteerInterest = (interest: string) => {
@@ -244,42 +178,14 @@ const GetInvolvedSection = ({ apiBaseUrl }: GetInvolvedSectionProps) => {
       return;
     }
 
-    try {
-      setVolunteerStatus({ state: 'loading', message: 'Sending your volunteer interest to our team…' });
-      const response = await fetch(`${apiBaseUrl}/engage/volunteer`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name: volunteerName,
-          email: volunteerEmail,
-          phone: volunteerPhone,
-          region: volunteerRegion,
-          availability: volunteerAvailability,
-          interests: volunteerInterests,
-          message: volunteerMessage
-        })
-      });
+    setVolunteerStatus({ state: 'loading', message: 'Capturing your demo volunteer brief…' });
+    await simulateNetworkDelay();
 
-      const payload = (await response.json()) as { message?: string };
-      if (!response.ok) {
-        throw new Error(payload?.message ?? 'Unable to record your interest right now.');
-      }
-
-      setVolunteerStatus({
-        state: 'success',
-        message:
-          payload.message ??
-          'Aseda! Our community mobilisers will call or email within 48 hours with onboarding next steps.'
-      });
-      setVolunteerMessage('');
-    } catch (error) {
-      console.error('Volunteer submission failed', error);
-      setVolunteerStatus({
-        state: 'error',
-        message:
-          error instanceof Error ? error.message : 'We could not submit your interest. Kindly try again later.'
-      });
-    }
+    setVolunteerStatus({
+      state: 'success',
+      message: 'Our team will follow up once the live CRM is back online. Thank you for stepping forward to serve.',
+    });
+    setVolunteerMessage('');
   };
 
   const handlePartnerSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -293,40 +199,14 @@ const GetInvolvedSection = ({ apiBaseUrl }: GetInvolvedSectionProps) => {
       return;
     }
 
-    try {
-      setPartnerStatus({ state: 'loading', message: 'Routing your partnership brief to our leadership circle…' });
-      const response = await fetch(`${apiBaseUrl}/engage/partnership`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          contactName: partnerName,
-          organisation: partnerOrganisation,
-          email: partnerEmail,
-          phone: partnerPhone,
-          partnershipType: partnerTrack,
-          message: partnerMessage
-        })
-      });
+    setPartnerStatus({ state: 'loading', message: 'Routing your partnership brief through our demo workflow…' });
+    await simulateNetworkDelay(850);
 
-      const payload = (await response.json()) as { message?: string };
-      if (!response.ok) {
-        throw new Error(payload?.message ?? 'We could not log your partnership request.');
-      }
-
-      setPartnerStatus({
-        state: 'success',
-        message:
-          payload.message ?? 'We will schedule a partnership discovery call within two business days.'
-      });
-      setPartnerMessage('');
-    } catch (error) {
-      console.error('Partnership submission failed', error);
-      setPartnerStatus({
-        state: 'error',
-        message:
-          error instanceof Error ? error.message : 'Unable to process your partnership request at the moment.'
-      });
-    }
+    setPartnerStatus({
+      state: 'success',
+      message: 'Demo received! Expect a follow-up calendar invite once we reconnect the partnership CRM.',
+    });
+    setPartnerMessage('');
   };
 
   return (
@@ -690,9 +570,15 @@ const GetInvolvedSection = ({ apiBaseUrl }: GetInvolvedSectionProps) => {
                 </Body>
               </CardHeader>
               <CardContent className="space-y-4">
-                {resourcesStatus.state === 'error' && resourcesStatus.message ? (
-                  <div className="rounded-2xl border border-white/30 bg-white/10 p-4 text-sm text-brand-100">
-                    {resourcesStatus.message}
+                {transparencyNotice.message ? (
+                  <div
+                    className={`rounded-2xl p-4 text-sm ${
+                      transparencyNotice.state === 'error'
+                        ? 'border border-white/30 bg-white/10 text-brand-100'
+                        : 'border border-white/20 bg-white/5 text-brand-100'
+                    }`}
+                  >
+                    {transparencyNotice.message}
                   </div>
                 ) : null}
                 <ul className="space-y-4">
