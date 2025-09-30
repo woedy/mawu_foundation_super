@@ -1,6 +1,8 @@
 {
-  "buildCommand": "npm run build --workspace @mawu/web",
-  "installCommand": "npm install",
+  "buildCommand": "npm install && npm run build --workspace @mawu/web",
+  "installCommand": "npm install --prefer-offline",
   "outputDirectory": "apps/web/dist",
-  "framework": "vite"
+  "framework": "vite",
+  "nodeVersion": "20.x",
+  "regions": ["iad1"]
 }
