@@ -247,7 +247,7 @@ export const LandingPage = () => (
           <img
             alt="Illustrated Volta Region community fields"
             className="absolute inset-0 h-full w-full object-cover opacity-60"
-            src="/season-focus-landscape.jpg"
+            src="https://images.unsplash.com/photo-1680200023508-5289ae3de157?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
           />
           <div className="relative space-y-4 p-8 text-white">
             <Eyebrow className="text-brand-100">Season focus</Eyebrow>
