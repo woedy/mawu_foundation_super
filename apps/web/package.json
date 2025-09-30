@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc --noEmit && vite build",
+    "build": "cross-env ROLLUP_USE_WASM=true tsc --noEmit && vite build",
     "preview": "vite preview",
     "lint": "eslint src --ext .ts,.tsx",
     "format": "prettier --check .",
@@ -28,6 +28,7 @@
     "@typescript-eslint/parser": "^8.13.0",
     "@vitejs/plugin-react-swc": "^3.7.1",
     "autoprefixer": "^10.4.20",
+    "cross-env": "^10.1.0",
     "eslint": "^8.57.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-react-hooks": "^4.6.0",
