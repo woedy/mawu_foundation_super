@@ -1,6 +1,6 @@
 {
   "installCommand": "npm install",
-  "buildCommand": "npm run build --workspace @mawu/web",
+  "buildCommand": "ROLLUP_USE_WASM=true npm run build --workspace @mawu/web",
   "outputDirectory": "apps/web/dist",
   "framework": "vite",
   "regions": ["iad1"]
