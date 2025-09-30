@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "cross-env ROLLUP_USE_WASM=true tsc --noEmit && vite build",
+    "build": "cross-env ROLLUP_SKIP_NODEJS_NATIVE=true ROLLUP_USE_WASM=true tsc --noEmit && vite build",
     "preview": "vite preview",
     "lint": "eslint src --ext .ts,.tsx",
     "format": "prettier --check .",
@@ -18,7 +18,9 @@
     "react-router-dom": "^7.9.3"
   },
   "devDependencies": {
+    "@rollup/rollup-linux-x64-gnu": "4.52.2",
     "@rollup/wasm-node": "^4.52.3",
+    "@swc/core-linux-x64-gnu": "1.13.19",
     "@storybook/addon-a11y": "^8.2.9",
     "@storybook/addon-essentials": "^8.2.9",
     "@storybook/react-vite": "^8.2.9",
