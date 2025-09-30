@@ -31,9 +31,14 @@ Run these from the repository root.
 | `npm run storybook --workspace @mawu/web` | Opens the design system workbench for component previews. |
 
 ## Deployment
-- Deploy the Vite build output (`apps/web/dist`) to any static host such as Coolify, Netlify, or Vercel.
-- Coolify users can follow the static hosting guide in [`docs/deployment/coolify.md`](docs/deployment/coolify.md) for a one-service setup.
+- Deploy the Vite build output (`apps/web/dist`) to any static host such as Coolify, Netlify, or Vercel—no Express servers or Node backends are needed.
+- Follow the platform-specific docs for step-by-step guidance:
+  - [`docs/deployment/vercel.md`](docs/deployment/vercel.md) for Vercel’s static hosting workflow.
+  - [`docs/deployment/coolify.md`](docs/deployment/coolify.md) for a single-service Coolify setup.
 - If you set `VITE_ANALYTICS_DOMAIN`, ensure the host exposes the same domain so Plausible can receive events.
+
+## Static Architecture FAQ
+- **Is the `api` folder part of an Express backend?** No. The checked-in source only contains the static front end inside `apps/web` plus documentation under `docs`. Any `api` directories you might notice live inside dependencies (for example, Storybook packages) and are not used at runtime when deploying the static site.
 
 ## Current Focus
 - **Story: Implement the Get Involved & Transparency hub** – maintain polished static copy for donations, volunteering, partnerships, and governance so supporters understand what will launch next.
