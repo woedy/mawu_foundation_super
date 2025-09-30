@@ -20,8 +20,8 @@ This walkthrough publishes the Mawu Foundation investor demo as a fully static s
 1. In the Vercel dashboard click **Add New… → Project** and import this repository.
 2. When prompted for the **Framework Preset**, choose **Vite**.
 3. If you prefer configuring the project entirely from the repo, keep the **Root Directory** as the repository root—`vercel.json`
-   already instructs Vercel to install workspace dependencies, run `npm run build --workspace @mawu/web`, and publish the
-   static bundle from `apps/web/dist`.
+   now instructs Vercel to install workspace dependencies, run `npm run build --workspace @mawu/web`, publish the static bundle
+   from `apps/web/dist`, and rewrite deep links back to `index.html` so the single-page app router works on refresh.
 4. Alternatively, you can point the **Root Directory** to `apps/web` and keep the default Vite settings; both approaches build
    the same static output.
 
