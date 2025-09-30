@@ -79,17 +79,23 @@ export const LandingPage = () => (
     <Section
       as="header"
       background="inverted"
-      className="overflow-hidden"
-      containerClassName="relative grid gap-12 lg:grid-cols-[1.4fr,1fr] lg:items-center"
+      className="relative overflow-hidden py-20 -mx-4 md:-mx-6 lg:-mx-8 px-0"
+      containerClassName="relative z-10 grid gap-12 lg:grid-cols-[1.4fr,1fr] lg:items-center max-w-none"
     >
-      <div className="pointer-events-none absolute inset-0 -z-10">
+      {/* Background image */}
+      <div className="absolute inset-0 -inset-x-4 md:-inset-x-6 lg:-inset-x-8 -top-20 -bottom-20 sm:-top-24 sm:-bottom-24">
         <img
-          alt="Illustrated Volta River sunset with lush banks"
+          alt="Beautiful African landscape with golden sunset"
           className="h-full w-full object-cover"
-          src="/hero-volta-river.jpg"
+          src="https://images.unsplash.com/photo-1738860283720-baaf8c8418b8?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+          loading="eager"
         />
-        <div className="absolute inset-0 bg-gradient-to-br from-ink-900/85 via-ink-900/70 to-brand-700/55" />
       </div>
+      
+      {/* Gradient overlay */}
+      <div className="absolute inset-0 -top-20 -bottom-20 sm:-top-24 sm:-bottom-24 bg-gradient-to-br from-ink-900/90 via-ink-900/60 to-brand-700/50" />
+      
+      {/* Decorative elements */}
       <div className="pointer-events-none absolute -left-24 top-0 hidden h-96 w-96 rounded-full bg-brand-500/25 blur-3xl lg:block" />
       <div className="pointer-events-none absolute -bottom-20 right-0 h-80 w-80 rounded-full bg-sand-300/20 blur-3xl" />
       <div className="relative space-y-8">
@@ -360,3 +366,4 @@ export const LandingPage = () => (
     </Section>
   </>
 );
+
