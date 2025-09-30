@@ -14,7 +14,7 @@
   "workspaces": [
     "apps/web"
   ],
-  "devDependencies": {
+  "dependencies": {
     "patch-package": "^8.0.1"
   }
 }
