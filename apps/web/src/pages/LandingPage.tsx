@@ -92,6 +92,8 @@ export const LandingPage = () => (
         />
       </div>
       
+
+      
       {/* Gradient overlay */}
       <div className="absolute inset-0 -top-20 -bottom-20 sm:-top-24 sm:-bottom-24 bg-gradient-to-br from-ink-900/90 via-ink-900/60 to-brand-700/50" />
       
