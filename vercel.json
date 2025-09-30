@@ -3,6 +3,5 @@
   "installCommand": "npm install --prefer-offline",
   "outputDirectory": "apps/web/dist",
   "framework": "vite",
-  "nodeVersion": "20.x",
   "regions": ["iad1"]
 }
