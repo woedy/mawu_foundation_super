@@ -45,6 +45,12 @@ If you plan to stream Plausible analytics events:
 ## 7. Troubleshooting
 - **Build fails:** Confirm the project uses the repo's `vercel.json` (or sets `apps/web` as the root) so the build output ends up
   in `apps/web/dist`.
+- **Rollup native module errors:** If the build log mentions `@rollup/rollup-linux-x64-gnu`, make sure the deployment is using the
+  updated build script (or set `ROLLUP_SKIP_NODEJS_NATIVE=true`) so Rollup falls back to its WASM bundle—this repo now ships a
+  `patch-package` fallback, so running `npm install` end-to-end will automatically apply it even on Node 22 builders.
+- **SWC binding failures:** Vercel's Linux builders occasionally skip the optional `@swc/core` binaries. The workspace pins the
+  `@swc/core-linux-x64-gnu` package to guarantee the React SWC plugin loads—double-check the dependency is present if you override
+  the default install command.
 - **Missing styles or data:** Confirm `npm run build --workspace @mawu/web` succeeds locally and that no runtime fetches are pointing to removed APIs.
 - **Analytics not firing:** Verify `VITE_ANALYTICS_DOMAIN` is defined and that any ad blockers allow Plausible.
 

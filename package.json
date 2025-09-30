@@ -8,9 +8,13 @@
     "dev": "npm run dev --workspaces",
     "lint": "npm run lint --if-present --workspaces",
     "test": "npm run test --if-present --workspaces",
-    "format": "npm run format --if-present --workspaces"
+    "format": "npm run format --if-present --workspaces",
+    "postinstall": "patch-package"
   },
   "workspaces": [
     "apps/web"
-  ]
+  ],
+  "devDependencies": {
+    "patch-package": "^8.0.1"
+  }
 }
