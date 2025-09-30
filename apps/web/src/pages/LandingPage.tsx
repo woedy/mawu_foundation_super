@@ -1,98 +1,361 @@
 import { Link } from "react-router-dom";
 
 import { Body, Button, Card, Eyebrow, Heading, Section } from "../design-system";
-import { VisionHero } from "../components/VisionHero";
+import { fallbackProgramsPayload } from "../data/programs-fallback";
 
-const overviewCards = [
+const heroStats = [
   {
-    title: "Vision",
+    label: "Countries collaborating",
+    value: "11",
+    description: "Grassroots partners spanning West, East, and Southern Africa advancing shared blueprints.",
+  },
+  {
+    label: "Residents reached",
+    value: "42k",
+    description: "Families across the continent supported with health, education, and climate resources.",
+  },
+  {
+    label: "Seasonal pilots",
+    value: "9",
+    description: "Volta Region initiatives stress-testing solutions before scaling to new regions.",
+  },
+];
+
+const strategicPillars = [
+  {
+    eyebrow: "Community-first",
+    title: "We listen before we build",
     description:
-      "Discover how we partner with communities to co-create resilient futures across the continent.",
+      "Every initiative is co-designed with local leaders so investments strengthen existing wisdom and power community ownership.",
     to: "/vision",
+    cta: "Explore our vision",
   },
   {
-    title: "Volta Focus",
+    eyebrow: "Integrated systems",
+    title: "Programs unlock each other",
     description:
-      "Explore this season's pilots in Ghana's Volta Region and how they unlock scalable models.",
-    to: "/volta-focus",
-  },
-  {
-    title: "Programs",
-    description:
-      "Dive into education, health, water, and livelihoods initiatives shaping measurable impact.",
+      "Education, health, climate resilience, and livelihoods connect as one ecosystem to keep families thriving long term.",
     to: "/programs",
+    cta: "See active programs",
+  },
+  {
+    eyebrow: "Radical transparency",
+    title: "Supporters stay informed",
+    description:
+      "Field diaries, budgets, and open dashboards keep donors and partners aligned with community priorities.",
+    to: "/stories",
+    cta: "Read latest updates",
   },
 ];
 
-const storytellingHighlights = [
+const engagementActions = [
   {
-    eyebrow: "Stories",
-    heading: "See the movement in motion",
-    body: "Track immersive narratives from classrooms, clinics, and cooperatives driving lasting change.",
-    to: "/stories",
-    cta: "Read latest stories",
+    title: "Fuel resilient futures",
+    description:
+      "Back the seasonal priorities in Ghana's Volta Region and help prove models ready to scale across the continent.",
+    primaryCta: { label: "Donate now", to: "/donate" },
+    secondaryCta: { label: "Why your gift matters", to: "/vision" },
   },
   {
-    eyebrow: "Voices",
-    heading: "Hear from our community",
-    body: "Volunteers, donors, and residents share why they trust the Mawu Foundation to deliver with integrity.",
-    to: "/voices",
-    cta: "Meet the voices",
+    title: "Shop the movement",
+    description:
+      "Our limited-run merch celebrates artists and makers who champion equitable development across Africa.",
+    primaryCta: { label: "Browse the shop", to: "/shop" },
+    secondaryCta: { label: "Meet the creators", to: "/stories" },
   },
   {
-    eyebrow: "Support",
-    heading: "Invest in resilient futures",
-    body: "Shop limited-run merch or make a secure donation to keep the constellation of programs thriving.",
-    to: "/donate",
-    cta: "Support today",
+    title: "Amplify community voices",
+    description:
+      "Hear from ambassadors, volunteers, and beneficiaries who shape our roadmap and keep us accountable.",
+    primaryCta: { label: "Visit voices hub", to: "/voices" },
+    secondaryCta: { label: "Share your story", to: "/stories" },
   },
 ];
+
+const highlightPrograms = fallbackProgramsPayload.programs.slice(0, 3);
 
 export const LandingPage = () => (
   <>
-    <VisionHero />
-    <Section>
-      <div className="space-y-6 text-center">
-        <Eyebrow>Navigate the platform</Eyebrow>
-        <Heading level={2}>Find the depth you are looking for</Heading>
-        <Body className="mx-auto max-w-2xl" variant="muted">
-          The landing page highlights the essentials. Follow the links below to
-          explore each focus area in detail, from the foundation's mission to
-          the programs, stories, and ways to engage.
-        </Body>
+    <Section
+      as="header"
+      background="inverted"
+      className="overflow-hidden"
+      containerClassName="relative grid gap-12 lg:grid-cols-[1.4fr,1fr] lg:items-center"
+    >
+      <div className="pointer-events-none absolute inset-0 -z-10">
+        <img
+          alt="Illustrated Volta River sunset with lush banks"
+          className="h-full w-full object-cover"
+          src="/hero-volta-river.jpg"
+        />
+        <div className="absolute inset-0 bg-gradient-to-br from-ink-900/85 via-ink-900/70 to-brand-700/55" />
       </div>
-      <div className="mt-10 grid gap-6 md:grid-cols-3">
-        {overviewCards.map((card) => (
-          <Card className="flex h-full flex-col justify-between border border-ink-100/60 bg-white/80 p-6 shadow-soft" key={card.title}>
-            <div className="space-y-4">
-              <Heading className="text-xl" level={3}>
-                {card.title}
-              </Heading>
-              <Body variant="muted">{card.description}</Body>
+      <div className="pointer-events-none absolute -left-24 top-0 hidden h-96 w-96 rounded-full bg-brand-500/25 blur-3xl lg:block" />
+      <div className="pointer-events-none absolute -bottom-20 right-0 h-80 w-80 rounded-full bg-sand-300/20 blur-3xl" />
+      <div className="relative space-y-8">
+        <Eyebrow className="text-brand-100">Pan-African impact • Seasonal focus: Volta Region</Eyebrow>
+        <Heading className="text-balance text-white" level={1}>
+          Scale community power across Africa
+        </Heading>
+        <Body className="max-w-2xl text-lg" variant="light">
+          Mawu Foundation partners with community cooperatives, clinics, and youth leaders across Africa to unlock
+          health, education, and climate resilience. This season, our teams are deep in Ghana's Volta Region pressure-testing
+          what will soon scale across the continent.
+        </Body>
+        <div className="flex flex-col gap-3 sm:flex-row">
+          <Button as={Link} size="lg" to="/donate" variant="primary">
+            Donate today
+          </Button>
+          <Button as={Link} size="lg" to="/programs" variant="secondary">
+            Explore our programs
+          </Button>
+        </div>
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {heroStats.map((stat) => (
+            <div
+              className="rounded-2xl border border-white/20 bg-white/10 p-5 shadow-lg backdrop-blur"
+              key={stat.label}
+            >
+              <p className="text-3xl font-semibold text-white sm:text-4xl">{stat.value}</p>
+              <p className="mt-1 text-xs font-semibold uppercase tracking-[0.3em] text-brand-100/80">
+                {stat.label}
+              </p>
+              <Body className="mt-3 text-sm text-white/70" variant="light">
+                {stat.description}
+              </Body>
             </div>
-            <Button as={Link} className="mt-6 self-start" to={card.to} variant="secondary">
-              Read more
+          ))}
+        </div>
+      </div>
+      <Card className="relative overflow-hidden border-white/20 bg-white/95 text-ink-900 shadow-elevated">
+        <div className="pointer-events-none absolute -top-20 right-0 h-52 w-52 rounded-full bg-brand-200/40 blur-3xl" />
+        <div className="relative space-y-4">
+          <Eyebrow>Impact spotlight</Eyebrow>
+          <Heading level={3}>Your support powers lasting change across Africa</Heading>
+          <Body variant="muted">
+            See how gifts translate into thriving schools, healthier families, and resilient livelihoods. Every donation is
+            stewarded alongside community leaders to ensure progress that outlives our interventions and readies expansion to
+            new regions.
+          </Body>
+          <ul className="mt-6 space-y-4 text-sm text-ink-600">
+            <li className="flex items-start gap-3">
+              <span className="mt-1 h-2.5 w-2.5 rounded-full bg-brand-500" />
+              <div>
+                <Link className="font-semibold text-ink-800 transition hover:text-brand-600" to="/volta-focus">
+                  Clean water restored
+                </Link>
+                <p className="text-ink-600">
+                  Solar pumping stations now serve 9 river communities with reliable drinking water and irrigation, laying the
+                  groundwork for similar upgrades in Malawi and Côte d'Ivoire.
+                </p>
+              </div>
+            </li>
+            <li className="flex items-start gap-3">
+              <span className="mt-1 h-2.5 w-2.5 rounded-full bg-brand-500" />
+              <div>
+                <Link className="font-semibold text-ink-800 transition hover:text-brand-600" to="/programs">
+                  Students back in class
+                </Link>
+                <p className="text-ink-600">
+                  Mobile learning hubs provide tutoring, meals, and digital literacy to 1,200 young people each term with
+                  roadmaps ready for partners in Tanzania and Nigeria.
+                </p>
+              </div>
+            </li>
+            <li className="flex items-start gap-3">
+              <span className="mt-1 h-2.5 w-2.5 rounded-full bg-brand-500" />
+              <div>
+                <Link className="font-semibold text-ink-800 transition hover:text-brand-600" to="/stories">
+                  Farmers earning more
+                </Link>
+                <p className="text-ink-600">
+                  Climate-smart training and cooperative financing lifted yields by 38% during the last harvest season and are
+                  being adapted with partners in Uganda and Rwanda.
+                </p>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </Card>
+    </Section>
+
+    <Section>
+      <div className="grid gap-8 lg:grid-cols-[3fr,2fr] lg:items-center">
+        <div className="space-y-6">
+          <Eyebrow>What we do</Eyebrow>
+          <Heading level={2}>A holistic approach to dignity, opportunity, and climate resilience</Heading>
+          <Body className="text-lg text-ink-700" variant="muted">
+            Mawu Foundation exists to power community-designed solutions that uplift health, education, water, and livelihoods in
+            tandem. Explore the journey from our pan-African vision to the pilots unfolding in Ghana's Volta Region this season and
+            the expansion plans queued for the wider network.
+          </Body>
+          <div className="flex flex-col gap-3 sm:flex-row">
+            <Button as={Link} to="/volta-focus">
+              See the Volta roadmap
             </Button>
-          </Card>
-        ))}
+            <Button as={Link} to="/programs" variant="secondary">
+              Browse programs
+            </Button>
+          </div>
+        </div>
+        <Card className="border-brand-100/60 bg-brand-50/60">
+          <Eyebrow className="text-brand-600">Core commitments</Eyebrow>
+          <Heading className="text-xl">Designed with accountability at the center</Heading>
+          <Body variant="muted">
+            We pair every investment with local stewardship committees, shared dashboards, and public updates so supporters see
+            the full journey from planning through maintenance across every geography we enter.
+          </Body>
+        </Card>
       </div>
     </Section>
+
     <Section background="tinted">
-      <div className="grid gap-6 md:grid-cols-3">
-        {storytellingHighlights.map((item) => (
-          <Card className="flex h-full flex-col justify-between border border-brand-100/60 bg-white/80 p-6 shadow-soft" key={item.to}>
-            <div className="space-y-3">
-              <Eyebrow>{item.eyebrow}</Eyebrow>
-              <Heading className="text-xl" level={3}>
-                {item.heading}
-              </Heading>
-              <Body variant="muted">{item.body}</Body>
+      <div className="space-y-10">
+        <div className="text-center">
+          <Eyebrow>Our approach</Eyebrow>
+          <Heading level={2}>Built with trust, co-creation, and measurable outcomes</Heading>
+          <Body className="mx-auto mt-4 max-w-3xl" variant="muted">
+            Dive deeper into the philosophy guiding every partnership. These pillars help supporters understand why Mawu Foundation
+            continues to earn community trust across the continent.
+          </Body>
+        </div>
+        <div className="grid gap-6 md:grid-cols-3">
+          {strategicPillars.map((pillar) => (
+            <Card className="flex h-full flex-col justify-between border border-brand-100/70 bg-white/80" key={pillar.title}>
+              <div className="space-y-4">
+                <Eyebrow>{pillar.eyebrow}</Eyebrow>
+                <Heading className="text-2xl" level={3}>
+                  {pillar.title}
+                </Heading>
+                <Body variant="muted">{pillar.description}</Body>
+              </div>
+              <Button as={Link} className="mt-6 self-start" to={pillar.to} variant="tertiary">
+                {pillar.cta}
+              </Button>
+            </Card>
+          ))}
+        </div>
+      </div>
+    </Section>
+
+    <Section background="muted">
+      <div className="grid gap-8 lg:grid-cols-[2fr,3fr] lg:items-stretch">
+        <Card
+          bleed
+          className="relative flex min-h-[20rem] flex-col justify-end overflow-hidden border-ink-100/60 bg-ink-900"
+        >
+          <img
+            alt="Illustrated Volta Region community fields"
+            className="absolute inset-0 h-full w-full object-cover opacity-60"
+            src="/season-focus-landscape.jpg"
+          />
+          <div className="relative space-y-4 p-8 text-white">
+            <Eyebrow className="text-brand-100">Season focus</Eyebrow>
+            <Heading level={3}>
+              Volta Region pilots model the resilience we aim to scale continent-wide
+            </Heading>
+            <Body variant="light">
+              Navigate floating classrooms, riverine health bridges, and regenerative water systems that are co-funded with
+              local cooperatives. Each program is a blueprint for what the rest of Africa can adapt next.
+            </Body>
+            <div className="flex flex-col gap-3 sm:flex-row">
+              <Button as={Link} to="/volta-focus">
+                Tour focus area
+              </Button>
+              <Button as={Link} to="/stories" variant="secondary">
+                Read field updates
+              </Button>
             </div>
-            <Button as={Link} className="mt-6 self-start" to={item.to}>
-              {item.cta}
+          </div>
+        </Card>
+        <div className="grid gap-6 lg:grid-cols-2">
+          {highlightPrograms.map((program) => (
+            <Card className="flex h-full flex-col border border-ink-100/60 bg-white/90" key={program.slug}>
+              <div className="aspect-[4/3] overflow-hidden rounded-2xl bg-ink-900/5">
+                <img
+                  alt={program.title}
+                  className="h-full w-full object-cover"
+                  src={program.heroImage}
+                />
+              </div>
+              <div className="mt-6 space-y-3">
+                <Eyebrow>{program.category}</Eyebrow>
+                <Heading className="text-xl" level={3}>
+                  {program.title}
+                </Heading>
+                <Body variant="muted">{program.summary}</Body>
+              </div>
+              <Button as={Link} className="mt-6 self-start" to="/programs" variant="secondary">
+                Explore in programs
+              </Button>
+            </Card>
+          ))}
+        </div>
+      </div>
+    </Section>
+
+    <Section>
+      <div className="grid gap-8 lg:grid-cols-[3fr,2fr] lg:items-center">
+        <div className="space-y-4">
+          <Eyebrow>Stories & voices</Eyebrow>
+          <Heading level={2}>Transparency is a practice, not a page</Heading>
+          <Body className="text-lg text-ink-700" variant="muted">
+            From in-depth narratives to rapid voice notes, we invite stakeholders into the process. Meet volunteers, parents,
+            health workers, and artisans who hold us accountable to the outcomes we promise.
+          </Body>
+          <div className="flex flex-col gap-3 sm:flex-row">
+            <Button as={Link} to="/stories">
+              Discover stories
             </Button>
-          </Card>
-        ))}
+            <Button as={Link} to="/voices" variant="secondary">
+              Hear community voices
+            </Button>
+          </div>
+        </div>
+        <Card className="border-ink-100/60 bg-white/90">
+          <Eyebrow>Why stories matter</Eyebrow>
+          <Body variant="muted">
+            The Stories and Voices libraries elevate the people behind every statistic—parents, volunteers, health workers, and
+            artisans who protect the progress we celebrate together.
+          </Body>
+          <Body className="mt-4 text-sm text-ink-500">
+            Follow their journeys to understand how resources are used, what challenges remain, and where partnership can unlock
+            the next wave of impact across the Volta basin.
+          </Body>
+        </Card>
+      </div>
+    </Section>
+
+    <Section background="tinted">
+      <div className="space-y-10">
+        <div className="text-center">
+          <Eyebrow>Get involved</Eyebrow>
+          <Heading level={2}>Choose how you will help write the next chapter</Heading>
+          <Body className="mx-auto mt-4 max-w-3xl" variant="muted">
+            Whether you give, advocate, or collaborate, there is a clear pathway to stand with the communities shaping a more
+            just future across the Volta basin and the continent it inspires.
+          </Body>
+        </div>
+        <div className="grid gap-6 md:grid-cols-3">
+          {engagementActions.map((action) => (
+            <Card className="flex h-full flex-col justify-between border border-brand-100/70 bg-white/90" key={action.title}>
+              <div className="space-y-4">
+                <Heading className="text-2xl" level={3}>
+                  {action.title}
+                </Heading>
+                <Body variant="muted">{action.description}</Body>
+              </div>
+              <div className="mt-6 flex flex-col gap-3">
+                <Button as={Link} to={action.primaryCta.to}>
+                  {action.primaryCta.label}
+                </Button>
+                <Button as={Link} to={action.secondaryCta.to} variant="tertiary">
+                  {action.secondaryCta.label}
+                </Button>
+              </div>
+            </Card>
+          ))}
+        </div>
       </div>
     </Section>
   </>

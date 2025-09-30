@@ -62,17 +62,6 @@ const renderIcon = (icon: ReactNode, position: 'leading' | 'trailing') => (
   </span>
 );
 
-type ButtonComponent = <T extends ElementType = 'button'>({
-  as,
-  children,
-  className,
-  icon,
-  leadingIcon,
-  size,
-  variant,
-  ...rest
-}: ButtonProps<T> & { ref?: PolymorphicRef<T> }) => ReactElement | null;
-
 const ButtonInner = <T extends ElementType = 'button'>(
   {
     as,
@@ -124,4 +113,10 @@ const ForwardedButton = forwardRef(
 );
 ForwardedButton.displayName = 'Button';
 
-export const Button = ForwardedButton as unknown as ButtonComponent;
+/* eslint-disable no-unused-vars */
+export const Button = ForwardedButton as unknown as <
+  T extends ElementType = 'button'
+>(
+  props: ButtonProps<T> & { ref?: PolymorphicRef<T> }
+) => ReactElement | null;
+/* eslint-enable no-unused-vars */

@@ -3,72 +3,140 @@ import { Link } from "react-router-dom";
 import { Body, Container, Heading } from "../../design-system";
 import { NewsletterSignup } from "../NewsletterSignup";
 
-const exploreLinks = [
-  { to: "/vision", label: "Vision" },
-  { to: "/volta-focus", label: "Volta Focus" },
-  { to: "/programs", label: "Programs" },
-  { to: "/stories", label: "Stories" },
-  { to: "/voices", label: "Voices" },
+const commitments = [
+  "Community stewardship councils guide every investment.",
+  "Transparent budgets and dashboards keep partners aligned.",
+  "Long-term maintenance plans protect local infrastructure.",
 ];
 
-const engageLinks = [
-  { to: "/donate", label: "Donate" },
-  { to: "/shop", label: "Shop" },
+const navigationColumns = [
+  {
+    title: "Explore",
+    links: [
+      { to: "/vision", label: "Vision & thesis" },
+      { to: "/volta-focus", label: "Volta focus" },
+      { to: "/programs", label: "Programs" },
+      { to: "/stories", label: "Stories" },
+    ],
+  },
+  {
+    title: "Participate",
+    links: [
+      { to: "/donate", label: "Donate" },
+      { to: "/voices", label: "Voices hub" },
+      { to: "/shop", label: "Shop the movement" },
+      { to: "/volta-focus", label: "Season priorities" },
+    ],
+  },
+  {
+    title: "Resources",
+    links: [
+      { to: "/vision", label: "Accountability" },
+      { to: "/stories", label: "Field reports" },
+      { href: "mailto:hello@mawufoundation.org", label: "Contact" },
+      { href: "https://plausible.io/", label: "Analytics (optional)" },
+    ],
+  },
+  {
+    title: "Follow",
+    links: [
+      { href: "https://twitter.com/mawufoundation", label: "Twitter" },
+      { href: "https://www.linkedin.com/company/mawufoundation", label: "LinkedIn" },
+      { href: "https://instagram.com/mawufoundation", label: "Instagram" },
+    ],
+  },
 ];
 
 export const SiteFooter = () => (
-  <footer className="bg-ink-900 py-16 text-white">
-    <Container className="grid gap-8 md:grid-cols-[1.2fr_1fr]">
-      <div className="space-y-6" id="newsletter">
-        <Heading className="text-white" level={3}>
-          Stay connected to the movement
-        </Heading>
-        <Body className="text-white/75" variant="light">
-          Receive quarterly impact letters, volunteering opportunities, and
-          regional expansion news as we scale across Africa.
-        </Body>
-        <NewsletterSignup />
-        <p className="text-xs text-white/50">
-          (c) {new Date().getFullYear()} Mawu Foundation. Crafted for investor
-          previews--content subject to change.
-        </p>
-      </div>
-      <div className="grid grid-cols-2 gap-6 text-sm text-white/80 sm:grid-cols-3">
-        <div className="space-y-3">
-          <p className="font-semibold uppercase tracking-[0.18em] text-white/60">
-            Explore
-          </p>
-          {exploreLinks.map((link) => (
-            <Link className="transition hover:text-brand-200" key={link.to} to={link.to}>
-              {link.label}
-            </Link>
-          ))}
+  <footer className="bg-ink-900 text-white">
+    <Container className="space-y-12 py-16">
+      <div className="grid gap-12 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)]">
+        <div className="space-y-8">
+          <Link className="flex items-center gap-3 text-left" to="/">
+            <span className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-500 text-xl font-semibold text-white shadow-soft">
+              MF
+            </span>
+            <div>
+              <p className="font-display text-lg font-semibold text-white">Mawu Foundation</p>
+              <p className="text-xs uppercase tracking-[0.24em] text-white/60">Rooted in community power</p>
+            </div>
+          </Link>
+          <Body className="max-w-xl text-white/80" variant="light">
+            We partner with communities across Ghana's Volta Region to expand access to health, learning, climate resilience,
+            and dignified livelihoods. Every pilot is co-created with local leaders to unlock prosperity that outlasts aid
+            cycles.
+          </Body>
+          <ul className="space-y-3 text-sm text-white/70">
+            {commitments.map((item) => (
+              <li className="flex items-start gap-3" key={item}>
+                <span className="mt-1 inline-flex h-2.5 w-2.5 rounded-full bg-brand-400" />
+                <span>{item}</span>
+              </li>
+            ))}
+          </ul>
+          <div className="space-y-1 text-sm text-white/60">
+            <p>Field office: Ho, Volta Region, Ghana</p>
+            <a className="transition hover:text-brand-200" href="mailto:hello@mawufoundation.org">
+              hello@mawufoundation.org
+            </a>
+            <a className="transition hover:text-brand-200" href="tel:+233000000000">
+              +233 000 000 000
+            </a>
+          </div>
         </div>
-        <div className="space-y-3">
-          <p className="font-semibold uppercase tracking-[0.18em] text-white/60">
-            Engage
+        <div className="space-y-6 rounded-3xl border border-white/10 bg-white/5 p-8" id="newsletter">
+          <Heading className="text-white" level={3}>
+            Stay close to the work
+          </Heading>
+          <Body className="text-white/75" variant="light">
+            Quarterly stories, seasonal priorities, and partner briefings delivered straight to your inbox.
+          </Body>
+          <NewsletterSignup />
+          <p className="text-xs text-white/45">
+            We send a single update each quarter and you can unsubscribe at any time.
           </p>
-          {engageLinks.map((link) => (
-            <Link className="transition hover:text-brand-200" key={link.to} to={link.to}>
-              {link.label}
-            </Link>
-          ))}
+        </div>
+      </div>
+      <div className="grid gap-8 border-t border-white/10 pt-10 sm:grid-cols-2 lg:grid-cols-4">
+        {navigationColumns.map((column) => (
+          <div className="space-y-4" key={column.title}>
+            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-white/60">{column.title}</p>
+            <ul className="space-y-3 text-sm text-white/75">
+              {column.links.map((link) => (
+                <li key={link.label}>
+                  {"to" in link ? (
+                    <Link className="transition hover:text-brand-200" to={link.to}>
+                      {link.label}
+                    </Link>
+                  ) : (
+                    <a
+                      className="transition hover:text-brand-200"
+                      href={link.href}
+                      rel="noreferrer"
+                      target={link.href?.startsWith("http") ? "_blank" : undefined}
+                    >
+                      {link.label}
+                    </a>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+      <div className="flex flex-col gap-4 border-t border-white/10 pt-8 text-xs text-white/50 md:flex-row md:items-center md:justify-between">
+        <p>
+          © {new Date().getFullYear()} Mawu Foundation. Crafted for demo previews — content subject to change as pilots evolve.
+        </p>
+        <div className="flex flex-wrap items-center gap-4 text-white/60">
           <a className="transition hover:text-brand-200" href="#newsletter">
             Newsletter
           </a>
-        </div>
-        <div className="space-y-3">
-          <p className="font-semibold uppercase tracking-[0.18em] text-white/60">
-            Connect
-          </p>
-          <a className="transition hover:text-brand-200" href="mailto:hello@mawufoundation.org">
-            hello@mawufoundation.org
-          </a>
-          <a className="transition hover:text-brand-200" href="tel:+233000000000">
-            +233 000 000 000
-          </a>
           <Link className="transition hover:text-brand-200" to="/vision">
             Transparency hub
+          </Link>
+          <Link className="transition hover:text-brand-200" to="/stories">
+            Field stories
           </Link>
         </div>
       </div>
