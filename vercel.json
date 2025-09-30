@@ -1,5 +1,5 @@
 {
-  "buildCommand": "npm install && npm run build --workspace @mawu/web",
+  "buildCommand": "npm install --prefer-offline && cd apps/web && npm rebuild && npm run build",
   "installCommand": "npm install --prefer-offline",
   "outputDirectory": "apps/web/dist",
   "framework": "vite",
