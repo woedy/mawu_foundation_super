@@ -1,0 +1,6 @@
+{
+  "buildCommand": "npm run build --workspace @mawu/web",
+  "installCommand": "npm install",
+  "outputDirectory": "apps/web/dist",
+  "framework": "vite"
+}

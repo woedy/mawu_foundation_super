@@ -19,9 +19,11 @@ This walkthrough publishes the Mawu Foundation investor demo as a fully static s
 ## 3. Create the Vercel project
 1. In the Vercel dashboard click **Add New… → Project** and import this repository.
 2. When prompted for the **Framework Preset**, choose **Vite**.
-3. Set the **Root Directory** to `apps/web` so Vercel only builds the front-end workspace.
-4. Override the default build command to `npm run build` (Vercel automatically runs it inside `apps/web`).
-5. Set the output directory to `dist` (Vercel defaults this for Vite projects).
+3. If you prefer configuring the project entirely from the repo, keep the **Root Directory** as the repository root—`vercel.json`
+   already instructs Vercel to install workspace dependencies, run `npm run build --workspace @mawu/web`, and publish the
+   static bundle from `apps/web/dist`.
+4. Alternatively, you can point the **Root Directory** to `apps/web` and keep the default Vite settings; both approaches build
+   the same static output.
 
 ## 4. Environment variables (optional)
 If you plan to stream Plausible analytics events:
@@ -41,7 +43,8 @@ If you plan to stream Plausible analytics events:
 - For analytics-enabled demos, confirm the Plausible script loads by checking the browser network tab.
 
 ## 7. Troubleshooting
-- **Build fails:** Ensure the project root is set to `apps/web` and that `package.json` exists inside that folder.
+- **Build fails:** Confirm the project uses the repo's `vercel.json` (or sets `apps/web` as the root) so the build output ends up
+  in `apps/web/dist`.
 - **Missing styles or data:** Confirm `npm run build --workspace @mawu/web` succeeds locally and that no runtime fetches are pointing to removed APIs.
 - **Analytics not firing:** Verify `VITE_ANALYTICS_DOMAIN` is defined and that any ad blockers allow Plausible.
 

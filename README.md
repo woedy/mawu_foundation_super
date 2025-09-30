@@ -32,7 +32,8 @@ Run these from the repository root.
 
 ## Deployment
 - Deploy the Vite build output (`apps/web/dist`) to any static host such as Coolify, Netlify, or Vercel—no Express servers or Node backends are needed.
-- Follow the platform-specific docs for step-by-step guidance:
+- Follow the platform-specific docs for step-by-step guidance (the root `vercel.json` already configures the static build for
+  Vercel):
   - [`docs/deployment/vercel.md`](docs/deployment/vercel.md) for Vercel’s static hosting workflow.
   - [`docs/deployment/coolify.md`](docs/deployment/coolify.md) for a single-service Coolify setup.
 - If you set `VITE_ANALYTICS_DOMAIN`, ensure the host exposes the same domain so Plausible can receive events.
