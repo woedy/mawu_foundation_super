@@ -3,6 +3,10 @@ import { Link } from "react-router-dom";
 import { Body, Container, Heading } from "../../design-system";
 import { NewsletterSignup } from "../NewsletterSignup";
 
+type NavigationLink = { label: string } & ({ to: string } | { href: string });
+
+const isRouteLink = (link: NavigationLink): link is NavigationLink & { to: string } => "to" in link;
+
 const commitments = [
   "Community stewardship councils guide every investment.",
   "Transparent budgets and dashboards keep partners aligned.",
@@ -45,7 +49,8 @@ const navigationColumns = [
       { href: "https://instagram.com/mawufoundation", label: "Instagram" },
     ],
   },
-];
+// Using `satisfies` ensures TypeScript understands the discriminated union for href/to links.
+] satisfies Array<{ title: string; links: NavigationLink[] }>;
 
 export const SiteFooter = () => (
   <footer className="bg-ink-900 text-white">
@@ -104,7 +109,7 @@ export const SiteFooter = () => (
             <ul className="space-y-3 text-sm text-white/75">
               {column.links.map((link) => (
                 <li key={link.label}>
-                  {"to" in link ? (
+                  {isRouteLink(link) ? (
                     <Link className="transition hover:text-brand-200" to={link.to}>
                       {link.label}
                     </Link>
