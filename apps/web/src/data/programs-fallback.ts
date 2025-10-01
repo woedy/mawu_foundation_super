@@ -6,6 +6,7 @@ export const fallbackProgramsPayload: ProgramsPayload = {
     'Health',
     'Water & Sanitation',
     'Economic Empowerment',
+    'IT & Digital Literacy',
     'Community Development'
   ],
   regions: [
@@ -267,6 +268,58 @@ export const fallbackProgramsPayload: ProgramsPayload = {
           label: 'Partner with a Cooperative',
           href: '/get-involved/partners',
           tone: 'secondary'
+        }
+      ]
+    },
+    {
+      slug: 'digital-empowerment-labs',
+      title: 'Digital Empowerment Labs',
+      category: 'IT & Digital Literacy',
+      focus: 'pan-africa',
+      summary:
+        'Bridging the digital divide with computer literacy training, coding bootcamps, and tech entrepreneurship programs.',
+      excerpt:
+        'Equipping youth and adults with essential digital skills for the modern economy through hands-on training in coding, digital marketing, and online entrepreneurship.',
+      heroImage:
+        '/computer_literacy_di_16160378.jpg',
+      spotlightStatistic: '2,800 people trained in digital skills in 2024',
+      highlightQuote: {
+        quote: 'Learning to code changed my life. Now I can support my family through web development.',
+        attribution: 'Kwame, Digital Lab Graduate, Accra'
+      },
+      outcomes: [
+        'Establish 15 digital literacy centers across Ghana and Nigeria',
+        'Train 5,000 youth in basic computer skills and internet safety',
+        'Graduate 500 participants from coding and digital marketing bootcamps',
+        'Launch 100 tech-enabled micro-businesses'
+      ],
+      narrative: [
+        'Digital Empowerment Labs provide free access to computers, internet, and expert instruction in communities where technology access is limited.',
+        'Our curriculum covers everything from basic computer literacy to advanced coding, web development, digital marketing, and e-commerce.',
+        'Graduates receive mentorship and seed funding to launch tech-enabled businesses, from online shops to freelance digital services.',
+        'We partner with tech companies to provide internship opportunities and job placement for top performers.'
+      ],
+      gallery: [
+        {
+          src: '/computer_literacy_di_d137182c.jpg',
+          alt: 'Students learning computer skills in digital lab'
+        },
+        {
+          src: '/computer_literacy_di_4a969b3f.jpg',
+          alt: 'Instructor teaching coding to youth participants'
+        }
+      ],
+      ctas: [
+        {
+          label: 'Fund Digital Training',
+          href: '/donate?designation=digital-labs',
+          tone: 'primary'
+        },
+        {
+          label: 'Become a Tech Mentor',
+          href: '/get-involved/volunteer',
+          tone: 'secondary',
+          description: 'Share your IT expertise with aspiring tech professionals.'
         }
       ]
     }
