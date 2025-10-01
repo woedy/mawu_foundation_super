@@ -1,0 +1,26 @@
+This website is called Mawu Foundation. its a foundation formed by a group of people coming together in arts, culture, spirituality, quality education, humanitarian services, IT literacy, charity etc. the foundation focuses on helping and providing humanitarian services through out Africa in different aspects of charity you can think of. for this season, their main focus is to provide humanitarian services in the vola region of ghana in all areas of charity/philanthropy. the current state of the website has the context I just described to you about, but I want to enrich it more to be more captivating(the design is fine unless you want to touch it abit creatively).
+
+1. here are some websites I want you to refer to get some more context on charity/philanthropy work in Africa/Ghana/Volta Region, to solidify(enrich) my website
+(https://dreambigghana.org.uk/   , https://www.ketafoundation.org/ , https://chrissyfoundation.org/ )
+
+2. Use proper and right images that describes what ever point that is being made or sections.
+
+3. also fix this so I can preview in replit.
+
+(Blocked request. This host ("ed99bea7-3b96-4296-b738-9a715188af1f-00-eragdeud5f0m.janeway.replit.dev") is not allowed.
+To allow this host, add "ed99bea7-3b96-4296-b738-9a715188af1f-00-eragdeud5f0m.janeway.replit.dev" to `server.allowedHosts` in vite.config.js.)
+
+4.Provide detail information for links that has 'read more' or 'details' or stuff like that(you know some detail infos require a whole page on its own)
+
+5. Make sure all clickable links and buttons navigate to their right locations.
+
+6. also work on proper donation page with different donation tiers for one-time donation and monthly recurring donations - the one-time and monthly should be in a tab on the same donation so the user can switch between the wo on the same page. also I want to be able to go through the donation process to donation successful(all demo static pages.. no server connection)
+
+7. work on a proper shop page too.. it should have all the shopping experience of a standard shopping site. so meaning there will be a cart with counter on the menu header too. its should take you through the all the shopping process through checkout to successful((all demo static pages.. no server connection)
+
+8. if you think we can improve the landing page to look more captivating and enguaging, give a go at it. just be creative and don't mess up what I already have
+
+9. don't forget IT literacy in the contexts too.
+
+10. the website should still be static as it is no servers please..
+
