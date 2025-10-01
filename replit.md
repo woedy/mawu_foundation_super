@@ -5,9 +5,12 @@ The Mawu Foundation investor demo is a React + Vite + TypeScript + Tailwind stat
 
 ## Recent Changes
 - **2025-10-01**: Imported from GitHub and configured for Replit environment
+  - Installed Node.js 20 and all npm dependencies
   - Updated Vite config to use port 5000 and host 0.0.0.0
-  - Configured workflow for development server
-  - Set up deployment configuration for autoscale hosting
+  - Configured HMR with clientPort 443 for Replit proxy compatibility
+  - Configured workflow for development server (npm run dev)
+  - Set up deployment configuration for autoscale hosting with build and preview commands
+  - Verified website is working correctly with all features functional
 
 ## Project Architecture
 
