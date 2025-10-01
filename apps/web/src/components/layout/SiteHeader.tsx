@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { NavLink, Link } from "react-router-dom";
 
 import { Body, Button, Container } from "../../design-system";
+import { useCart } from "../../contexts/CartContext";
 
 const navItems = [
   { to: "/vision", label: "Vision" },
@@ -15,6 +16,7 @@ const navItems = [
 
 export const SiteHeader = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { itemCount } = useCart();
 
   useEffect(() => {
     if (isMenuOpen) {
@@ -63,7 +65,27 @@ export const SiteHeader = () => {
             ))}
           </ul>
         </nav>
-        <div className="hidden md:block">
+        <div className="hidden md:flex md:items-center md:gap-4">
+          <Link to="/shop/cart" className="relative">
+            <svg
+              className="h-6 w-6 text-ink-600 hover:text-brand-600 transition"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
+              />
+            </svg>
+            {itemCount > 0 && (
+              <span className="absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full bg-brand-600 text-xs font-semibold text-white">
+                {itemCount}
+              </span>
+            )}
+          </Link>
           <Button as={Link} to="/donate">
             Give Today
           </Button>
