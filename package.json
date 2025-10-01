@@ -12,5 +12,8 @@
   },
   "workspaces": [
     "apps/web"
-  ]
+  ],
+  "optionalDependencies": {
+    "@rollup/rollup-linux-x64-gnu": "4.52.2"
+  }
 }

@@ -1,0 +1,66 @@
+03:49:15.974 Running build in Washington, D.C., USA (East) – iad1
+03:49:15.974 Build machine configuration: 2 cores, 8 GB
+03:49:15.993 Cloning github.com/woedy/mawu_foundation_super (Branch: main, Commit: 5408427)
+03:49:16.153 Previous build caches not available
+03:49:16.308 Cloning completed: 315.000ms
+03:49:16.984 Running "vercel build"
+03:49:17.711 Vercel CLI 48.1.6
+03:49:18.481 Running "install" command: `npm install`...
+03:49:35.129 
+03:49:35.130 added 430 packages, and audited 432 packages in 16s
+03:49:35.131 
+03:49:35.134 126 packages are looking for funding
+03:49:35.135   run `npm fund` for details
+03:49:35.143 
+03:49:35.143 2 moderate severity vulnerabilities
+03:49:35.143 
+03:49:35.144 To address all issues (including breaking changes), run:
+03:49:35.144   npm audit fix --force
+03:49:35.145 
+03:49:35.145 Run `npm audit` for details.
+03:49:35.492 
+03:49:35.492 > @mawu/web@0.1.0 build
+03:49:35.493 > tsc --noEmit && vite build
+03:49:35.493 
+03:49:42.204 /vercel/path0/node_modules/rollup/dist/native.js:71
+03:49:42.204 		throw new Error(
+03:49:42.205 		      ^
+03:49:42.205 
+03:49:42.206 Error: Cannot find module @rollup/rollup-linux-x64-gnu. npm has a bug related to optional dependencies (https://github.com/npm/cli/issues/4828). Please try `npm i` again after removing both package-lock.json and node_modules directory.
+03:49:42.206     at requireWithFriendlyError (/vercel/path0/node_modules/rollup/dist/native.js:71:9)
+03:49:42.206     at Object.<anonymous> (/vercel/path0/node_modules/rollup/dist/native.js:80:76)
+03:49:42.206     at Module._compile (node:internal/modules/cjs/loader:1706:14)
+03:49:42.207     at Object..js (node:internal/modules/cjs/loader:1839:10)
+03:49:42.207     at Module.load (node:internal/modules/cjs/loader:1441:32)
+03:49:42.207     at Function._load (node:internal/modules/cjs/loader:1263:12)
+03:49:42.207     at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+03:49:42.208     at wrapModuleLoad (node:internal/modules/cjs/loader:237:24)
+03:49:42.208     at cjsLoader (node:internal/modules/esm/translators:309:5)
+03:49:42.208     at ModuleWrap.<anonymous> (node:internal/modules/esm/translators:202:7) {
+03:49:42.208   [cause]: Error: Cannot find module '@rollup/rollup-linux-x64-gnu'
+03:49:42.208   Require stack:
+03:49:42.208   - /vercel/path0/node_modules/rollup/dist/native.js
+03:49:42.208       at Function._resolveFilename (node:internal/modules/cjs/loader:1383:15)
+03:49:42.208       at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+03:49:42.209       at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+03:49:42.209       at Function._load (node:internal/modules/cjs/loader:1192:37)
+03:49:42.209       at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+03:49:42.209       at wrapModuleLoad (node:internal/modules/cjs/loader:237:24)
+03:49:42.209       at Module.require (node:internal/modules/cjs/loader:1463:12)
+03:49:42.209       at require (node:internal/modules/helpers:147:16)
+03:49:42.209       at requireWithFriendlyError (/vercel/path0/node_modules/rollup/dist/native.js:53:10)
+03:49:42.209       at Object.<anonymous> (/vercel/path0/node_modules/rollup/dist/native.js:80:76) {
+03:49:42.209     code: 'MODULE_NOT_FOUND',
+03:49:42.209     requireStack: [ '/vercel/path0/node_modules/rollup/dist/native.js' ]
+03:49:42.209   }
+03:49:42.210 }
+03:49:42.210 
+03:49:42.210 Node.js v22.20.0
+03:49:42.213 npm error Lifecycle script `build` failed with error:
+03:49:42.214 npm error code 1
+03:49:42.214 npm error path /vercel/path0/apps/web
+03:49:42.215 npm error workspace @mawu/web@0.1.0
+03:49:42.215 npm error location /vercel/path0/apps/web
+03:49:42.215 npm error command failed
+03:49:42.217 npm error command sh -c tsc --noEmit && vite build
+03:49:42.224 Error: Command "npm run build --workspace @mawu/web" exited with 1
