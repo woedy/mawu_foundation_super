@@ -22,7 +22,7 @@ export const fallbackShopCatalog: ShopCatalogPayload = {
       description:
         'A soft organic cotton tee featuring a hand-illustrated Kente-inspired sunburst that honours ancestral craft while backing our creative learning labs.',
       images: [
-        'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=900&q=80',
+        'https://images.unsplash.com/photo-1660695828403-b42e117e0b4f?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
         'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=900&q=80'
       ],
       availability: 'in_stock',
@@ -113,7 +113,7 @@ export const fallbackShopCatalog: ShopCatalogPayload = {
       description:
         'Pair of lay-flat journals with tactile covers inspired by clay murals from our community hubs, perfect for capturing dreams and impact ideas.',
       images: [
-        'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=900&q=80',
+        'https://images.unsplash.com/photo-1596626417050-39c7f6ddd2c9?q=80&w=1169&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
         'https://images.unsplash.com/photo-1448932223592-d1fc686e76ea?auto=format&fit=crop&w=900&q=80'
       ],
       availability: 'in_stock',

@@ -281,7 +281,7 @@ export const fallbackProgramsPayload: ProgramsPayload = {
       excerpt:
         'Equipping youth and adults with essential digital skills for the modern economy through hands-on training in coding, digital marketing, and online entrepreneurship.',
       heroImage:
-        '/computer_literacy_di_16160378.jpg',
+        'https://images.unsplash.com/photo-1528901166007-3784c7dd3653?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
       spotlightStatistic: '2,800 people trained in digital skills in 2024',
       highlightQuote: {
         quote: 'Learning to code changed my life. Now I can support my family through web development.',

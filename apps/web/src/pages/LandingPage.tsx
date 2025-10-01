@@ -72,7 +72,11 @@ const engagementActions = [
   },
 ];
 
-const highlightPrograms = fallbackProgramsPayload.programs.slice(0, 3);
+const highlightPrograms = [
+  fallbackProgramsPayload.programs[0], // Volta Learning Labs
+  fallbackProgramsPayload.programs[1], // Riverine Health Bridge
+  fallbackProgramsPayload.programs[4]  // Digital Empowerment Labs (IT & Digital Literacy)
+];
 
 export const LandingPage = () => (
   <>
@@ -100,15 +104,17 @@ export const LandingPage = () => (
       {/* Decorative elements */}
       <div className="pointer-events-none absolute -left-24 top-0 hidden h-96 w-96 rounded-full bg-brand-500/25 blur-3xl lg:block" />
       <div className="pointer-events-none absolute -bottom-20 right-0 h-80 w-80 rounded-full bg-sand-300/20 blur-3xl" />
+
+      {/* Cultural motif elements */}
+      <div className="pointer-events-none absolute left-8 top-32 hidden h-16 w-16 rounded-full border-2 border-brand-200/30 lg:block" style={{background: 'conic-gradient(from 0deg, transparent 0deg, #f59e0b20 90deg, transparent 180deg)'}}></div>
+      <div className="pointer-events-none absolute right-16 top-48 hidden h-12 w-12 rounded-full border border-white/20 lg:block" style={{background: 'radial-gradient(circle, #10b98130 0%, transparent 70%)'}}></div>
       <div className="relative space-y-8">
-        <Eyebrow className="text-brand-100">Pan-African impact • Seasonal focus: Volta Region</Eyebrow>
+        <Eyebrow className="text-brand-100">Arts & Culture • Spiritual Guidance • Pan-African Service • Volta Region Season</Eyebrow>
         <Heading className="text-balance text-white" level={1}>
           Scale community power across Africa
         </Heading>
         <Body className="max-w-2xl text-lg" variant="light">
-          Mawu Foundation partners with community cooperatives, clinics, and youth leaders across Africa to unlock
-          health, education, and climate resilience. This season, our teams are deep in Ghana's Volta Region pressure-testing
-          what will soon scale across the continent.
+          Born from the union of artists, cultural custodians, spiritual guides, educators, and technologists across Africa, Mawu Foundation embodies the collective spirit of humanitarian service. We advance arts and culture, spiritual wellbeing, quality education, IT literacy, and comprehensive charity work throughout the continent. This season, our diverse teams unite in Ghana's Volta Region, delivering holistic humanitarian services across health, education, water access, economic empowerment, cultural preservation, and spiritual support—creating models that will inspire pan-African transformation.
         </Body>
         <div className="flex flex-col gap-3 sm:flex-row">
           <Button as={Link} size="lg" to="/donate" variant="primary">
@@ -190,12 +196,10 @@ export const LandingPage = () => (
     <Section>
       <div className="grid gap-8 lg:grid-cols-[3fr,2fr] lg:items-center">
         <div className="space-y-6">
-          <Eyebrow>What we do</Eyebrow>
-          <Heading level={2}>A holistic approach to dignity, opportunity, and climate resilience</Heading>
+          <Eyebrow>Our foundation</Eyebrow>
+          <Heading level={2}>A holistic approach to dignity, opportunity, and cultural preservation</Heading>
           <Body className="text-lg text-ink-700" variant="muted">
-            Mawu Foundation exists to power community-designed solutions that uplift health, education, water, and livelihoods in
-            tandem. Explore the journey from our pan-African vision to the pilots unfolding in Ghana's Volta Region this season and
-            the expansion plans queued for the wider network.
+            Mawu Foundation emerges from the collective wisdom of artists, cultural custodians, spiritual leaders, educators, and technologists across Africa. We advance arts and culture, spiritual wellbeing, quality education, IT literacy, and comprehensive humanitarian services throughout the continent. This season, our diverse teams—representing many faiths, artistic traditions, and technical expertise—unite in Ghana's Volta Region, delivering holistic support across health, education, water access, economic empowerment, cultural preservation, and spiritual guidance, creating models that honor both tradition and innovation.
           </Body>
           <div className="flex flex-col gap-3 sm:flex-row">
             <Button as={Link} to="/volta-focus">
