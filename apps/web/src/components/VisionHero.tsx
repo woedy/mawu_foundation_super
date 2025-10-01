@@ -50,9 +50,9 @@ export const VisionHero = ({
       <img
         alt="Community celebrating impact"
         className="h-full w-full object-cover object-center opacity-70"
-        src="https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&w=1600&q=80"
+        src="https://images.unsplash.com/photo-1740986188963-f99c42d5bad4?q=80&w=1167&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
       />
-      <div className="absolute inset-0 bg-gradient-to-br from-ink-900 via-ink-900/80 to-brand-600/70" />
+      <div className="absolute inset-0 bg-gradient-to-br from-ink-900/60 via-ink-900/50 to-brand-600/40" />
     </div>
     <div className="relative flex-1 space-y-6">
       <Eyebrow className="text-brand-100">Pan-African Mission</Eyebrow>

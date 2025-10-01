@@ -183,7 +183,7 @@ export const fallbackProgramsPayload: ProgramsPayload = {
       excerpt:
         'Guardians blend indigenous knowledge with IoT sensors to keep community water points safe, sustainable, and locally owned.',
       heroImage:
-        'https://images.unsplash.com/photo-1489515217757-5fd1be406fef?auto=format&fit=crop&w=1600&q=80',
+        'https://images.unsplash.com/photo-1568413612146-c687f9747846?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
       spotlightStatistic: '71,000+ people with reliable drinking water',
       highlightQuote: {
         quote: 'For the first time we can track water levels before the dry season hits.',
