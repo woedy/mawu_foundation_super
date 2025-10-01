@@ -1,0 +1,41 @@
+03:58:23.392 Running build in Washington, D.C., USA (East) – iad1
+03:58:23.392 Build machine configuration: 2 cores, 8 GB
+03:58:23.442 Cloning github.com/woedy/mawu_foundation_super (Branch: main, Commit: 48cfa75)
+03:58:23.595 Previous build caches not available
+03:58:23.693 Cloning completed: 251.000ms
+03:58:24.028 Running "vercel build"
+03:58:26.232 Vercel CLI 48.1.6
+03:58:26.824 Running "install" command: `npm install`...
+03:58:29.243 npm warn deprecated rimraf@3.0.2: Rimraf versions prior to v4 are no longer supported
+03:58:29.542 npm warn deprecated inflight@1.0.6: This module is not supported, and leaks memory. Do not use it. Check out lru-cache if you want a good and tested way to coalesce async requests by a key value, which is much more comprehensive and powerful.
+03:58:30.718 npm warn deprecated @humanwhocodes/object-schema@2.0.3: Use @eslint/object-schema instead
+03:58:30.719 npm warn deprecated @humanwhocodes/config-array@0.13.0: Use @eslint/config-array instead
+03:58:30.836 npm warn deprecated glob@7.2.3: Glob versions prior to v9 are no longer supported
+03:58:33.008 npm warn deprecated eslint@8.57.1: This version is no longer supported. Please see https://eslint.org/version-support for other options.
+03:58:34.319 
+03:58:34.320 added 422 packages, and audited 424 packages in 7s
+03:58:34.320 
+03:58:34.320 126 packages are looking for funding
+03:58:34.321   run `npm fund` for details
+03:58:34.331 
+03:58:34.331 2 moderate severity vulnerabilities
+03:58:34.331 
+03:58:34.331 To address all issues (including breaking changes), run:
+03:58:34.332   npm audit fix --force
+03:58:34.332 
+03:58:34.332 Run `npm audit` for details.
+03:58:34.603 
+03:58:34.603 > @mawu/web@0.1.0 build
+03:58:34.603 > tsc --noEmit && vite build
+03:58:34.603 
+03:58:39.480 [36mvite v5.4.20 [32mbuilding for production...[36m[39m
+03:58:39.528 transforming...
+03:58:41.574 [32m✓[39m 73 modules transformed.
+03:58:41.733 rendering chunks...
+03:58:41.739 computing gzip size...
+03:58:41.749 [2mdist/[22m[32mindex.html                 [39m[1m[2m  0.43 kB[22m[1m[22m[2m │ gzip:  0.29 kB[22m
+03:58:41.750 [2mdist/[22m[2massets/[22m[35mindex-Dau-xumX.css  [39m[1m[2m 37.26 kB[22m[1m[22m[2m │ gzip:  6.60 kB[22m
+03:58:41.750 [2mdist/[22m[2massets/[22m[36mindex-ItO8py0K.js   [39m[1m[2m248.05 kB[22m[1m[22m[2m │ gzip: 77.80 kB[22m
+03:58:41.751 [32m✓ built in 2.25s[39m
+03:58:41.781 Error: No Output Directory named "dist" found after the Build completed. Configure the Output Directory in your Project Settings. Alternatively, configure vercel.json#outputDirectory.
+03:58:41.781 Learn More: https://vercel.link/missing-public-directory

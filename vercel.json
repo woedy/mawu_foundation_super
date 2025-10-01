@@ -1,14 +1,14 @@
 {
-  "version": 2,
-  "framework": "vite",
-  "installCommand": "npm install",
   "buildCommand": "npm run build --workspace @mawu/web",
-  "devCommand": "npm run dev --workspace @mawu/web",
   "outputDirectory": "apps/web/dist",
-  "rewrites": [
+  "installCommand": "npm install",
+  "routes": [
     {
-      "source": "/(.*)",
-      "destination": "/index.html"
+      "handle": "filesystem"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
     }
   ]
 }

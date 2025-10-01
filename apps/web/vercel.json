@@ -1,0 +1,13 @@
+{
+  "buildCommand": "npm install --prefix ../.. && npm run build --prefix ../..",
+  "outputDirectory": "dist",
+  "routes": [
+    {
+      "handle": "filesystem"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
+    }
+  ]
+}
