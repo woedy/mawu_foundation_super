@@ -33,7 +33,7 @@ export const DonationCheckoutPage = () => {
         <div className="mb-8 text-center">
           <Heading level={1}>Complete Your Donation</Heading>
           <Body className="mt-2" variant="muted">
-            You're donating ${amount} {type === "monthly" && "per month"}
+            You're donating GHS {amount} {type === "monthly" && "per month"}
           </Body>
         </div>
 
@@ -136,7 +136,7 @@ export const DonationCheckoutPage = () => {
           </div>
 
           <Button type="submit" size="lg" className="w-full">
-            Complete Donation - ${amount}
+            Complete Donation - GHS {amount}
           </Button>
         </form>
       </div>

@@ -30,7 +30,7 @@ export const DonationSuccessPage = () => {
         <Heading level={1}>Thank You for Your Generosity!</Heading>
         
         <Body className="mt-4 text-lg" variant="muted">
-          Your {type === "monthly" ? "monthly recurring" : "one-time"} donation of ${amount} has been successfully processed.
+          Your {type === "monthly" ? "monthly recurring" : "one-time"} donation of GHS {amount} has been successfully processed.
         </Body>
 
         <div className="mt-8 rounded-lg bg-white p-6 shadow-lg">

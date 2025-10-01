@@ -3,6 +3,7 @@ export type ProgramCategory =
   | 'Health'
   | 'Water & Sanitation'
   | 'Economic Empowerment'
+  | 'IT & Digital Literacy'
   | 'Community Development';
 
 export type ProgramFocus = 'pan-africa' | 'volta';

@@ -6,11 +6,11 @@ type DonationType = "one-time" | "monthly";
 type DonationTier = { amount: number; impact: string };
 
 const donationTiers: DonationTier[] = [
-  { amount: 50, impact: "Provides clean water for 5 families for a month" },
-  { amount: 100, impact: "Funds IT literacy training for 3 students" },
-  { amount: 250, impact: "Supports a mobile health clinic for one day" },
-  { amount: 500, impact: "Equips a classroom with learning materials" },
-  { amount: 1000, impact: "Installs a solar-powered borehole" },
+  { amount: 250, impact: "Provides clean water for 5 families for a month" },
+  { amount: 500, impact: "Funds IT literacy training for 3 students" },
+  { amount: 1000, impact: "Supports a mobile health clinic for one day" },
+  { amount: 2500, impact: "Equips a classroom with learning materials" },
+  { amount: 5000, impact: "Installs a solar-powered borehole" },
 ];
 
 export const EnhancedDonatePage = () => {
@@ -84,7 +84,7 @@ export const EnhancedDonatePage = () => {
                       setCustomAmount("");
                     }}
                   >
-                    <div className="text-xl font-bold">${tier.amount}</div>
+                    <div className="text-xl font-bold">GHS {tier.amount}</div>
                     {donationType === "monthly" && (
                       <div className="text-xs text-ink-500">/month</div>
                     )}
@@ -98,7 +98,7 @@ export const EnhancedDonatePage = () => {
                 Or enter a custom amount
               </label>
               <div className="relative">
-                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-ink-500">$</span>
+                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-ink-500">GHS</span>
                 <input
                   type="number"
                   value={customAmount}
@@ -106,7 +106,7 @@ export const EnhancedDonatePage = () => {
                     setCustomAmount(e.target.value);
                     setSelectedAmount(null);
                   }}
-                  className="w-full rounded-lg border-2 border-ink-200 py-3 pl-8 pr-4 focus:border-brand-500 focus:outline-none"
+                  className="w-full rounded-lg border-2 border-ink-200 py-3 pl-16 pr-4 focus:border-brand-500 focus:outline-none"
                   placeholder="Enter amount"
                   min="1"
                 />
@@ -131,7 +131,7 @@ export const EnhancedDonatePage = () => {
               disabled={!activeAmount || activeAmount <= 0}
             >
               {donationType === "monthly" ? "Start Monthly Donation" : "Donate Now"} 
-              {activeAmount ? ` - $${activeAmount}${donationType === "monthly" ? "/month" : ""}` : ""}
+              {activeAmount ? ` - GHS ${activeAmount}${donationType === "monthly" ? "/month" : ""}` : ""}
             </Button>
 
             <p className="text-center text-sm text-ink-500">
