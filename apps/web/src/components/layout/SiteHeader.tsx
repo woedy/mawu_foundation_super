@@ -65,58 +65,67 @@ export const SiteHeader = () => {
             ))}
           </ul>
         </nav>
-        <div className="hidden md:flex md:items-center md:gap-4">
-          <Link to="/shop/cart" className="relative">
-            <svg
-              className="h-6 w-6 text-ink-600 hover:text-brand-600 transition"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
+        <div className="flex items-center gap-4">
+          <div className="hidden md:flex md:items-center md:gap-4">
+            <Link to="/shop/cart" className="relative">
+              <svg
+                className="h-6 w-6 text-ink-600 hover:text-brand-600 transition"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
+                />
+              </svg>
+              {itemCount > 0 && (
+                <span className="absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full bg-brand-600 text-xs font-semibold text-white">
+                  {itemCount}
+                </span>
+              )}
+            </Link>
+            <Button as={Link} to="/donate">
+              Give Today
+            </Button>
+          </div>
+          <div className="flex md:hidden">
+            <Button as={Link} to="/donate" className="mr-3">
+              Give
+            </Button>
+          </div>
+          <button
+            aria-controls="mobile-navigation"
+            aria-expanded={isMenuOpen}
+            className="inline-flex items-center justify-center rounded-full border border-ink-100/80 bg-white/90 p-2 text-ink-900 shadow-soft transition hover:border-brand-200 hover:text-brand-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white md:hidden"
+            onClick={toggleMenu}
+            type="button"
+          >
+            <span className="sr-only">{isMenuOpen ? "Close navigation" : "Open navigation"}</span>
+            <span aria-hidden className="relative block h-5 w-6">
+              <span
+                className={`absolute left-0 top-0 h-0.5 w-full rounded-full bg-current transition-transform duration-200 ease-in-out ${
+                  isMenuOpen ? "translate-y-2.5 rotate-45" : ""
+                }`}
               />
-            </svg>
-            {itemCount > 0 && (
-              <span className="absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full bg-brand-600 text-xs font-semibold text-white">
-                {itemCount}
-              </span>
-            )}
-          </Link>
-          <Button as={Link} to="/donate">
-            Give Today
-          </Button>
+              <span
+                className={`absolute left-0 top-1/2 h-0.5 w-full -translate-y-1/2 rounded-full bg-current transition-opacity duration-200 ease-in-out ${
+                  isMenuOpen ? "opacity-0" : "opacity-100"
+                }`}
+              />
+              <span
+                className={`absolute bottom-0 left-0 h-0.5 w-full rounded-full bg-current transition-transform duration-200 ease-in-out ${
+                  isMenuOpen ? "-translate-y-2.5 -rotate-45" : ""
+                }`}
+              />
+            </span>
+          </button>
         </div>
-        <button
-          aria-controls="mobile-navigation"
-          aria-expanded={isMenuOpen}
-          className="inline-flex items-center justify-center rounded-full border border-ink-100/80 bg-white/90 p-2 text-ink-900 shadow-soft transition hover:border-brand-200 hover:text-brand-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white md:hidden"
-          onClick={toggleMenu}
-          type="button"
-        >
-          <span className="sr-only">{isMenuOpen ? "Close navigation" : "Open navigation"}</span>
-          <span aria-hidden className="relative block h-5 w-6">
-            <span
-              className={`absolute left-0 top-0 h-0.5 w-full rounded-full bg-current transition-transform duration-200 ease-in-out ${
-                isMenuOpen ? "translate-y-2.5 rotate-45" : ""
-              }`}
-            />
-            <span
-              className={`absolute left-0 top-1/2 h-0.5 w-full -translate-y-1/2 rounded-full bg-current transition-opacity duration-200 ease-in-out ${
-                isMenuOpen ? "opacity-0" : "opacity-100"
-              }`}
-            />
-            <span
-              className={`absolute bottom-0 left-0 h-0.5 w-full rounded-full bg-current transition-transform duration-200 ease-in-out ${
-                isMenuOpen ? "-translate-y-2.5 -rotate-45" : ""
-              }`}
-            />
-          </span>
-        </button>
       </Container>
+      
+      {/* Mobile Navigation */}
       <div
         className={`md:hidden overflow-hidden border-t border-ink-100/60 bg-white/95 shadow-lg transition-[max-height,opacity] duration-200 ease-in-out ${
           isMenuOpen ? "max-h-[28rem] opacity-100" : "max-h-0 opacity-0 pointer-events-none"
@@ -143,9 +152,34 @@ export const SiteHeader = () => {
               ))}
             </ul>
           </nav>
-          <div className="space-y-3">
+          <div className="space-y-4">
+            <Link 
+              to="/shop/cart" 
+              className="flex items-center justify-center gap-2 rounded-lg border border-ink-100 bg-white px-4 py-3 text-base font-medium text-ink-700 transition hover:border-brand-200 hover:bg-brand-50 hover:text-brand-700"
+              onClick={closeMenu}
+            >
+              <svg
+                className="h-6 w-6"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
+                />
+              </svg>
+              <span>View Cart</span>
+              {itemCount > 0 && (
+                <span className="flex h-6 w-6 items-center justify-center rounded-full bg-brand-600 text-xs font-semibold text-white">
+                  {itemCount}
+                </span>
+              )}
+            </Link>
             <Button as={Link} className="w-full justify-center" onClick={closeMenu} to="/donate">
-              Give Today
+              Donate Now
             </Button>
             <Body className="text-sm text-ink-500" variant="muted">
               We are building alongside communities in Ghana's Volta Region. Explore each route to learn how investments drive
