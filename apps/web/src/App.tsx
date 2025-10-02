@@ -17,6 +17,8 @@ import { ShopSuccessPage } from "./pages/ShopSuccessPage";
 import { EnhancedDonatePage } from "./pages/EnhancedDonatePage";
 import { DonationCheckoutPage } from "./pages/DonationCheckoutPage";
 import { DonationSuccessPage } from "./pages/DonationSuccessPage";
+import { AdminLoginPage } from "./pages/AdminLoginPage";
+import { AdminDashboardPage } from "./pages/AdminDashboardPage";
 import { NotFoundPage } from "./pages/NotFoundPage";
 
 const App = () => {
@@ -42,6 +44,8 @@ const App = () => {
             <Route element={<EnhancedDonatePage />} path="donate" />
             <Route element={<DonationCheckoutPage />} path="donate/checkout" />
             <Route element={<DonationSuccessPage />} path="donate/success" />
+            <Route element={<AdminLoginPage />} path="admin/login" />
+            <Route element={<AdminDashboardPage />} path="admin/dashboard" />
             <Route element={<NotFoundPage />} path="*" />
           </Route>
         </Routes>
