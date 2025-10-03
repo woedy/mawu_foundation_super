@@ -42,7 +42,7 @@ export const AdminDashboardPage = () => {
     <Section>
       <div className="mb-8 flex items-center justify-between">
         <Heading level={1}>Admin Dashboard</Heading>
-        <Button onClick={handleLogout} variant="outline">Logout</Button>
+        <Button onClick={handleLogout} variant="secondary">Logout</Button>
       </div>
 
       <div className="grid gap-6 md:grid-cols-3 mb-8">

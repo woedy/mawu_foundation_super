@@ -33,7 +33,7 @@ export const NewsletterSignup = () => {
 
     setStatus("success");
     setMessage(
-      "Medasi! This demo adds you to our investor preview list. We'll restore live newsletter sync once the API is reconnected.",
+      "Medasi! You've been added to our newsletter. Expect quarterly updates on our impact and programs.",
     );
     setEmail("");
     trackEvent("newsletter_subscribed", {

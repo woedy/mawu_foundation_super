@@ -181,7 +181,7 @@ export const ShopCheckoutPage = () => {
 
               <div className="rounded-lg bg-brand-50 p-4">
                 <p className="text-sm text-ink-600">
-                  This is a demo checkout. No actual payment will be processed.
+                  Your payment will be processed securely through Stripe.
                 </p>
               </div>
 

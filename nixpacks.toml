@@ -1,12 +1,16 @@
 [phases.setup]
-aptPkgs = ['...', 'postgresql']
+aptPkgs = ['postgresql-client']
 
 [phases.build]
 cmds = [
   'npm install',
-  'npm run db:push --force',
   'npm run build --workspace @mawu/web'
 ]
 
+[phases.deploy]
+cmds = [
+  'npm run db:push'
+]
+
 [start]
-cmd = 'npm run dev:server & npm run dev --workspace @mawu/web'
+cmd = 'npm run dev:server'

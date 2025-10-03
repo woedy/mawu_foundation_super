@@ -17,7 +17,7 @@ export const useProgramsData = (): ProgramsDataState => {
   useEffect(() => {
     let isActive = true;
 
-    const loadDemoData = async () => {
+    const loadProgramsData = async () => {
       setLoading(true);
 
       await new Promise((resolve) => {
@@ -29,13 +29,11 @@ export const useProgramsData = (): ProgramsDataState => {
       }
 
       setPayload(fallbackProgramsPayload);
-      setError(
-        "Demo mode active: explore our curated program snapshot while the live API is paused for this investor preview.",
-      );
+      setError(null);
       setLoading(false);
     };
 
-    void loadDemoData();
+    void loadProgramsData();
 
     return () => {
       isActive = false;

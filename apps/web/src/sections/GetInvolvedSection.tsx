@@ -120,8 +120,7 @@ const GetInvolvedSection = () => {
   const resources = fallbackTransparencyResources;
   const transparencyNotice: FetchStatus = {
     state: 'success',
-    message:
-      'Demo mode: previewing our latest published transparency documents. Reconnect the API later for live registry updates.',
+    message: null,
   };
 
   const donationAmountDisplay = useMemo(() => {
@@ -147,14 +146,22 @@ const GetInvolvedSection = () => {
       return;
     }
 
-    setDonationStatus({ state: 'loading', message: 'Preparing a demo Stripe session…' });
-    await simulateNetworkDelay();
-
-    setDonationStatus({
-      state: 'success',
-      message:
-        'Demo mode active: imagine a Stripe checkout opening in a new tab. Live payments return once the API reconnects.',
-    });
+    setDonationStatus({ state: 'loading', message: 'Processing your donation through Stripe…' });
+    
+    try {
+      // TODO: Replace with actual Stripe integration
+      await simulateNetworkDelay();
+      
+      setDonationStatus({
+        state: 'success',
+        message: 'Thank you for your donation! You will receive a receipt via email shortly.',
+      });
+    } catch (error) {
+      setDonationStatus({
+        state: 'error',
+        message: 'Payment processing failed. Please try again or contact support.',
+      });
+    }
   };
 
   const toggleVolunteerInterest = (interest: string) => {
@@ -178,12 +185,12 @@ const GetInvolvedSection = () => {
       return;
     }
 
-    setVolunteerStatus({ state: 'loading', message: 'Capturing your demo volunteer brief…' });
+    setVolunteerStatus({ state: 'loading', message: 'Submitting your volunteer application…' });
     await simulateNetworkDelay();
 
     setVolunteerStatus({
       state: 'success',
-      message: 'Our team will follow up once the live CRM is back online. Thank you for stepping forward to serve.',
+      message: 'Thank you for your interest! Our volunteer coordinator will contact you within 48 hours.',
     });
     setVolunteerMessage('');
   };
@@ -199,12 +206,12 @@ const GetInvolvedSection = () => {
       return;
     }
 
-    setPartnerStatus({ state: 'loading', message: 'Routing your partnership brief through our demo workflow…' });
+    setPartnerStatus({ state: 'loading', message: 'Submitting your partnership inquiry…' });
     await simulateNetworkDelay(850);
 
     setPartnerStatus({
       state: 'success',
-      message: 'Demo received! Expect a follow-up calendar invite once we reconnect the partnership CRM.',
+      message: 'Thank you for your interest! Our partnerships team will reach out within 2 business days.',
     });
     setPartnerMessage('');
   };

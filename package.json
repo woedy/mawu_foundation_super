@@ -2,7 +2,7 @@
   "name": "mawu_foundation_super",
   "version": "0.1.0",
   "private": true,
-  "description": "Workspace for the Mawu Foundation static investor demo.",
+  "description": "Workspace for the Mawu Foundation platform.",
   "scripts": {
     "build": "npm run build --workspaces",
     "dev": "npm run dev --workspaces",
@@ -17,14 +17,13 @@
   "workspaces": [
     "apps/web"
   ],
-  "optionalDependencies": {
-    "@rollup/rollup-linux-x64-gnu": "4.52.2"
-  },
+
   "dependencies": {
     "@types/bcryptjs": "^2.4.6",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.3",
     "@types/express-session": "^1.18.2",
+    "@types/nodemailer": "^6.4.14",
     "@types/pg": "^8.15.5",
     "bcryptjs": "^3.0.2",
     "connect-pg-simple": "^10.0.0",
@@ -34,6 +33,7 @@
     "drizzle-orm": "^0.44.5",
     "express": "^5.1.0",
     "express-session": "^1.18.2",
+    "nodemailer": "^6.9.8",
     "postgres": "^3.4.7",
     "resend": "^6.1.2",
     "stripe": "^19.0.0"

@@ -131,7 +131,7 @@ export const SiteFooter = () => (
       </div>
       <div className="flex flex-col gap-4 border-t border-white/10 pt-8 text-xs text-white/50 md:flex-row md:items-center md:justify-between">
         <p>
-          © {new Date().getFullYear()} Mawu Foundation. Crafted for demo previews — content subject to change as pilots evolve.
+          © {new Date().getFullYear()} Mawu Foundation. Empowering communities across Ghana's Volta Region.
         </p>
         <div className="flex flex-wrap items-center gap-4 text-white/60">
           <a className="transition hover:text-brand-200" href="#newsletter">

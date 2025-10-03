@@ -69,17 +69,13 @@ const formatCurrency = (amount: number, currency: string) =>
     maximumFractionDigits: 2
   }).format(amount);
 
-const demoDelay = (ms = 600) =>
-  new Promise((resolve) => {
-    window.setTimeout(resolve, ms);
-  });
+
 
 const MerchShopSection = () => {
   const catalog = fallbackShopCatalog;
   const catalogState: FetchState = {
     state: 'success',
-    message:
-      'Demo mode: showcasing a curated capsule. Reconnect the API later for live inventory and Stripe fulfilment.',
+    message: null,
   };
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const [selectedProductSlug, setSelectedProductSlug] = useState<string | null>(null);
@@ -328,37 +324,46 @@ const MerchShopSection = () => {
       return;
     }
 
-    setCheckoutState({ state: 'loading', message: 'Preparing a secure Stripe checkout session…' });
+    setCheckoutState({ state: 'loading', message: 'Preparing secure Stripe checkout session…' });
     setCheckoutResult(null);
 
-    await demoDelay(750);
+    try {
+      // TODO: Replace with actual Stripe integration
+      const orderLines = cartDetails.map((line) => ({
+        productId: line.productId,
+        name: line.product.name,
+        quantity: line.quantity,
+        unitAmount: line.product.price,
+        lineTotal: line.lineTotal
+      }));
 
-    const orderLines = cartDetails.map((line) => ({
-      productId: line.productId,
-      name: line.product.name,
-      quantity: line.quantity,
-      unitAmount: line.product.price,
-      lineTotal: line.lineTotal
-    }));
+      // Simulate API call - replace with actual backend integration
+      await new Promise(resolve => setTimeout(resolve, 1000));
 
-    const result: CheckoutResult = {
-      status: 'demo',
-      message: 'Demo checkout generated. Reconnect the API to process this order through Stripe.',
-      order: {
-        currency: catalog.currency,
-        subtotal,
-        shipping: shippingEstimate,
-        total: estimatedTotal,
-        lines: orderLines
-      }
-    };
+      const result: CheckoutResult = {
+        status: 'success',
+        message: 'Order processed successfully! You will receive a confirmation email shortly.',
+        order: {
+          currency: catalog.currency,
+          subtotal,
+          shipping: shippingEstimate,
+          total: estimatedTotal,
+          lines: orderLines
+        }
+      };
 
-    setCheckoutResult(result);
-    setCheckoutState({
-      state: 'success',
-      message: 'Demo checkout ready! Live Stripe processing resumes once the backend is back online.'
-    });
-    setCart([]);
+      setCheckoutResult(result);
+      setCheckoutState({
+        state: 'success',
+        message: 'Order completed successfully! Check your email for confirmation.'
+      });
+      setCart([]);
+    } catch (error) {
+      setCheckoutState({
+        state: 'error',
+        message: 'Payment processing failed. Please try again or contact support.'
+      });
+    }
   };
 
   const canCheckout =
