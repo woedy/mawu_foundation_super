@@ -5,13 +5,15 @@ aptPkgs = ['postgresql-client']
 [phases.install]
 # Install dependencies with production optimizations, skip optional deps that cause build issues
 cmds = [
-  'npm install --include=dev --omit=optional'
+  'rm -rf node_modules package-lock.json || true',
+  'npm install --include=dev --omit=optional',
+  'npx patch-package || echo "No patches to apply"'
 ]
 
 [phases.build]
 # Build frontend and prepare backend for production
 cmds = [
-  'npm run build --workspace @mawu/web',
+  'ROLLUP_USE_WASM=true npm run build --workspace @mawu/web',
   'npm run build:server',
   'npm run db:push:production',
   'npm run seed:admin:production'
@@ -26,3 +28,5 @@ cmd = 'npm run start:production'
 NODE_ENV = 'production'
 # Specify Node.js version
 NIXPACKS_NODE_VERSION = '20'
+# Force Rollup to use WASM instead of native binaries
+ROLLUP_USE_WASM = 'true'
