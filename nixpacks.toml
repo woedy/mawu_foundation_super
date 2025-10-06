@@ -5,7 +5,7 @@ aptPkgs = ['postgresql-client']
 [phases.install]
 # Install dependencies with production optimizations, skip optional deps that cause build issues
 cmds = [
-  'npm ci --include=dev --omit=optional'
+  'npm install --include=dev --omit=optional'
 ]
 
 [phases.build]
