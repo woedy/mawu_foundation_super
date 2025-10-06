@@ -24,6 +24,5 @@ cmd = 'npm run start:production'
 [variables]
 # Ensure production environment
 NODE_ENV = 'production'
-
-[providers]
-node = { version = '20' }
+# Specify Node.js version
+NIXPACKS_NODE_VERSION = '20'
