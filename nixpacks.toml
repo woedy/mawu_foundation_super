@@ -25,6 +25,5 @@ cmd = 'npm run start:production'
 # Ensure production environment
 NODE_ENV = 'production'
 
-[providers.node]
-# Use Node.js 20 for compatibility
-version = '20'
+[providers]
+node = { version = '20' }
