@@ -3,7 +3,7 @@
  * Test script to validate product variations functionality
  */
 
-import { storage } from './storage';
+import { storage } from './storage-factory';
 import type { ProductVariation, VariationOption } from '../shared/schema';
 
 async function testProductVariations() {

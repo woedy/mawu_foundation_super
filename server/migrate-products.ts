@@ -4,7 +4,7 @@
  * This script ensures all existing products have the correct variations field format
  */
 
-import { storage } from './storage';
+import { storage } from './storage-factory';
 
 async function migrateProductVariations() {
   console.log('Starting product variations migration...');

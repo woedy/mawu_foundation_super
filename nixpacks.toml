@@ -3,9 +3,9 @@
 aptPkgs = ['postgresql-client']
 
 [phases.install]
-# Install dependencies with production optimizations
+# Install dependencies with production optimizations, skip optional deps that cause build issues
 cmds = [
-  'npm ci --include=dev'
+  'npm ci --include=dev --no-optional'
 ]
 
 [phases.build]
@@ -13,7 +13,7 @@ cmds = [
 cmds = [
   'npm run build --workspace @mawu/web',
   'npm run build:server',
-  'npm run db:push',
+  'npm run db:push:production',
   'npm run seed:admin:production'
 ]
 
@@ -24,3 +24,7 @@ cmd = 'npm run start:production'
 [variables]
 # Ensure production environment
 NODE_ENV = 'production'
+
+[providers.node]
+# Use Node.js 20 for compatibility
+version = '20'

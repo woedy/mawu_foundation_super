@@ -3,7 +3,7 @@ import { createServer, type Server } from 'http';
 import Stripe from 'stripe';
 import { Resend } from 'resend';
 import { eq } from 'drizzle-orm';
-import { storage, db } from './storage';
+import { storage, db } from './storage-factory';
 import { emailService, type OrderStatusUpdateData, type AdminNotificationData } from './email-service';
 import * as schema from '../shared/schema';
 

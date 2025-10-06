@@ -1,5 +1,5 @@
 import dotenv from 'dotenv';
-import { storage } from './storage';
+import { storage } from './storage-factory';
 
 dotenv.config();
 

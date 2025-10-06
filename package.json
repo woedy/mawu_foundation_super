@@ -13,8 +13,10 @@
     "test": "npm run test --if-present --workspaces",
     "format": "npm run format --if-present --workspaces",
     "db:push": "drizzle-kit push",
+    "db:push:production": "drizzle-kit push --config=drizzle.config.production.ts",
     "db:studio": "drizzle-kit studio",
     "db:migrate": "drizzle-kit migrate",
+    "db:migrate:production": "drizzle-kit migrate --config=drizzle.config.production.ts",
     "seed:admin": "tsx server/seed-admin.ts",
     "seed:admin:production": "node dist/server/seed-admin.js || tsx server/seed-admin.ts",
     "seed:products": "tsx server/seed-products.ts",
@@ -39,14 +41,12 @@
   ],
   "dependencies": {
     "@types/bcryptjs": "^2.4.6",
-    "@types/better-sqlite3": "^7.6.13",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.3",
     "@types/express-session": "^1.18.2",
     "@types/nodemailer": "^6.4.14",
     "@types/pg": "^8.15.5",
     "bcryptjs": "^3.0.2",
-    "better-sqlite3": "^12.4.1",
     "connect-pg-simple": "^10.0.0",
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
@@ -55,8 +55,13 @@
     "express": "^5.1.0",
     "express-session": "^1.18.2",
     "nodemailer": "^6.9.8",
+    "postgres": "^3.4.4",
     "resend": "^6.1.2",
     "stripe": "^19.0.0"
+  },
+  "optionalDependencies": {
+    "@types/better-sqlite3": "^7.6.13",
+    "better-sqlite3": "^12.4.1"
   },
   "devDependencies": {
     "@types/node": "^24.6.2",

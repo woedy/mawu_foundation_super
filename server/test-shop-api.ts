@@ -3,7 +3,7 @@
  * Test script to verify shop API endpoints work correctly
  */
 
-import { storage } from './storage';
+import { storage } from './storage-factory';
 
 async function testShopAPI() {
   console.log('Testing Shop API Data Layer...\n');

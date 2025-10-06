@@ -11,7 +11,7 @@ import type {
   Product, 
   NewProduct 
 } from '../shared/schema';
-import { storage } from './storage';
+import { storage } from './storage-factory';
 
 async function verifyTask4Implementation() {
   console.log('🔍 Verifying Task 4: Enhanced product data model with variations support\n');

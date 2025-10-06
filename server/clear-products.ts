@@ -4,7 +4,7 @@
  * Use this before reseeding with updated data
  */
 
-import { db } from './storage';
+import { db } from './storage-factory';
 import { products } from '../shared/schema';
 
 async function clearProducts() {

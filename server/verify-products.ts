@@ -3,7 +3,7 @@
  * Verification script to check seeded products
  */
 
-import { storage } from './storage';
+import { storage } from './storage-factory';
 
 async function verifyProducts() {
   console.log('Verifying seeded products...\n');

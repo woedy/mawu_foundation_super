@@ -4,7 +4,7 @@
  * Products are themed around the Mawu Foundation's mission in Ghana's Volta Region
  */
 
-import { storage } from './storage';
+import { storage } from './storage-factory';
 import type { NewProduct } from '../shared/schema';
 
 const demoProducts: NewProduct[] = [

@@ -3,7 +3,7 @@
  * Script to display product images for verification
  */
 
-import { storage } from './storage';
+import { storage } from './storage-factory';
 
 async function showProductImages() {
   console.log('Product Images Overview\n');
