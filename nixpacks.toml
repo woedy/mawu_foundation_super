@@ -12,12 +12,7 @@ cmds = [
 # Build frontend and prepare backend for production
 cmds = [
   'npm run build --workspace @mawu/web',
-  'npm run build:server'
-]
-
-[phases.deploy]
-# Run database migrations and seed admin user
-cmds = [
+  'npm run build:server',
   'npm run db:push',
   'npm run seed:admin:production'
 ]
