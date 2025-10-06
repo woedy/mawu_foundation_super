@@ -1,16 +1,31 @@
 [phases.setup]
+# Install PostgreSQL client for database operations
 aptPkgs = ['postgresql-client']
 
-[phases.build]
+[phases.install]
+# Install dependencies with production optimizations
 cmds = [
-  'npm install',
-  'npm run build --workspace @mawu/web'
+  'npm ci --include=dev'
+]
+
+[phases.build]
+# Build frontend and prepare backend for production
+cmds = [
+  'npm run build --workspace @mawu/web',
+  'npm run build:server'
 ]
 
 [phases.deploy]
+# Run database migrations and seed admin user
 cmds = [
-  'npm run db:push'
+  'npm run db:push',
+  'npm run seed:admin:production'
 ]
 
 [start]
-cmd = 'npm run dev:server'
+# Start production server
+cmd = 'npm run start:production'
+
+[variables]
+# Ensure production environment
+NODE_ENV = 'production'

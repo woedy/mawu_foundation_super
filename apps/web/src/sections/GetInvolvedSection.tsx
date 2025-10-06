@@ -87,11 +87,6 @@ interface FetchStatus {
 
 const defaultStatus: FetchStatus = { state: 'idle', message: null };
 
-const simulateNetworkDelay = (ms = 700) =>
-  new Promise((resolve) => {
-    window.setTimeout(resolve, ms);
-  });
-
 const GetInvolvedSection = () => {
   const [selectedAmount, setSelectedAmount] = useState<number | 'custom'>(donationPresetAmounts[1]);
   const [customAmount, setCustomAmount] = useState('');
@@ -146,22 +141,15 @@ const GetInvolvedSection = () => {
       return;
     }
 
-    setDonationStatus({ state: 'loading', message: 'Processing your donation through Stripe…' });
+    // Redirect to donation checkout page with parameters
+    const params = new URLSearchParams({
+      amount: amountValue.toString(),
+      type: donationFrequency === 'monthly' ? 'monthly' : 'one-time',
+      focus: donationFocus,
+      email: donorEmail,
+    });
     
-    try {
-      // TODO: Replace with actual Stripe integration
-      await simulateNetworkDelay();
-      
-      setDonationStatus({
-        state: 'success',
-        message: 'Thank you for your donation! You will receive a receipt via email shortly.',
-      });
-    } catch (error) {
-      setDonationStatus({
-        state: 'error',
-        message: 'Payment processing failed. Please try again or contact support.',
-      });
-    }
+    window.location.href = `/donate/checkout?${params.toString()}`;
   };
 
   const toggleVolunteerInterest = (interest: string) => {
@@ -186,13 +174,15 @@ const GetInvolvedSection = () => {
     }
 
     setVolunteerStatus({ state: 'loading', message: 'Submitting your volunteer application…' });
-    await simulateNetworkDelay();
-
-    setVolunteerStatus({
-      state: 'success',
-      message: 'Thank you for your interest! Our volunteer coordinator will contact you within 48 hours.',
-    });
-    setVolunteerMessage('');
+    
+    // TODO: Implement actual volunteer submission API
+    setTimeout(() => {
+      setVolunteerStatus({
+        state: 'success',
+        message: 'Thank you for your interest! Our volunteer coordinator will contact you within 48 hours.',
+      });
+      setVolunteerMessage('');
+    }, 700);
   };
 
   const handlePartnerSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -207,13 +197,15 @@ const GetInvolvedSection = () => {
     }
 
     setPartnerStatus({ state: 'loading', message: 'Submitting your partnership inquiry…' });
-    await simulateNetworkDelay(850);
-
-    setPartnerStatus({
-      state: 'success',
-      message: 'Thank you for your interest! Our partnerships team will reach out within 2 business days.',
-    });
-    setPartnerMessage('');
+    
+    // TODO: Implement actual partnership submission API
+    setTimeout(() => {
+      setPartnerStatus({
+        state: 'success',
+        message: 'Thank you for your interest! Our partnerships team will reach out within 2 business days.',
+      });
+      setPartnerMessage('');
+    }, 850);
   };
 
   return (
@@ -331,7 +323,7 @@ const GetInvolvedSection = () => {
                   <div className="flex flex-col gap-2">
                     <Button disabled={donationStatus.state === 'loading'} size="lg" type="submit">
                       {donationStatus.state === 'loading'
-                        ? 'Preparing secure checkout…'
+                        ? 'Redirecting to checkout…'
                         : `Donate ${donationAmountDisplay} with Stripe`}
                     </Button>
                     <Button disabled size="lg" variant="ghost">
@@ -339,9 +331,11 @@ const GetInvolvedSection = () => {
                     </Button>
                   </div>
                   <p className="text-xs text-ink-500">Stripe is the only active processor today. Additional channels will unlock once compliance reviews are complete.</p>
-                  <p aria-live="polite" className="text-sm font-medium text-brand-700">
-                    {donationStatus.message}
-                  </p>
+                  {donationStatus.message && (
+                    <p aria-live="polite" className={`text-sm font-medium ${donationStatus.state === 'error' ? 'text-red-600' : 'text-brand-700'}`}>
+                      {donationStatus.message}
+                    </p>
+                  )}
                 </form>
               </CardContent>
             </Card>

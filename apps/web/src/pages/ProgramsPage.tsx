@@ -1,8 +1,5 @@
-import { Fragment } from "react";
-
 import { Body, Heading, Section } from "../design-system";
 import { ProgramExplorer } from "../components/ProgramExplorer";
-import { ProgramDetailSection } from "../components/ProgramDetailSection";
 import { useProgramsData } from "../hooks/useProgramsData";
 
 export const ProgramsPage = () => {
@@ -19,7 +16,7 @@ export const ProgramsPage = () => {
         <div className="space-y-4 text-center">
           <Heading level={1}>Programs & Impact Explorer</Heading>
           <Body className="mx-auto max-w-2xl" variant="muted">
-            Filter by category, preview highlight stories, and dive into detailed narratives that show how each initiative is
+            Filter by category, preview highlight stories, and explore detailed program information to see how each initiative is
             transforming lives.
           </Body>
         </div>
@@ -32,11 +29,6 @@ export const ProgramsPage = () => {
         programs={programs}
         regions={regions}
       />
-      {programs.map((program) => (
-        <Fragment key={program.slug}>
-          <ProgramDetailSection program={program} />
-        </Fragment>
-      ))}
     </>
   );
 };

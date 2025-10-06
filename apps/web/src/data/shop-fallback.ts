@@ -26,8 +26,29 @@ export const fallbackShopCatalog: ShopCatalogPayload = {
         'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=900&q=80'
       ],
       availability: 'in_stock',
-      inventory: 64
-      
+      inventory: 64,
+      variations: [
+        {
+          type: 'color',
+          name: 'Color',
+          options: [
+            { value: 'natural', label: 'Natural Beige', inventory: 20 },
+            { value: 'indigo', label: 'Indigo Blue', inventory: 24 },
+            { value: 'terracotta', label: 'Terracotta', inventory: 20 }
+          ]
+        },
+        {
+          type: 'size',
+          name: 'Size',
+          options: [
+            { value: 'xs', label: 'XS', inventory: 10 },
+            { value: 's', label: 'S', inventory: 15 },
+            { value: 'm', label: 'M', inventory: 20 },
+            { value: 'l', label: 'L', inventory: 12 },
+            { value: 'xl', label: 'XL', inventory: 7 }
+          ]
+        }
+      ]
     },
     {
       id: 'volta-horizon-hoodie',
@@ -45,7 +66,27 @@ export const fallbackShopCatalog: ShopCatalogPayload = {
         'https://images.unsplash.com/photo-1492447166138-50c3889fccb1?auto=format&fit=crop&w=900&q=80'
       ],
       availability: 'low_stock',
-      inventory: 18
+      inventory: 18,
+      variations: [
+        {
+          type: 'color',
+          name: 'Color',
+          options: [
+            { value: 'indigo-gradient', label: 'Indigo Gradient', inventory: 10 },
+            { value: 'sunset-fade', label: 'Sunset Fade', inventory: 8 }
+          ]
+        },
+        {
+          type: 'size',
+          name: 'Size',
+          options: [
+            { value: 's', label: 'S', inventory: 4 },
+            { value: 'm', label: 'M', inventory: 6 },
+            { value: 'l', label: 'L', inventory: 5 },
+            { value: 'xl', label: 'XL', inventory: 3 }
+          ]
+        }
+      ]
     },
     {
       id: 'volta-water-bottle',

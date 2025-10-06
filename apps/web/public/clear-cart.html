@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clear Cart - Mawu Foundation</title>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            margin-top: 0;
+        }
+        button {
+            background: #ff6b35;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        button:hover {
+            background: #e55a2b;
+        }
+        button.secondary {
+            background: #6c757d;
+        }
+        button.secondary:hover {
+            background: #5a6268;
+        }
+        .success {
+            color: #28a745;
+            margin-top: 20px;
+            padding: 10px;
+            background: #d4edda;
+            border-radius: 4px;
+        }
+        .info {
+            color: #004085;
+            background: #cce5ff;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+        .cart-info {
+            margin: 20px 0;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>🛒 Cart Management</h1>
+        
+        <div class="info">
+            <strong>Why clear the cart?</strong><br>
+            Old cart items don't have the product slug needed for validation. Clearing the cart and re-adding items will fix the "Unable to validate item availability" error.
+        </div>
+
+        <div class="cart-info" id="cartInfo">
+            <strong>Current Cart:</strong>
+            <div id="cartContent">Loading...</div>
+        </div>
+
+        <button onclick="clearCart()">Clear Cart</button>
+        <button class="secondary" onclick="window.location.href='/shop'">Go to Shop</button>
+
+        <div id="message"></div>
+    </div>
+
+    <script>
+        function displayCartInfo() {
+            try {
+                const cartData = localStorage.getItem('mawu_cart_items');
+                const cartInfo = document.getElementById('cartContent');
+                
+                if (!cartData) {
+                    cartInfo.innerHTML = '<em>Cart is empty</em>';
+                    return;
+                }
+
+                const items = JSON.parse(cartData);
+                if (items.length === 0) {
+                    cartInfo.innerHTML = '<em>Cart is empty</em>';
+                    return;
+                }
+
+                let html = `<ul style="margin: 10px 0; padding-left: 20px;">`;
+                items.forEach(item => {
+                    const hasSlug = item.productSlug ? '✅' : '❌';
+                    html += `<li>${item.name} (x${item.quantity}) ${hasSlug} ${item.productSlug ? 'Has slug' : 'Missing slug'}</li>`;
+                });
+                html += `</ul>`;
+                html += `<p><strong>Total items:</strong> ${items.length}</p>`;
+                
+                cartInfo.innerHTML = html;
+            } catch (error) {
+                document.getElementById('cartContent').innerHTML = '<em>Error reading cart</em>';
+            }
+        }
+
+        function clearCart() {
+            try {
+                localStorage.removeItem('mawu_cart_items');
+                document.getElementById('message').innerHTML = 
+                    '<div class="success">✅ Cart cleared successfully! You can now add items again.</div>';
+                displayCartInfo();
+            } catch (error) {
+                document.getElementById('message').innerHTML = 
+                    '<div style="color: red;">Error clearing cart: ' + error.message + '</div>';
+            }
+        }
+
+        // Display cart info on load
+        displayCartInfo();
+    </script>
+</body>
+</html>

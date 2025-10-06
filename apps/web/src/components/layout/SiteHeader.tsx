@@ -37,9 +37,17 @@ export const SiteHeader = () => {
     <header className="sticky top-0 z-20 border-b border-white/40 bg-white/70 backdrop-blur-lg">
       <Container className="flex items-center justify-between py-4">
         <Link className="flex items-center gap-3" to="/" onClick={closeMenu}>
-          <span className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-500 text-xl font-semibold text-white shadow-soft">
-            MF
-          </span>
+          <picture>
+            <source srcSet="/web_logo_48.webp" type="image/webp" />
+            <img 
+              src="/web_logo_48.png" 
+              alt="Mawu Foundation Logo" 
+              className="h-12 w-12 object-contain"
+              loading="eager"
+              width="48"
+              height="48"
+            />
+          </picture>
           <div>
             <p className="font-display text-lg font-semibold text-ink-900">
               Mawu Foundation

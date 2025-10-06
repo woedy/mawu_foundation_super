@@ -7,14 +7,16 @@ export default defineConfig({
   server: {
     host: '0.0.0.0',
     port: 5000,
-    strictPort: true,
-    hmr: {
-      clientPort: 443
-    }
+    strictPort: true
   },
   preview: {
     host: '0.0.0.0',
     port: 5000,
     strictPort: true
+  },
+  test: {
+    globals: true,
+    environment: 'happy-dom',
+    setupFiles: './src/test/setup.ts',
   }
 });

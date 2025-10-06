@@ -5,27 +5,48 @@
   "description": "Workspace for the Mawu Foundation platform.",
   "scripts": {
     "build": "npm run build --workspaces",
+    "build:server": "tsc --project tsconfig.server.json",
     "dev": "npm run dev --workspaces",
     "dev:server": "tsx watch server/index.ts",
+    "start:production": "node dist/server/index.js",
     "lint": "npm run lint --if-present --workspaces",
     "test": "npm run test --if-present --workspaces",
     "format": "npm run format --if-present --workspaces",
     "db:push": "drizzle-kit push",
     "db:studio": "drizzle-kit studio",
-    "seed:admin": "tsx server/seed-admin.ts"
+    "db:migrate": "drizzle-kit migrate",
+    "seed:admin": "tsx server/seed-admin.ts",
+    "seed:admin:production": "node dist/server/seed-admin.js || tsx server/seed-admin.ts",
+    "seed:products": "tsx server/seed-products.ts",
+    "clear:products": "tsx server/clear-products.ts",
+    "reseed:products": "tsx server/clear-products.ts && tsx server/seed-products.ts",
+    "verify:products": "tsx server/verify-products.ts",
+    "show:product-images": "tsx server/show-product-images.ts",
+    "test:shop-api": "tsx server/test-shop-api.ts",
+    "migrate:products": "tsx server/migrate-products.ts",
+    "test:email": "tsx server/test-email.ts",
+    "test:email-notifications": "tsx server/test-email-notifications.ts",
+    "test:variations": "tsx server/test-variations.ts",
+    "test:webhook": "tsx server/test-webhook.ts",
+    "test:payment-platforms": "tsx server/test-payment-platforms.ts",
+    "test:user-journeys": "tsx server/test-user-journeys.ts",
+    "test:security": "tsx server/test-security.ts",
+    "test:production-readiness": "tsx server/test-production-readiness.ts",
+    "test:final": "tsx server/test-final-production-readiness.ts"
   },
   "workspaces": [
     "apps/web"
   ],
-
   "dependencies": {
     "@types/bcryptjs": "^2.4.6",
+    "@types/better-sqlite3": "^7.6.13",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.3",
     "@types/express-session": "^1.18.2",
     "@types/nodemailer": "^6.4.14",
     "@types/pg": "^8.15.5",
     "bcryptjs": "^3.0.2",
+    "better-sqlite3": "^12.4.1",
     "connect-pg-simple": "^10.0.0",
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
@@ -34,12 +55,12 @@
     "express": "^5.1.0",
     "express-session": "^1.18.2",
     "nodemailer": "^6.9.8",
-    "postgres": "^3.4.7",
     "resend": "^6.1.2",
     "stripe": "^19.0.0"
   },
   "devDependencies": {
     "@types/node": "^24.6.2",
-    "tsx": "^4.20.6"
+    "tsx": "^4.20.6",
+    "typescript": "^5.6.3"
   }
 }

@@ -1,10 +1,66 @@
 import { Link, useSearchParams } from "react-router-dom";
+import { useEffect, useState } from "react";
 import { Body, Button, Heading, Section } from "../design-system";
 
 export const ShopSuccessPage = () => {
   const [searchParams] = useSearchParams();
-  const orderNumber = searchParams.get("order") || "MF-00000000";
-  const amount = searchParams.get("amount") || "0";
+  const paymentIntent = searchParams.get("payment_intent");
+  const [isVerifying, setIsVerifying] = useState(true);
+  const [orderData, setOrderData] = useState<{
+    orderNumber: string;
+    amount: string;
+    customerEmail: string;
+  } | null>(null);
+
+  useEffect(() => {
+    // In a real implementation, you would verify the payment with your backend
+    // For now, we'll simulate a successful verification
+    const verifyPayment = async () => {
+      try {
+        // Simulate API call delay
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        
+        // Extract order info from URL or use defaults
+        const amount = searchParams.get("amount") || "0";
+        const orderNumber = `MF-${Date.now().toString().slice(-8)}`;
+        
+        setOrderData({
+          orderNumber,
+          amount,
+          customerEmail: searchParams.get("email") || "",
+        });
+      } catch (error) {
+        console.error("Payment verification failed:", error);
+      } finally {
+        setIsVerifying(false);
+      }
+    };
+
+    if (paymentIntent) {
+      verifyPayment();
+    } else {
+      setIsVerifying(false);
+    }
+  }, [paymentIntent, searchParams]);
+
+  if (isVerifying) {
+    return (
+      <Section background="muted">
+        <div className="mx-auto max-w-2xl text-center">
+          <div className="mb-6 flex justify-center">
+            <div className="h-12 w-12 animate-spin rounded-full border-4 border-brand-200 border-t-brand-600"></div>
+          </div>
+          <Heading level={2}>Verifying your payment...</Heading>
+          <Body className="mt-4" variant="muted">
+            Please wait while we confirm your order.
+          </Body>
+        </div>
+      </Section>
+    );
+  }
+
+  const orderNumber = orderData?.orderNumber || "MF-00000000";
+  const amount = orderData?.amount || "0";
 
   return (
     <Section background="muted">

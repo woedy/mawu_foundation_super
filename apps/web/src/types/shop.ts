@@ -1,5 +1,19 @@
 export type ShopAvailability = 'in_stock' | 'low_stock' | 'backorder';
 
+export interface VariationOption {
+  value: string;
+  label: string;
+  priceModifier?: number;
+  inventory?: number;
+  images?: string[];
+}
+
+export interface ProductVariation {
+  type: 'color' | 'size' | 'style';
+  name: string;
+  options: VariationOption[];
+}
+
 export interface ShopProduct {
   id: string;
   slug: string;
@@ -13,6 +27,7 @@ export interface ShopProduct {
   images: string[];
   availability: ShopAvailability;
   inventory: number;
+  variations?: ProductVariation[];
 }
 
 

@@ -1,45 +1,65 @@
-import { pgTable, text, serial, integer, timestamp, boolean, decimal, jsonb } from 'drizzle-orm/pg-core';
+import { sqliteTable, text, integer, real } from 'drizzle-orm/sqlite-core';
 
-export const admins = pgTable('admins', {
-  id: serial('id').primaryKey(),
+// Product variation type definitions
+export interface VariationOption {
+  value: string;
+  label: string;
+  priceModifier?: number;
+  inventory?: number;
+  images?: string[];
+}
+
+export interface ProductVariation {
+  type: 'color' | 'size' | 'style';
+  name: string;
+  options: VariationOption[];
+}
+
+export const admins = sqliteTable('admins', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
   email: text('email').notNull().unique(),
   password: text('password').notNull(),
   name: text('name').notNull(),
-  createdAt: timestamp('created_at').defaultNow().notNull(),
+  createdAt: integer('created_at', { mode: 'timestamp' }).$defaultFn(() => new Date()).notNull(),
 });
 
-export const products = pgTable('products', {
-  id: serial('id').primaryKey(),
+export const products = sqliteTable('products', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
   slug: text('slug').notNull().unique(),
   name: text('name').notNull(),
   category: text('category').notNull(),
-  price: decimal('price', { precision: 10, scale: 2 }).notNull(),
+  price: real('price').notNull(),
   currency: text('currency').notNull().default('GHS'),
-  tags: jsonb('tags').$type<string[]>().default([]),
+  tags: text('tags').$type<string[]>().$defaultFn(() => []),
   impactStatement: text('impact_statement'),
   description: text('description').notNull(),
-  images: jsonb('images').$type<string[]>().default([]),
+  images: text('images').$type<string[]>().$defaultFn(() => []),
   availability: text('availability').notNull().default('in_stock'),
   inventory: integer('inventory').notNull().default(0),
-  createdAt: timestamp('created_at').defaultNow().notNull(),
-  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+  variations: text('variations').$type<ProductVariation[]>().$defaultFn(() => []),
+  createdAt: integer('created_at', { mode: 'timestamp' }).$defaultFn(() => new Date()).notNull(),
+  updatedAt: integer('updated_at', { mode: 'timestamp' }).$defaultFn(() => new Date()).notNull(),
 });
 
-export const orders = pgTable('orders', {
-  id: serial('id').primaryKey(),
+// Order item type definition
+export interface OrderItem {
+  productId: number;
+  productName: string;
+  quantity: number;
+  price: string;
+  selectedVariations?: Record<string, string>;
+}
+
+export const orders = sqliteTable('orders', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
   customerEmail: text('customer_email').notNull(),
   customerName: text('customer_name').notNull(),
-  items: jsonb('items').$type<Array<{
-    productId: number;
-    productName: string;
-    quantity: number;
-    price: string;
-  }>>().notNull(),
-  totalAmount: decimal('total_amount', { precision: 10, scale: 2 }).notNull(),
+  items: text('items').$type<OrderItem[]>().notNull(),
+  totalAmount: real('total_amount').notNull(),
   currency: text('currency').notNull().default('GHS'),
   stripePaymentIntentId: text('stripe_payment_intent_id'),
   status: text('status').notNull().default('pending'),
-  shippingAddress: jsonb('shipping_address').$type<{
+  shippingAddress: text('shipping_address').$type<{
     line1: string;
     line2?: string;
     city: string;
@@ -47,22 +67,22 @@ export const orders = pgTable('orders', {
     postalCode?: string;
     country: string;
   }>(),
-  createdAt: timestamp('created_at').defaultNow().notNull(),
-  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+  createdAt: integer('created_at', { mode: 'timestamp' }).$defaultFn(() => new Date()).notNull(),
+  updatedAt: integer('updated_at', { mode: 'timestamp' }).$defaultFn(() => new Date()).notNull(),
 });
 
-export const donations = pgTable('donations', {
-  id: serial('id').primaryKey(),
+export const donations = sqliteTable('donations', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
   donorEmail: text('donor_email').notNull(),
   donorName: text('donor_name').notNull(),
-  amount: decimal('amount', { precision: 10, scale: 2 }).notNull(),
+  amount: real('amount').notNull(),
   currency: text('currency').notNull().default('USD'),
   frequency: text('frequency').notNull().default('one-time'),
   message: text('message'),
-  anonymous: boolean('anonymous').default(false),
+  anonymous: integer('anonymous', { mode: 'boolean' }).default(false),
   stripePaymentIntentId: text('stripe_payment_intent_id'),
   status: text('status').notNull().default('pending'),
-  createdAt: timestamp('created_at').defaultNow().notNull(),
+  createdAt: integer('created_at', { mode: 'timestamp' }).$defaultFn(() => new Date()).notNull(),
 });
 
 export type Admin = typeof admins.$inferSelect;

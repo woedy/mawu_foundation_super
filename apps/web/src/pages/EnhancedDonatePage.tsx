@@ -22,7 +22,11 @@ export const EnhancedDonatePage = () => {
   const handleDonate = () => {
     const amount = selectedAmount || parseFloat(customAmount) || 0;
     if (amount > 0) {
-      navigate(`/donate/checkout?amount=${amount}&type=${donationType}`);
+      const params = new URLSearchParams({
+        amount: amount.toString(),
+        type: donationType,
+      });
+      navigate(`/donate/checkout?${params.toString()}`);
     }
   };
 

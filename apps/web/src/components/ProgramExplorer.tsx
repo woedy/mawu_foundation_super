@@ -277,8 +277,8 @@ export const ProgramExplorer = ({
                     <Button onClick={() => setSelectedProgramSlug(program.slug)} size="sm">
                       Preview story
                     </Button>
-                    <Button as={Link} size="sm" to={`#program-${program.slug}`} variant="secondary">
-                      Read full narrative
+                    <Button as={Link} size="sm" to={`/programs/${program.slug}`} variant="secondary">
+                      Read full details
                     </Button>
                   </div>
                 </Card>
@@ -323,8 +323,8 @@ export const ProgramExplorer = ({
                   </p>
                 </blockquote>
                 <div className="flex flex-wrap gap-3">
-                  <Button as={Link} size="sm" to={`#program-${selectedProgram.slug}`} variant="secondary">
-                    Deep dive into the program
+                  <Button as={Link} size="sm" to={`/programs/${selectedProgram.slug}`} variant="secondary">
+                    View program details
                   </Button>
                   <Button as={Link} size="sm" to="/donate" variant="ghost">
                     Fund this initiative

@@ -5,6 +5,7 @@ export const DonationSuccessPage = () => {
   const [searchParams] = useSearchParams();
   const amount = searchParams.get("amount") || "0";
   const type = searchParams.get("type") || "one-time";
+  const paymentIntent = searchParams.get("payment_intent");
 
   return (
     <Section background="muted">
@@ -30,8 +31,14 @@ export const DonationSuccessPage = () => {
         <Heading level={1}>Thank You for Your Generosity!</Heading>
         
         <Body className="mt-4 text-lg" variant="muted">
-          Your {type === "monthly" ? "monthly recurring" : "one-time"} donation of GHS {amount} has been successfully processed.
+          Your {type === "monthly" ? "monthly recurring" : "one-time"} donation of GHS {parseFloat(amount).toFixed(2)} has been successfully processed.
         </Body>
+
+        {paymentIntent && (
+          <p className="mt-2 text-xs text-ink-500">
+            Transaction ID: {paymentIntent.substring(0, 20)}...
+          </p>
+        )}
 
         <div className="mt-8 rounded-lg bg-white p-6 shadow-lg">
           <h3 className="mb-4 text-lg font-semibold text-ink-900">What Happens Next?</h3>

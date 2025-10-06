@@ -58,9 +58,17 @@ export const SiteFooter = () => (
       <div className="grid gap-12 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)]">
         <div className="space-y-8">
           <Link className="flex items-center gap-3 text-left" to="/">
-            <span className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-500 text-xl font-semibold text-white shadow-soft">
-              MF
-            </span>
+            <picture>
+              <source srcSet="/web_logo_48.webp" type="image/webp" />
+              <img 
+                src="/web_logo_48.png" 
+                alt="Mawu Foundation Logo" 
+                className="h-12 w-12 object-contain"
+                loading="lazy"
+                width="48"
+                height="48"
+              />
+            </picture>
             <div>
               <p className="font-display text-lg font-semibold text-white">Mawu Foundation</p>
               <p className="text-xs uppercase tracking-[0.24em] text-white/60">Rooted in community power</p>
