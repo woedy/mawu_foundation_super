@@ -35,8 +35,7 @@
     "test:security": "tsx server/test-security.ts",
     "test:production-readiness": "tsx server/test-production-readiness.ts",
     "test:final": "tsx server/test-final-production-readiness.ts",
-    "test:rollup": "node test-rollup-fix.js",
-    "postinstall": "patch-package"
+    "fix:rollup": "node fix-rollup.js"
   },
   "workspaces": [
     "apps/web"
@@ -67,7 +66,6 @@
   },
   "devDependencies": {
     "@types/node": "^24.6.2",
-    "patch-package": "^8.0.0",
     "tsx": "^4.20.6",
     "typescript": "^5.6.3"
   }

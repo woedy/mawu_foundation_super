@@ -7,7 +7,7 @@ aptPkgs = ['postgresql-client']
 cmds = [
   'rm -rf node_modules package-lock.json || true',
   'npm install --include=dev --omit=optional',
-  'npx patch-package || echo "No patches to apply"'
+  'node fix-rollup.js || echo "Rollup fix failed, continuing..."'
 ]
 
 [phases.build]

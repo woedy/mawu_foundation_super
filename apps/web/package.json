@@ -24,6 +24,7 @@
   },
   "devDependencies": {
     "@rollup/wasm-node": "^4.52.3",
+    "rollup": "^4.52.3",
     "@storybook/addon-a11y": "^8.2.9",
     "@storybook/addon-essentials": "^8.2.9",
     "@storybook/react-vite": "^8.2.9",
